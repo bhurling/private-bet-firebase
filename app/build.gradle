@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "io.bhurling.privatebet"
+        minSdkVersion 21
+        //noinspection OldTargetApi
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
+        }
+    }
+}
+
+dependencies {
+    def SUPPORT_LIBS_VERSION='23.4.0'
+
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
+    compile 'com.google.firebase:firebase-database:9.2.1'
+
+    testCompile 'junit:junit:4.12'
+}
+
+// Docs say this plugin should go at the bottom of the file
+apply plugin: 'com.google.gms.google-services'
