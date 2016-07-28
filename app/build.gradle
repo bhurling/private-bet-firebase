@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -26,12 +27,17 @@ android {
 dependencies {
     def SUPPORT_LIBS_VERSION='23.4.0'
     def FIREBASE_VERSION='9.2.1'
+    def DAGGER_VERSION='2.5'
 
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
     compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
 
     testCompile 'junit:junit:4.12'
+
+    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    provided 'javax.annotation:jsr250-api:1.0'
 }
 
 // Docs say this plugin should go at the bottom of the file
