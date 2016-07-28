@@ -25,9 +25,11 @@ android {
 
 dependencies {
     def SUPPORT_LIBS_VERSION='23.4.0'
+    def FIREBASE_VERSION='9.2.1'
 
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
-    compile 'com.google.firebase:firebase-database:9.2.1'
+    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
+    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
 
     testCompile 'junit:junit:4.12'
 }
