@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1040347160160-15b88chmp2sbd4728d0g88umuur5n41v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bhurling.privatebet",
+            "certificate_hash": "58B13804711AA25A745EF7DA990C11B04DA1BB85"
+          }
+        },
+        {
           "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
