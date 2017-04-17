@@ -47,6 +47,6 @@ public class ApplicationModule {
     @ReferenceFeed
     @Provides
     public DatabaseReference provideFeed(FirebaseDatabase database, FirebaseUser user) {
-        return database.getReference(String.format("feeds/%s", user.getUid()));
+        return database.getReference("feeds").child(user.getUid());
     }
 }
