@@ -1,48 +1,58 @@
 package io.bhurling.privatebet.presenter;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.bhurling.privatebet.dependencies.ReferenceFeed;
+import io.bhurling.privatebet.rx.RxFirebaseDatabase;
+import io.reactivex.Observable;
 
-public class FeedPresenter implements ValueEventListener {
+public class FeedPresenter extends Presenter<FeedPresenter.View> {
 
     private final DatabaseReference feed;
-
-    private View view;
 
     @Inject
     public FeedPresenter(@ReferenceFeed DatabaseReference feed) {
         this.feed = feed;
     }
 
+    @Override
     public void attachView(View view) {
-        this.view = view;
+        super.attachView(view);
 
-        this.feed.addValueEventListener(this);
+        disposables.addAll(
+                RxFirebaseDatabase.observeValueEvents(this.feed.orderByValue())
+                        .map(DataSnapshot::getChildren)
+                        .map(this::makeList)
+                        .map(this::reverse)
+                        .subscribe(this::handleData)
+        );
     }
 
-    public void detachView() {
-        this.view = null;
-
-        this.feed.removeEventListener(this);
+    private void handleData(List<DataSnapshot> list) {
+        for (DataSnapshot item : list) {
+            Log.d("FEED", item.toString());
+        }
     }
 
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-
+    private List<DataSnapshot> makeList(Iterable<DataSnapshot> data) {
+        return Observable.fromIterable(data).toList().blockingGet();
     }
 
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
+    private List<DataSnapshot> reverse(List<DataSnapshot> list) {
+        Collections.reverse(list);
 
+        return list;
     }
 
-    public interface View {
+    public interface View extends Presenter.View {
 
     }
 }
