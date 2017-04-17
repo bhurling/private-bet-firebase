@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     MainPresenter mPresenter;
 
+    @Inject
+    FirebaseAuth auth;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Application.component(this).inject(this);
 
         if (savedInstanceState == null) {
-            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            if (auth.getCurrentUser() == null) {
                 startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
@@ -36,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
                                 .build(),
                         REQUEST_CODE_AUTH
                 );
+            } else {
+                startActivity(new Intent(this, FeedActivity.class));
+                finish();
             }
         }
     }
