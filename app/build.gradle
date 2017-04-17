@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "io.bhurling.privatebet"
@@ -25,15 +25,16 @@ android {
 }
 
 dependencies {
-    def SUPPORT_LIBS_VERSION='24.1.0'
-    def FIREBASE_VERSION='9.2.1'
+    def SUPPORT_LIBS_VERSION='25.1.1'
+    def FIREBASE_VERSION='10.2.0'
     def DAGGER_VERSION='2.5'
 
+    //noinspection GradleDependency - firebase-ui-auth is referencing outdated support lib
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
     compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    compile 'com.firebaseui:firebase-ui-auth:0.4.3'
+    compile 'com.firebaseui:firebase-ui-auth:1.2.0'
 
     testCompile 'junit:junit:4.12'
 
