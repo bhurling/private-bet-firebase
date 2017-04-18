@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.bhurling.privatebet.Application;
@@ -28,5 +30,10 @@ public class FeedActivity extends AppCompatActivity implements FeedPresenter.Vie
         super.onDestroy();
 
         presenter.detachView();
+    }
+
+    @Override
+    public void updateKeys(List<String> keys) {
+
     }
 }

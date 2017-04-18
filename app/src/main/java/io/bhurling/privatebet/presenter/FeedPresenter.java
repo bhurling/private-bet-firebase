@@ -1,7 +1,5 @@
 package io.bhurling.privatebet.presenter;
 
-import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -30,29 +28,30 @@ public class FeedPresenter extends Presenter<FeedPresenter.View> {
         disposables.addAll(
                 RxFirebaseDatabase.observeValueEvents(this.feed.orderByValue())
                         .map(DataSnapshot::getChildren)
-                        .map(this::makeList)
+                        .map(this::keys)
                         .map(this::reverse)
                         .subscribe(this::handleData)
         );
     }
 
-    private void handleData(List<DataSnapshot> list) {
-        for (DataSnapshot item : list) {
-            Log.d("FEED", item.toString());
-        }
+    private void handleData(List<String> keys) {
+        view.updateKeys(keys);
     }
 
-    private List<DataSnapshot> makeList(Iterable<DataSnapshot> data) {
-        return Observable.fromIterable(data).toList().blockingGet();
+    private List<String> keys(Iterable<DataSnapshot> data) {
+        return Observable.fromIterable(data)
+                .map(DataSnapshot::getKey)
+                .toList()
+                .blockingGet();
     }
 
-    private List<DataSnapshot> reverse(List<DataSnapshot> list) {
+    private List<String> reverse(List<String> list) {
         Collections.reverse(list);
 
         return list;
     }
 
     public interface View extends Presenter.View {
-
+        void updateKeys(List<String> keys);
     }
 }
