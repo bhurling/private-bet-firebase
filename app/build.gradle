@@ -31,23 +31,28 @@ android {
 }
 
 dependencies {
-    def SUPPORT_LIBS_VERSION='25.1.1'
-    def FIREBASE_VERSION='10.2.0'
+    def BUTTERKNIFE_VERSION='8.5.1'
     def DAGGER_VERSION='2.5'
+    def FIREBASE_VERSION='10.2.0'
+    def SUPPORT_LIBS_VERSION='25.1.1'
 
     //noinspection GradleDependency - firebase-ui-auth is referencing outdated support lib
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
     compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
     compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.8'
 
-    testCompile 'junit:junit:4.12'
-
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+
     provided 'javax.annotation:jsr250-api:1.0'
+
+    testCompile 'junit:junit:4.12'
 }
 
 // Docs say this plugin should go at the bottom of the file
