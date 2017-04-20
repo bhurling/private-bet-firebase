@@ -51,6 +51,10 @@ public class FeedActivity extends AppCompatActivity implements FeedPresenter.Vie
     protected void onDestroy() {
         super.onDestroy();
 
+        // we need to unregister the adapter to make sure we call onViewDetachedFromWindow(ViewHolder)
+        // for the visible items.
+        feed.swapAdapter(null, true);
+
         presenter.detachView();
     }
 
