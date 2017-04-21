@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -15,19 +15,22 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.bhurling.privatebet.R;
+import io.bhurling.privatebet.dependencies.BetsReference;
 import io.bhurling.privatebet.model.pojo.Bet;
-import io.bhurling.privatebet.rx.RxFirebaseDatabase;
+import io.bhurling.privatebet.rx.ReactiveFirebase;
 import io.reactivex.disposables.Disposable;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
-    private final FirebaseDatabase database;
+    private final ReactiveFirebase firebase;
+    private final DatabaseReference bets;
 
     private List<String> keys;
 
     @Inject
-    public FeedAdapter(FirebaseDatabase database) {
-        this.database = database;
+    public FeedAdapter(ReactiveFirebase firebase, @BetsReference DatabaseReference bets) {
+        this.firebase = firebase;
+        this.bets = bets;
     }
 
     @Override
@@ -85,8 +88,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         }
 
         private void subscribe() {
-            disposable = RxFirebaseDatabase
-                    .observeValueEvents(database.getReference("bets").child(key))
+            disposable = firebase
+                    .observeValueEvents(bets.child(key))
                     .map(dataSnapshot -> dataSnapshot.getValue(Bet.class))
                     .subscribe(this::update, Throwable::printStackTrace);
         }

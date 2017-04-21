@@ -11,7 +11,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.bhurling.privatebet.dependencies.ReferenceFeed;
+import io.bhurling.privatebet.dependencies.BetsReference;
+import io.bhurling.privatebet.dependencies.FeedReference;
 
 @Module
 public class ApplicationModule {
@@ -44,9 +45,16 @@ public class ApplicationModule {
         return auth.getCurrentUser();
     }
 
-    @ReferenceFeed
+    @FeedReference
     @Provides
     public DatabaseReference provideFeed(FirebaseDatabase database, FirebaseUser user) {
         return database.getReference("feeds").child(user.getUid());
     }
+
+    @BetsReference
+    @Provides
+    public DatabaseReference provideBets(FirebaseDatabase database) {
+        return database.getReference("bets");
+    }
+
 }

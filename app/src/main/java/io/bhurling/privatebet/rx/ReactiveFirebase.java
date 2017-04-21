@@ -5,9 +5,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 
-public class RxFirebaseDatabase {
+public class ReactiveFirebase {
 
     @SuppressWarnings("WeakerAccess")
     public static class RxFirebaseDatabaseException extends Exception {
@@ -24,7 +26,12 @@ public class RxFirebaseDatabase {
         }
     }
 
-    public static Observable<DataSnapshot> observeValueEvents(Query query) {
+    @Inject
+    public ReactiveFirebase() {
+        // Empty constructor used for injection
+    }
+
+    public Observable<DataSnapshot> observeValueEvents(Query query) {
         return Observable.create(emitter -> {
             ValueEventListener listener = query.addValueEventListener(new ValueEventListener() {
                 @Override

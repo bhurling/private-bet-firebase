@@ -8,16 +8,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.bhurling.privatebet.dependencies.ReferenceFeed;
-import io.bhurling.privatebet.rx.RxFirebaseDatabase;
+import io.bhurling.privatebet.dependencies.FeedReference;
+import io.bhurling.privatebet.rx.ReactiveFirebase;
 import io.reactivex.Observable;
 
 public class FeedPresenter extends Presenter<FeedPresenter.View> {
 
+    private final ReactiveFirebase firebase;
     private final DatabaseReference feed;
 
     @Inject
-    public FeedPresenter(@ReferenceFeed DatabaseReference feed) {
+    public FeedPresenter(ReactiveFirebase firebase, @FeedReference DatabaseReference feed) {
+        this.firebase = firebase;
         this.feed = feed;
     }
 
@@ -26,7 +28,7 @@ public class FeedPresenter extends Presenter<FeedPresenter.View> {
         super.attachView(view);
 
         disposables.addAll(
-                RxFirebaseDatabase.observeValueEvents(this.feed.orderByValue())
+                firebase.observeValueEvents(this.feed.orderByValue())
                         .map(DataSnapshot::getChildren)
                         .map(this::keys)
                         .map(this::reverse)
