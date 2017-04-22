@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.FeedActivity" />
+        <activity android:name=".ui.AddBetActivity" />
 
     </application>
 

@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.bhurling.privatebet.Application;
 import io.bhurling.privatebet.R;
 import io.bhurling.privatebet.presenter.FeedPresenter;
@@ -61,5 +63,10 @@ public class FeedActivity extends AppCompatActivity implements FeedPresenter.Vie
     @Override
     public void updateKeys(List<String> keys) {
         adapter.setKeys(keys);
+    }
+
+    @OnClick(R.id.fab)
+    public void onAddBetClicked() {
+        startActivity(new Intent(this, AddBetActivity.class));
     }
 }
