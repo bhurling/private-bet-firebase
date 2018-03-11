@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "io.bhurling.privatebet"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -33,29 +32,24 @@ android {
 }
 
 dependencies {
-    def BUTTERKNIFE_VERSION='8.5.1'
-    def DAGGER_VERSION='2.5'
-    def FIREBASE_VERSION='10.2.0'
-    def SUPPORT_LIBS_VERSION='25.1.1'
+    implementation project(':lib-kotterknife')
+    implementation project(':lib-di')
 
     //noinspection GradleDependency - firebase-ui-auth is referencing outdated support lib
-    compile "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
-    compile "com.google.dagger:dagger:$DAGGER_VERSION"
-    compile "com.google.firebase:firebase-auth:$FIREBASE_VERSION"
-    compile "com.google.firebase:firebase-database:$FIREBASE_VERSION"
-    compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
-    compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBS_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIBS_VERSION"
+    implementation "com.google.firebase:firebase-auth:$PLAY_SERVICES_VERSION"
+    implementation "com.google.firebase:firebase-database:$PLAY_SERVICES_VERSION"
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
 
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
-
-    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-    apt "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
 
     provided 'javax.annotation:jsr250-api:1.0'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
 }
 
 // Docs say this plugin should go at the bottom of the file
