@@ -1,5 +1,6 @@
 package io.bhurling.privatebet
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -35,8 +36,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE_AUTH && resultCode == Activity.RESULT_OK) {
+            startActivity(Intent(this, FeedActivity::class.java))
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
-        private val REQUEST_CODE_AUTH = 0
+    companion object {
+        const val REQUEST_CODE_AUTH = 0
     }
 }

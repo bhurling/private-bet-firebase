@@ -10,4 +10,11 @@ val feedKoinModule = applicationContext {
                 feed = get(Qualifiers.feed)
         )
     }
+
+    factory {
+        FeedAdapter(
+                firebase = get(),
+                bets = get(Qualifiers.bets)
+        )
+    }
 }
