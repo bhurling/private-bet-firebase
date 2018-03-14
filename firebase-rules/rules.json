@@ -1,0 +1,20 @@
+{
+  "rules": {
+    ".read": "auth.uid === 'feeds-worker'",
+    "bets": {
+      "$betId": {
+        ".read": "data.child('users').hasChild(auth.uid)",
+        ".write": "data.child('users').hasChild(auth.uid)"
+      }
+    },
+    "feeds": {
+      ".write": "auth.uid === 'feeds-worker'",
+      "$uid": {
+        ".read": "$uid === auth.uid"
+      }
+    },
+    "categories": {
+      ".read": "auth !== null"
+    }
+  }
+}
