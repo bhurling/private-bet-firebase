@@ -15,6 +15,17 @@
     },
     "categories": {
       ".read": "auth !== null"
+    },
+    "profiles": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        "public": {
+          ".read": "auth !== null"
+        },
+        "private": {
+          ".read": "$uid === auth.uid"
+        }
+      }
     }
   }
 }
