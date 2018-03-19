@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 for file in firebase-rules/tests/*.json
 do
