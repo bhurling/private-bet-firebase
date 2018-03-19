@@ -1,0 +1,76 @@
+{
+  "root": {
+    "links": {
+      "user:bjoern": {
+        "incoming": {
+          "user:paul": true
+        }
+      },
+      "user:paul": {
+        "incoming": {
+          "user:arnd": true
+        }
+      }
+    }
+  },
+  "users": {
+    "Bjoern": {
+      "uid": "user:bjoern"
+    },
+    "Paul": {
+      "uid": "user:paul"
+    },
+    "Arnd": {
+      "uid": "user:arnd"
+    },
+    "Weirdo": {
+      "uid": "user:weirdo"
+    }
+  },
+  "tests": {
+    "links/user:bjoern/incoming": {
+      "description": "Users can read their incoming link requests",
+      "canRead": [
+        "Bjoern"
+      ],
+      "cannotRead": [
+        "Paul",
+        "Arnd",
+        "Weirdo"
+      ]
+    },
+    "links/user:bjoern/incoming/user:paul": {
+      "description": "Users can add/remove themselves to other users' incoming link requests",
+      "canWrite": [
+        {
+          "auth": "Paul",
+          "data": true
+        },
+        {
+          "auth": "Paul",
+          "data": {}
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Arnd",
+          "data": true
+        },
+        {
+          "auth": "Bjoern",
+          "data": true
+        },
+        {
+          "auth": "Paul",
+          "data": 1234
+        },
+        {
+          "auth": "Paul",
+          "data": {
+            "crazy": "stuff"
+          }
+        }
+      ]
+    }
+  }
+}

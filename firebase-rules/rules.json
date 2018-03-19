@@ -26,6 +26,17 @@
           ".read": "$uid === auth.uid"
         }
       }
+    },
+    "links": {
+      "$uid": {
+        "incoming": {
+          ".read": "$uid === auth.uid",
+          "$oid": {
+            ".write": "$oid === auth.uid",
+            ".validate": "newData.isBoolean()"
+          }
+        }
+      }
     }
   }
 }
