@@ -30,18 +30,22 @@ class MainActivity : AppCompatActivity() {
                         REQUEST_CODE_AUTH
                 )
             } else {
-                startActivity(Intent(this, FeedActivity::class.java))
-                finish()
+                proceed()
             }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_AUTH && resultCode == Activity.RESULT_OK) {
-            startActivity(Intent(this, FeedActivity::class.java))
+            proceed()
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun proceed() {
+        startActivity(Intent(this, FeedActivity::class.java))
+        finish()
     }
 
     companion object {
