@@ -32,8 +32,8 @@
         "incoming": {
           ".read": "$uid === auth.uid",
           "$oid": {
-            ".write": "$oid === auth.uid",
-            ".validate": "newData.isBoolean()"
+            ".write": "$oid === auth.uid || $uid === auth.uid",
+            ".validate": "$oid === auth.uid && newData.isBoolean() || $uid === auth.uid && newData.val() != true"
           }
         }
       }

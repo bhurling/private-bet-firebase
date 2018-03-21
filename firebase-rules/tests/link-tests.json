@@ -57,6 +57,10 @@
           "data": true
         },
         {
+          "auth": "Arnd",
+          "data": {}
+        },
+        {
           "auth": "Bjoern",
           "data": true
         },
@@ -69,6 +73,25 @@
           "data": {
             "crazy": "stuff"
           }
+        }
+      ]
+    },
+    "links/user:bjoern/incoming/user:arnd": {
+      "description": "Users can not put other users into their incoming link requests",
+      "canWrite": [
+        {
+          "auth": "Bjoern",
+          "data": {}
+        },
+        {
+          "auth": "Bjoern",
+          "data": false
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Bjoern",
+          "data": true
         }
       ]
     }
