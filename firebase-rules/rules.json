@@ -1,6 +1,5 @@
 {
   "rules": {
-    ".read": "auth.uid === 'feeds-worker'",
     "bets": {
       "$betId": {
         ".read": "data.child('users').hasChild(auth.uid)",
@@ -8,7 +7,6 @@
       }
     },
     "feeds": {
-      ".write": "auth.uid === 'feeds-worker'",
       "$uid": {
         ".read": "$uid === auth.uid"
       }
@@ -18,12 +16,13 @@
     },
     "profiles": {
       "$uid": {
-        ".write": "$uid === auth.uid",
         "public": {
-          ".read": "auth !== null"
+          ".read": "auth !== null",
+          ".write": "$uid === auth.uid"
         },
         "private": {
-          ".read": "$uid === auth.uid"
+          ".read": "$uid === auth.uid",
+          ".write": "$uid === auth.uid"
         }
       }
     },

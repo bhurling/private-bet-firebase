@@ -1,0 +1,96 @@
+{
+  "root": {
+    "profiles": {
+      "user:bjoern": {
+        "public": {
+          "name": "Björn Hurling",
+          "photo-url": "https://test.image/1"
+        },
+        "private": {
+          "email": "test1@example.com"
+        }
+      },
+      "user:paul": {
+        "public": {
+          "name": "Paul Bumann",
+          "photo-url": "https://test.image/2"
+        },
+        "private": {
+          "email": "test2@example.com"
+        }
+      }
+    }
+  },
+  "users": {
+    "Bjoern": {
+      "uid": "user:bjoern"
+    },
+    "Paul": {
+      "uid": "user:paul"
+    },
+    "Arnd": {
+      "uid": "user:arnd"
+    },
+    "Weirdo": {
+      "uid": "user:weirdo"
+    }
+  },
+  "tests": {
+    "profiles/user:bjoern/public": {
+      "description": "Users can read/write own public profile data",
+      "canRead": [
+        "Bjoern",
+        "Paul",
+        "Arnd",
+        "Weirdo"
+      ],
+      "canWrite": [
+        {
+          "auth": "Bjoern",
+          "data": {
+            "name": "New name",
+            "photo-url": "https://test"
+          }
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Paul",
+          "data": {
+            "name": "New name",
+            "photo-url": "https://test"
+          }
+        }
+      ]
+    },
+    "profiles/user:bjoern/private": {
+      "description": "Users can read/write own private profile data",
+      "canRead": [
+        "Bjoern"
+      ],
+      "cannotRead": [
+        "Paul",
+        "Arnd",
+        "Weirdo"
+      ],
+      "canWrite": [
+        {
+          "auth": "Bjoern",
+          "data": {
+            "name": "New name",
+            "photo-url": "https://test"
+          }
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Paul",
+          "data": {
+            "name": "New name",
+            "photo-url": "https://test"
+          }
+        }
+      ]
+    }
+  }
+}
