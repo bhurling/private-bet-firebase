@@ -11,19 +11,10 @@ class SignupInteractor constructor(
             photoUrl: String?,
             email: String?
     ) {
-        val data = ProfileData(
-                private = PrivateProfileData(email),
-                public = PublicProfileData(displayName, photoUrl)
-        )
-
-        profile.setValue(data)
+        profile.child("private").setValue(PrivateProfileData(email))
+        profile.child("public").setValue(PublicProfileData(displayName, photoUrl))
     }
 }
-
-private data class ProfileData(
-        val private: PrivateProfileData,
-        val public: PublicProfileData
-)
 
 private data class PrivateProfileData(
         val email: String?
