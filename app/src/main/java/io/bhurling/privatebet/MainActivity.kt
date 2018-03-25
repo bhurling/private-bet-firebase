@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import io.bhurling.privatebet.feed.FeedActivity
+import io.bhurling.privatebet.signup.SignupService
 import org.koin.inject
 
 class MainActivity : AppCompatActivity() {
@@ -44,7 +45,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun proceed() {
+        startService(Intent(this, SignupService::class.java))
         startActivity(Intent(this, FeedActivity::class.java))
+
         finish()
     }
 

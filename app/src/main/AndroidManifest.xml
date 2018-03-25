@@ -23,6 +23,10 @@
             android:label="I bet that"
             android:theme="@style/Theme.PrivateBet.NoActionBar.CleanTitle" />
 
+        <service
+            android:name=".signup.SignupService"
+            android:exported="false" />
+
     </application>
 
 </manifest>

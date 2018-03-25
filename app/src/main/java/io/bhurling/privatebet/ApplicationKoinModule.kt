@@ -1,14 +1,12 @@
 package io.bhurling.privatebet
 
-import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import org.koin.dsl.module.applicationContext
 
-val appKoinModule = applicationContext {
+val applicationKoinModule = applicationContext {
 
     provide {
         FirebaseDatabase.getInstance()
@@ -36,17 +34,16 @@ val appKoinModule = applicationContext {
         get<FirebaseDatabase>()
                 .getReference("bets")
     }
+
+    factory(Qualifiers.me) {
+        get<FirebaseDatabase>()
+                .getReference("profiles")
+                .child(get<FirebaseUser>().uid)
+    }
 }
 
 object Qualifiers {
     const val bets = "bets"
     const val feed = "feed"
-}
-
-class ApplicationModule(private val application: Application) {
-
-    fun provideAppContext(): Context {
-        return application
-    }
-
+    const val me = "me"
 }
