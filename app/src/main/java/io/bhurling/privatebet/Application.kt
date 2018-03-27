@@ -2,6 +2,7 @@ package io.bhurling.privatebet
 
 import android.content.Context
 import io.bhurling.privatebet.feed.feedKoinModule
+import io.bhurling.privatebet.friends.friendsKoinModule
 import io.bhurling.privatebet.signup.signupKoinModule
 import org.koin.standalone.StandAloneContext.startKoin
 
@@ -24,6 +25,7 @@ class Application : android.app.Application() {
                 appContextKoinModule,
                 applicationKoinModule,
                 signupKoinModule,
+                friendsKoinModule,
                 feedKoinModule
         ))
     }

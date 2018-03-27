@@ -18,6 +18,8 @@
 
         <activity android:name=".feed.FeedActivity" />
 
+        <activity android:name=".friends.InviteActivity" />
+
         <activity
             android:name=".add.AddBetActivity"
             android:label="I bet that"
