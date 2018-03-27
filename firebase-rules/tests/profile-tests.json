@@ -1,22 +1,22 @@
 {
   "root": {
     "profiles": {
-      "user:bjoern": {
-        "public": {
-          "name": "Björn Hurling",
-          "photo-url": "https://test.image/1"
-        },
-        "private": {
-          "email": "test1@example.com"
-        }
-      },
-      "user:paul": {
-        "public": {
+      "public": {
+        "user:paul": {
           "name": "Paul Bumann",
           "photo-url": "https://test.image/2"
         },
-        "private": {
+        "user:bjoern": {
+          "name": "Björn Hurling",
+          "photo-url": "https://test.image/1"
+        }
+      },
+      "private": {
+        "user:paul": {
           "email": "test2@example.com"
+        },
+        "user:bjoern": {
+          "email": "test1@example.com"
         }
       }
     }
@@ -36,7 +36,7 @@
     }
   },
   "tests": {
-    "profiles/user:bjoern/public": {
+    "profiles/public/user:bjoern": {
       "description": "Users can read/write own public profile data",
       "canRead": [
         "Bjoern",
@@ -63,7 +63,7 @@
         }
       ]
     },
-    "profiles/user:bjoern/private": {
+    "profiles/private/user:bjoern": {
       "description": "Users can read/write own private profile data",
       "canRead": [
         "Bjoern"
@@ -77,8 +77,7 @@
         {
           "auth": "Bjoern",
           "data": {
-            "name": "New name",
-            "photo-url": "https://test"
+            "email": "some@email.com"
           }
         }
       ],
@@ -86,8 +85,7 @@
         {
           "auth": "Paul",
           "data": {
-            "name": "New name",
-            "photo-url": "https://test"
+            "email": "some@email.com"
           }
         }
       ]

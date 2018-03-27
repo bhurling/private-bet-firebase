@@ -3,7 +3,8 @@ package io.bhurling.privatebet.signup
 import com.google.firebase.database.DatabaseReference
 
 class SignupInteractor constructor(
-        val profile: DatabaseReference
+        private val privateProfile: DatabaseReference,
+        private val publicProfile: DatabaseReference
 ) {
 
     fun updateProfile(
@@ -11,8 +12,8 @@ class SignupInteractor constructor(
             photoUrl: String?,
             email: String?
     ) {
-        profile.child("private").setValue(PrivateProfileData(email))
-        profile.child("public").setValue(PublicProfileData(displayName, photoUrl))
+        privateProfile.setValue(PrivateProfileData(email))
+        publicProfile.setValue(PublicProfileData(displayName, photoUrl))
     }
 }
 

@@ -10,7 +10,8 @@ class InvitePresenter(
         super.attachView(view)
 
         disposables.addAll(
-
+                peopleInteractor.all()
+                        .subscribe()
         )
     }
 

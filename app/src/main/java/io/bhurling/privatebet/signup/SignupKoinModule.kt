@@ -6,7 +6,8 @@ import org.koin.dsl.module.applicationContext
 val signupKoinModule = applicationContext {
     factory {
         SignupInteractor(
-                profile = get(Qualifiers.me)
+                privateProfile = get(Qualifiers.Me.private),
+                publicProfile = get(Qualifiers.Me.public)
         )
     }
 }

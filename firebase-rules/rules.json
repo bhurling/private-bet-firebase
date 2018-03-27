@@ -15,12 +15,14 @@
       ".read": "auth !== null"
     },
     "profiles": {
-      "$uid": {
-        "public": {
-          ".read": "auth !== null",
+      "public": {
+        ".read": "auth !== null",
+        "$uid": {
           ".write": "$uid === auth.uid"
-        },
-        "private": {
+        }
+      },
+      "private": {
+        "$uid": {
           ".read": "$uid === auth.uid",
           ".write": "$uid === auth.uid"
         }
