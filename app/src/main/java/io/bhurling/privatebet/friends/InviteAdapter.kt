@@ -28,8 +28,13 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
         items[position].let {
             with(holder) {
                 title.text = it.person.displayName
+                button.visibility = if (canAdd(it)) View.VISIBLE else View.GONE
             }
         }
+    }
+
+    private fun canAdd(item: InviteAdapterItem): Boolean {
+        return !item.isSent && !item.isIncoming
     }
 
     override fun getItemCount() = items.size
@@ -37,6 +42,7 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val title: TextView by bindView(R.id.title)
+        val button: View by bindView(R.id.button)
 
     }
 }

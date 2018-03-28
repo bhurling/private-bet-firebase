@@ -23,4 +23,14 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="Victoria Martinez" />
 
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Add"/>
+
 </LinearLayout>

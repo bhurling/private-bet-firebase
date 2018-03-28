@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.friends
 
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import io.bhurling.privatebet.model.pojo.Person
@@ -8,14 +9,15 @@ import io.reactivex.Observable
 
 class PeopleInteractor(
         private val firebase: ReactiveFirebase,
-        private val profiles: DatabaseReference
+        private val profiles: DatabaseReference,
+        private val me: FirebaseUser
 ) {
 
     fun all(): Observable<List<Person>> {
         return firebase
                 .observeValueEvents(profiles.orderByChild("displayName"))
                 .take(1)
-                .map { it.children.map { makePerson(it) } }
+                .map { it.children.filter { it.key != me.uid }.map { makePerson(it) } }
     }
 
     private fun makePerson(snapshot: DataSnapshot): Person {
