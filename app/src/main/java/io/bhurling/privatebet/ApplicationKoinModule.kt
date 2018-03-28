@@ -39,6 +39,20 @@ val applicationKoinModule = applicationContext {
                 .getReference("bets")
     }
 
+    factory(Qualifiers.Links.incoming) {
+        get<FirebaseDatabase>()
+                .getReference("links")
+                .child(get<FirebaseUser>().uid)
+                .child("incoming")
+    }
+
+    factory(Qualifiers.Links.outgoing) {
+        get<FirebaseDatabase>()
+                .getReference("links")
+                .child(get<FirebaseUser>().uid)
+                .child("outgoing")
+    }
+
     factory(Qualifiers.profiles) {
         get<FirebaseDatabase>()
                 .getReference("profiles")
@@ -68,5 +82,10 @@ object Qualifiers {
     object Me {
         const val private = "me.private"
         const val public = "me.public"
+    }
+
+    object Links {
+        const val outgoing = "links.outgoing"
+        const val incoming = "links.incoming"
     }
 }

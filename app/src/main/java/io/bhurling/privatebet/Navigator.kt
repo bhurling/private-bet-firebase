@@ -3,6 +3,7 @@ package io.bhurling.privatebet
 import android.app.Activity
 import android.content.Intent
 import io.bhurling.privatebet.feed.FeedActivity
+import io.bhurling.privatebet.friends.InviteActivity
 import io.bhurling.privatebet.signup.SignupActivity
 import io.bhurling.privatebet.signup.SignupService
 
@@ -15,5 +16,9 @@ class Navigator {
     fun launchApp(activity: Activity) {
         activity.startService(Intent(activity, SignupService::class.java))
         activity.startActivity(Intent(activity, FeedActivity::class.java))
+    }
+
+    fun launchInviteFlow(activity: Activity) {
+        activity.startActivity(Intent(activity, InviteActivity::class.java))
     }
 }
