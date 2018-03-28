@@ -13,45 +13,19 @@ import org.koin.inject
 class MainActivity : AppCompatActivity() {
 
     private val auth: FirebaseAuth by inject()
+    private val navigator: Navigator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
             if (auth.currentUser == null) {
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setAvailableProviders(
-                                        listOf(
-                                            AuthUI.IdpConfig.GoogleBuilder().build()
-                                        )
-                                )
-                                .build(),
-                        REQUEST_CODE_AUTH
-                )
+                navigator.launchSignupFlow(this)
             } else {
-                proceed()
+                navigator.launchApp(this)
             }
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_CODE_AUTH && resultCode == Activity.RESULT_OK) {
-            proceed()
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun proceed() {
-        startService(Intent(this, SignupService::class.java))
-        startActivity(Intent(this, FeedActivity::class.java))
 
         finish()
-    }
-
-    companion object {
-        const val REQUEST_CODE_AUTH = 0
     }
 }

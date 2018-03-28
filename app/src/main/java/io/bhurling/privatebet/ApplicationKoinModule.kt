@@ -9,6 +9,10 @@ import org.koin.dsl.module.applicationContext
 val applicationKoinModule = applicationContext {
 
     provide {
+        Navigator()
+    }
+
+    provide {
         FirebaseDatabase.getInstance()
     }
 

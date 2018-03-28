@@ -1,14 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="Theme.PrivateBet.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.PrivateBet" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.PrivateBet.NoActionBar.CleanTitle">
+    <style name="Theme.PrivateBet.Signup">
+        <item name="android:windowBackground">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="Theme.PrivateBet.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="Theme.PrivateBet.CleanTitle">
         <item name="toolbarStyle">@style/Widget.PrivateBet.Toolbar.CleanTitle</item>
     </style>
 

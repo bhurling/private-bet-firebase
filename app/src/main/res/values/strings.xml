@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Private Bet</string>
+    <string name="app_name_linebreak">Private\nBet</string>
 </resources>

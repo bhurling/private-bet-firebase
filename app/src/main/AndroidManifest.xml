@@ -7,14 +7,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PrivateBet.NoActionBar">
+        android:theme="@style/Theme.PrivateBet">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.PrivateBet.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".signup.SignupActivity"
+            android:theme="@style/Theme.PrivateBet.Signup" />
 
         <activity android:name=".feed.FeedActivity" />
 
@@ -23,7 +29,7 @@
         <activity
             android:name=".add.AddBetActivity"
             android:label="I bet that"
-            android:theme="@style/Theme.PrivateBet.NoActionBar.CleanTitle" />
+            android:theme="@style/Theme.PrivateBet.CleanTitle" />
 
         <service
             android:name=".signup.SignupService"
