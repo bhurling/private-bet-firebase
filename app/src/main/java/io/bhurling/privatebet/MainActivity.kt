@@ -1,13 +1,8 @@
 package io.bhurling.privatebet
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import io.bhurling.privatebet.feed.FeedActivity
-import io.bhurling.privatebet.signup.SignupService
 import org.koin.inject
 
 class MainActivity : AppCompatActivity() {

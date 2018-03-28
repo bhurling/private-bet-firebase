@@ -11,9 +11,12 @@ class InvitePresenter(
 
         disposables.addAll(
                 peopleInteractor.all()
-                        .subscribe()
+                        .map { it.map { InviteAdapterItem(it, false, false) } }
+                        .subscribe { view.updateItems(it) }
         )
     }
 
-    interface View : Presenter.View
+    interface View : Presenter.View {
+        fun updateItems(items: List<InviteAdapterItem>)
+    }
 }
