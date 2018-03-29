@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import io.bhurling.privatebet.R
+import io.reactivex.Observable
 import kotterknife.bindView
 import org.koin.inject
 
@@ -31,6 +32,8 @@ internal class InviteActivity: AppCompatActivity(), InvitePresenter.View {
 
         super.onDestroy()
     }
+
+    override fun actions(): Observable<InviteAction> = (list.adapter as InviteAdapter).actions()
 
     override fun updateItems(items: List<InviteAdapterItem>) {
         (list.adapter as InviteAdapter).items = items

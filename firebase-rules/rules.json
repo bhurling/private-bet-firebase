@@ -36,6 +36,9 @@
             ".write": "$oid === auth.uid || $uid === auth.uid",
             ".validate": "$oid === auth.uid && newData.isBoolean() || $uid === auth.uid && newData.val() != true"
           }
+        },
+        "outgoing": {
+          ".write": "$uid === auth.uid"
         }
       }
     }

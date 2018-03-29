@@ -6,17 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import io.bhurling.privatebet.R
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 
 class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
+    private val actionsSubject = PublishSubject.create<InviteAction>()
+
     // TODO make it a diffable list
     var items: List<InviteAdapterItem> = listOf()
-    set(value) {
-        field = value
+        set(value) {
+            field = value
 
-        notifyDataSetChanged()
-    }
+            notifyDataSetChanged()
+        }
+
+    fun actions(): Observable<InviteAction> = actionsSubject
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_invite, parent, false)
@@ -25,19 +31,26 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        items[position].let {
+        items[position].let { item ->
             with(holder) {
-                title.text = it.person.displayName
-                button.visibility = if (canAdd(it)) View.VISIBLE else View.GONE
+                title.text = item.person.displayName
+
+                if (canInvite(item)) {
+                    button.visibility = View.VISIBLE
+
+                    button.setOnClickListener {
+                        actionsSubject.onNext(InviteAction.Invite(item.person.id))
+                    }
+                } else {
+                    button.visibility = View.GONE
+                }
             }
         }
     }
 
-    private fun canAdd(item: InviteAdapterItem): Boolean {
-        return !item.isSent && !item.isIncoming
-    }
-
     override fun getItemCount() = items.size
+
+    private fun canInvite(item: InviteAdapterItem) = !item.isSent && !item.isIncoming
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

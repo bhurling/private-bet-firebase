@@ -23,8 +23,8 @@ val friendsKoinModule = applicationContext {
     factory {
         InvitationsInteractor(
                 firebase = get(),
-                incoming = get(Qualifiers.Links.incoming),
-                outgoing = get(Qualifiers.Links.outgoing)
+                links = get(Qualifiers.links),
+                me = get()
         )
     }
 }
