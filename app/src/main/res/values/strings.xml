@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Private Bet</string>
     <string name="app_name_linebreak">Private\nBet</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_accept">Accept</string>
 </resources>

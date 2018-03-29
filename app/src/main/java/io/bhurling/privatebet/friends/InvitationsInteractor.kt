@@ -24,4 +24,17 @@ class InvitationsInteractor(
         links.child(me.uid).child("outgoing").child(id).setValue(true)
     }
 
+    fun revoke(id: String) {
+        links.child(id).child("incoming").child(me.uid).removeValue()
+        links.child(me.uid).child("outgoing").child(id).removeValue()
+    }
+
+    fun accept(id: String) {
+        // TODO accept invitation
+    }
+
+    fun decline(id: String) {
+        // TODO decline invitation
+    }
+
 }

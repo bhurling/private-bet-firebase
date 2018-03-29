@@ -35,6 +35,24 @@ class InvitePresenter(
                 .subscribe {
                     invitationsInteractor.invite(it.id)
                 }
+
+        disposables += view.actions()
+                .ofType(InviteAction.Revoke::class.java)
+                .subscribe {
+                    invitationsInteractor.revoke(it.id)
+                }
+
+        disposables += view.actions()
+                .ofType(InviteAction.Accept::class.java)
+                .subscribe {
+                    invitationsInteractor.accept(it.id)
+                }
+
+        disposables += view.actions()
+                .ofType(InviteAction.Decline::class.java)
+                .subscribe {
+                    invitationsInteractor.decline(it.id)
+                }
     }
 
     interface View : Presenter.View {

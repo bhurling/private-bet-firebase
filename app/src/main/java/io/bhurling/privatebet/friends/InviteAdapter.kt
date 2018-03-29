@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.common.ui.getString
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -43,14 +44,34 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
                 title.text = item.person.displayName
 
-                if (canInvite(item)) {
-                    button.visibility = View.VISIBLE
+                when {
+                    !item.isSent && !item.isIncoming -> {
+                        button.visibility = View.VISIBLE
+                        button.text = getString(R.string.action_add)
 
-                    button.setOnClickListener {
-                        actionsSubject.onNext(InviteAction.Invite(item.person.id))
+                        button.setOnClickListener {
+                            actionsSubject.onNext(InviteAction.Invite(item.person.id))
+                        }
                     }
-                } else {
-                    button.visibility = View.GONE
+                    item.isSent -> {
+                        button.visibility = View.VISIBLE
+                        button.text = getString(R.string.action_remove)
+
+                        button.setOnClickListener {
+                            actionsSubject.onNext(InviteAction.Revoke(item.person.id))
+                        }
+                    }
+                    item.isIncoming -> {
+                        button.visibility = View.VISIBLE
+                        button.text = getString(R.string.action_accept)
+
+                        button.setOnClickListener {
+                            actionsSubject.onNext(InviteAction.Accept(item.person.id))
+                        }
+                    }
+                    else -> {
+                        button.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -64,7 +85,7 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
         val icon: ImageView by bindView(R.id.icon)
         val title: TextView by bindView(R.id.title)
-        val button: View by bindView(R.id.button)
+        val button: TextView by bindView(R.id.button)
 
     }
 }
