@@ -4,8 +4,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -33,6 +36,11 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         items[position].let { item ->
             with(holder) {
+                Picasso.get()
+                        .load(item.person.photoUrl)
+                        .transform(CircleTransformation())
+                        .into(icon)
+
                 title.text = item.person.displayName
 
                 if (canInvite(item)) {
@@ -54,6 +62,7 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val icon: ImageView by bindView(R.id.icon)
         val title: TextView by bindView(R.id.title)
         val button: View by bindView(R.id.button)
 

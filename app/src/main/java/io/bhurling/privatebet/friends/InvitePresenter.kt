@@ -16,8 +16,8 @@ class InvitePresenter(
         disposables += Observables
                 .combineLatest(
                         peopleInteractor.all(),
-                        invitationsInteractor.incoming().startWith(listOf<String>()),
-                        invitationsInteractor.outgoing().startWith(listOf<String>())
+                        invitationsInteractor.incoming(),
+                        invitationsInteractor.outgoing()
                 )
                 .map { (persons, incoming, outgoing) ->
                     persons.map {
