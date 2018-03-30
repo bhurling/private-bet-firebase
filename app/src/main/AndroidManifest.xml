@@ -10,7 +10,8 @@
         android:theme="@style/Theme.PrivateBet">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".EntryActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,20 +21,27 @@
 
         <activity
             android:name=".signup.SignupActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PrivateBet.Signup" />
 
-        <activity android:name=".feed.FeedActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".friends.InviteActivity" />
+        <activity
+            android:name=".friends.InviteActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".add.AddBetActivity"
             android:label="I bet that"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PrivateBet.CleanTitle" />
 
         <service
             android:name=".signup.SignupService"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
     </application>
 

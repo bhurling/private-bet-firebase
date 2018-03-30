@@ -1,52 +1,50 @@
 package io.bhurling.privatebet.feed
 
-import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.add.AddBetActivity
 import kotterknife.bindView
 import org.koin.inject
 
-class FeedActivity : AppCompatActivity(), FeedPresenter.View {
+class FeedFragment : Fragment(), FeedPresenter.View {
 
     private val presenter: FeedPresenter by inject()
     private val adapter: FeedAdapter by inject()
 
     private val feed: RecyclerView by bindView(R.id.feed)
-    private val fab: View by bindView(R.id.fab)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_feed)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_feed, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         feed.adapter = adapter
-        feed.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        feed.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        decoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.transparent_divider)!!)
+        val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
+        decoration.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.transparent_divider)!!)
         feed.addItemDecoration(decoration)
-
-        fab.setOnClickListener {
-            startActivity(Intent(this, AddBetActivity::class.java))
-        }
 
         presenter.attachView(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        presenter.detachView()
 
         // we need to unregister the adapter to make sure we call onViewDetachedFromWindow(ViewHolder)
         // for the visible items.
         feed.swapAdapter(null, true)
 
-        presenter.detachView()
+        super.onDestroyView()
     }
 
     override fun updateKeys(keys: List<String>) {
