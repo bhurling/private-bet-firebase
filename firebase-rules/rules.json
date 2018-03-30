@@ -39,6 +39,12 @@
         },
         "outgoing": {
           ".write": "$uid === auth.uid"
+        },
+        "confirmed": {
+          "$oid": {
+            ".write": "$oid === auth.uid || $uid === auth.uid",
+            ".validate": "$oid === auth.uid && root.child('links').child($oid).child('incoming').child($uid).val() == true || $uid === auth.uid && data.parent().parent().child('incoming').child($oid).val() == true"
+          }
         }
       }
     }

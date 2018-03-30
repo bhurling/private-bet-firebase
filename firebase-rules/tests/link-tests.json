@@ -94,6 +94,45 @@
           "data": true
         }
       ]
+    },
+    "links/user:bjoern/confirmed/user:paul": {
+      "description": "Users can confirm link if there is an incoming invitation",
+      "canWrite": [
+        {
+          "auth": "Bjoern",
+          "data": true
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Paul",
+          "data": true
+        }
+      ]
+    },
+    "links/user:bjoern/confirmed/user:arnd": {
+      "description": "Users can not confirm link if there is no incoming invitation",
+      "cannotWrite": [
+        {
+          "auth": "Bjoern",
+          "data": true
+        }
+      ]
+    },
+    "links/user:paul/confirmed/user:bjoern": {
+      "description": "Users can confirm other persons link if there is an incoming invitation",
+      "canWrite": [
+        {
+          "auth": "Bjoern",
+          "data": true
+        }
+      ],
+      "cannotWrite": [
+        {
+          "auth": "Paul",
+          "data": true
+        }
+      ]
     }
   }
 }
