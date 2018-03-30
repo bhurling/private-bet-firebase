@@ -16,6 +16,12 @@
         <item name="toolbarStyle">@style/Widget.PrivateBet.Toolbar.CleanTitle</item>
     </style>
 
+    <!-- Style has to be applied in each toolbar manually. Otherwise, theme overlays aren't used -->
+    <style name="Widget.PrivateBet.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
     <style name="Widget.PrivateBet.Toolbar.CleanTitle" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle</item>
         <item name="contentInsetStartWithNavigation">48dp</item>
