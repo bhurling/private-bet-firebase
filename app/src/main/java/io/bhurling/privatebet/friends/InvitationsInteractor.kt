@@ -37,7 +37,10 @@ class InvitationsInteractor(
     }
 
     fun accept(id: String) {
-        // TODO accept invitation
+        links.child(id).child("confirmed").child(me.uid).setValue(true)
+        links.child(me.uid).child("confirmed").child(id).setValue(true)
+        links.child(id).child("incoming").child(me.uid).setValue(true)
+        links.child(me.uid).child("outgoing").child(id).setValue(true)
     }
 
     fun decline(id: String) {

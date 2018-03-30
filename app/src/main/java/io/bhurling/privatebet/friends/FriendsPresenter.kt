@@ -14,7 +14,7 @@ class FriendsPresenter constructor(
                         .subscribe {
                             when {
                                 it.isEmpty() -> view.showEmptyState()
-                                else -> view.hideEmptyState()
+                                else -> view.showContent(it)
                             }
                         }
         )
@@ -22,6 +22,6 @@ class FriendsPresenter constructor(
 
     interface View : Presenter.View {
         fun showEmptyState()
-        fun hideEmptyState()
+        fun showContent(ids: List<String>)
     }
 }

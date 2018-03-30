@@ -20,6 +20,13 @@ val friendsKoinModule = applicationContext {
     }
 
     factory {
+        FriendsAdapter(
+                firebase = get(),
+                profiles = get(Qualifiers.profiles)
+        )
+    }
+
+    factory {
         InvitePresenter(
                 peopleInteractor = get(),
                 invitationsInteractor = get()

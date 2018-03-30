@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.common.diffableList
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.common.ui.getString
 import io.reactivex.Observable
@@ -18,13 +19,10 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
-    // TODO make it a diffable list
-    var items: List<InviteAdapterItem> = listOf()
-        set(value) {
-            field = value
-
-            notifyDataSetChanged()
-        }
+    var items: List<InviteAdapterItem> by diffableList(
+            { old, new -> old.person.id == new.person.id },
+            { old, new -> old == new }
+    )
 
     fun actions(): Observable<InviteAction> = actionsSubject
 
@@ -78,8 +76,6 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
     }
 
     override fun getItemCount() = items.size
-
-    private fun canInvite(item: InviteAdapterItem) = !item.isSent && !item.isIncoming
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

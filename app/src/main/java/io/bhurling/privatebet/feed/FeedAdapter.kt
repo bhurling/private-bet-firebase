@@ -70,8 +70,8 @@ class FeedAdapter(
         }
 
         fun unsubscribe() {
-            if (disposable != null && !disposable!!.isDisposed) {
-                disposable!!.dispose()
+            disposable?.let {
+                if (!it.isDisposed) it.dispose()
             }
         }
 
