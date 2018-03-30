@@ -16,12 +16,6 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
     private val emptyView: View by bindView(R.id.friends_empty)
     private val connectButton: View by bindView(R.id.friends_connect)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_friends, container, false)
     }
@@ -54,9 +48,11 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
 
     override fun showEmptyState() {
         emptyView.visibility = View.VISIBLE
+        setHasOptionsMenu(false)
     }
 
     override fun hideEmptyState() {
         emptyView.visibility = View.GONE
+        setHasOptionsMenu(true)
     }
 }
