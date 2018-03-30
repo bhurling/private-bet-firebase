@@ -14,6 +14,12 @@ val friendsKoinModule = applicationContext {
     }
 
     factory {
+        FriendsPresenter(
+                invitationsInteractor = get()
+        )
+    }
+
+    factory {
         InvitePresenter(
                 peopleInteractor = get(),
                 invitationsInteractor = get()

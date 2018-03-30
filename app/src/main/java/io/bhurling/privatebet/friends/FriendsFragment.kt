@@ -5,11 +5,16 @@ import android.support.v4.app.Fragment
 import android.view.*
 import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
+import kotterknife.bindView
 import org.koin.inject
 
-class FriendsFragment : Fragment() {
+class FriendsFragment : Fragment(), FriendsPresenter.View {
 
+    private val presenter: FriendsPresenter by inject()
     private val navigator: Navigator by inject()
+
+    private val emptyView: View by bindView(R.id.friends_empty)
+    private val connectButton: View by bindView(R.id.friends_connect)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +24,12 @@ class FriendsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_friends, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter.attachView(this)
+
+        connectButton.setOnClickListener { navigator.launchInviteFlow(activity) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -33,5 +44,19 @@ class FriendsFragment : Fragment() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroyView() {
+        presenter.detachView()
+
+        super.onDestroyView()
+    }
+
+    override fun showEmptyState() {
+        emptyView.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyState() {
+        emptyView.visibility = View.GONE
     }
 }

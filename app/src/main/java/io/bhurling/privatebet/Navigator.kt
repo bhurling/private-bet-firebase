@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import io.bhurling.privatebet.add.AddBetActivity
 import io.bhurling.privatebet.friends.InviteActivity
+import io.bhurling.privatebet.home.HomeActivity
 import io.bhurling.privatebet.signup.SignupActivity
 import io.bhurling.privatebet.signup.SignupService
 
@@ -15,7 +16,7 @@ class Navigator {
 
     fun launchApp(activity: Activity?) {
         activity?.startService(Intent(activity, SignupService::class.java))
-        activity?.startActivity(Intent(activity, MainActivity::class.java))
+        activity?.startActivity(Intent(activity, HomeActivity::class.java))
     }
 
     fun launchInviteFlow(activity: Activity?) {

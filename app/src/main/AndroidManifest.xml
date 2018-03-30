@@ -25,7 +25,7 @@
             android:theme="@style/Theme.PrivateBet.Signup" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".home.HomeActivity"
             android:screenOrientation="portrait" />
 
         <activity

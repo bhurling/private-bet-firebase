@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.friends
 
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
@@ -11,13 +12,19 @@ class InvitationsInteractor(
         private val me: FirebaseUser
 ) {
 
+    private val myLinks = links.child(me.uid)
+
     fun incoming(): Observable<List<String>> = firebase
-            .observeValueEvents(links.child(me.uid).child("incoming"))
-            .map { it.children.map { it.key } }
+            .observeValueEvents(myLinks.child("incoming"))
+            .mapToChildKeys()
 
     fun outgoing(): Observable<List<String>> = firebase
-            .observeValueEvents(links.child(me.uid).child("outgoing"))
-            .map { it.children.map { it.key } }
+            .observeValueEvents(myLinks.child("outgoing"))
+            .mapToChildKeys()
+
+    fun confirmed(): Observable<List<String>> = firebase
+            .observeValueEvents(myLinks.child("confirmed"))
+            .mapToChildKeys()
 
     fun invite(id: String) {
         links.child(id).child("incoming").child(me.uid).setValue(true)
@@ -38,3 +45,5 @@ class InvitationsInteractor(
     }
 
 }
+
+private fun Observable<DataSnapshot>.mapToChildKeys() = map { it.children.map { it.key } }
