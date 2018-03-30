@@ -9,6 +9,8 @@ class FriendsPresenter constructor(
     override fun attachView(view: View) {
         super.attachView(view)
 
+        // TODO fetch unconfirmed incoming invitations
+
         disposables.addAll(
                 invitationsInteractor.confirmed()
                         .subscribe {
