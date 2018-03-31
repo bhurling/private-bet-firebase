@@ -55,12 +55,14 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
         super.onDestroyView()
     }
 
+    override fun actions() = adapter.actions()
+
     override fun showEmptyState() {
         emptyView.visibility = View.VISIBLE
         setHasOptionsMenu(false)
     }
 
-    override fun showContent(ids: List<String>) {
+    override fun showContent(ids: List<FriendsAdapterItem>) {
         emptyView.visibility = View.GONE
         setHasOptionsMenu(true)
 

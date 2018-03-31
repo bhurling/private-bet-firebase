@@ -59,14 +59,6 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
                             actionsSubject.onNext(InviteAction.Revoke(item.person.id))
                         }
                     }
-                    item.isIncoming -> {
-                        button.visibility = View.VISIBLE
-                        button.text = getString(R.string.action_accept)
-
-                        button.setOnClickListener {
-                            actionsSubject.onNext(InviteAction.Accept(item.person.id))
-                        }
-                    }
                     else -> {
                         button.visibility = View.GONE
                     }

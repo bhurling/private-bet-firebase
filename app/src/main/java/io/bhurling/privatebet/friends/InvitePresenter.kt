@@ -26,7 +26,7 @@ class InvitePresenter(
                                 isIncoming = incoming.contains(it.id),
                                 isSent = outgoing.contains(it.id)
                         )
-                    }.filterNot { it.isIncoming && it.isSent } // TODO filter incoming links
+                    }.filterNot { it.isIncoming }
                 }
                 .subscribe { view.updateItems(it) }
 

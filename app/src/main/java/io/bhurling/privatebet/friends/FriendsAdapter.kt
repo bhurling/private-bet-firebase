@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.diffableList
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.ReactiveFirebase
@@ -26,8 +27,8 @@ class FriendsAdapter(
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
-    var items: List<String> by diffableList(
-            { old, new -> old == new },
+    var items: List<FriendsAdapterItem> by diffableList(
+            { old, new -> old.id == new.id },
             { old, new -> old == new }
     )
 
@@ -63,18 +64,20 @@ class FriendsAdapter(
         val title: TextView by bindView(R.id.title)
         val button: TextView by bindView(R.id.button)
 
-        private var key: String? = null
+        private var _item: FriendsAdapterItem? = null
         private var disposable: Disposable? = null
 
-        fun bind(key: String) {
-            this.key = key
+        fun bind(item: FriendsAdapterItem) {
+            this._item = item
         }
 
         fun subscribe() {
-            disposable = firebase
-                    .observeValueEvents(profiles.child(key!!))
-                    .map { it.toPerson() }
-                    .subscribe({ this.update(it) })
+            _item?.let { item ->
+                disposable = firebase
+                        .observeValueEvents(profiles.child(item.id))
+                        .map { it.toPerson() }
+                        .subscribe({ this.update(it, item.isInvited, item.isConfirmed) })
+            }
         }
 
         fun unsubscribe() {
@@ -83,7 +86,7 @@ class FriendsAdapter(
             }
         }
 
-        private fun update(person: Person) {
+        private fun update(person: Person, isInvited: Boolean, isConfirmed: Boolean) {
             Picasso.get()
                     .load(person.photoUrl)
                     .transform(CircleTransformation())
@@ -91,7 +94,19 @@ class FriendsAdapter(
 
             title.text = person.displayName
 
-            button.visibility = View.GONE
+            when {
+                isInvited -> {
+                    button.visibility = View.VISIBLE
+                    button.text = getString(R.string.action_accept)
+
+                    button.setOnClickListener {
+                        actionsSubject.onNext(InviteAction.Accept(person.id))
+                    }
+                }
+                else -> {
+                    button.visibility = View.GONE
+                }
+            }
         }
     }
 }
