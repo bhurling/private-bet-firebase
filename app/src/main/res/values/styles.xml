@@ -37,4 +37,9 @@
         <item name="android:background">@drawable/btn_outline</item>
     </style>
 
+    <style name="Widget.PrivateBet.Button.Outline.Colored" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@drawable/btn_outline</item>
+        <item name="backgroundTint">?attr/colorAccent</item>
+    </style>
+
 </resources>
