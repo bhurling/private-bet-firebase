@@ -36,6 +36,7 @@
             android:name=".add.AddBetActivity"
             android:label="I bet that"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"
             android:theme="@style/Theme.PrivateBet.CleanTitle" />
 
         <service
