@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">?attr/colorPrimary</item>
     </style>
 
     <style name="Theme.PrivateBet.Signup">
@@ -14,6 +15,9 @@
 
     <style name="Theme.PrivateBet.CleanTitle">
         <item name="toolbarStyle">@style/Widget.PrivateBet.Toolbar.CleanTitle</item>
+
+        <!-- This is used to tint the back button in the toolbar -->
+        <item name="android:colorControlNormal">@color/grey</item>
     </style>
 
     <!-- Style has to be applied in each toolbar manually. Otherwise, theme overlays aren't used -->
@@ -30,7 +34,7 @@
 
     <style name="TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">#999999</item>
+        <item name="android:textColor">?android:attr/colorControlNormal</item>
     </style>
 
     <style name="Widget.PrivateBet.Button.Outline" parent="Widget.AppCompat.Button">
@@ -40,6 +44,10 @@
     <style name="Widget.PrivateBet.Button.Outline.Colored" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:background">@drawable/btn_outline</item>
         <item name="backgroundTint">?attr/colorAccent</item>
+    </style>
+
+    <style name="TextAppearance.Widget.PrivateBet.TextInputLayout.Label" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/grey</item>
     </style>
 
 </resources>
