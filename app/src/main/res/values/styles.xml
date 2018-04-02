@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">?attr/colorPrimary</item>
+        <item name="android:textColorTertiary">?attr/colorPrimary</item>
     </style>
 
     <style name="Theme.PrivateBet.Signup">

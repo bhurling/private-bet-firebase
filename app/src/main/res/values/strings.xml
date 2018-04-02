@@ -5,4 +5,7 @@
     <string name="action_remove">Remove</string>
     <string name="action_accept">Accept</string>
     <string name="invite_friends">Invite friends</string>
+    <string name="no_deadline">No deadline</string>
+    <string name="deadline_hint">Get notified when the deadline approaches</string>
+    <string name="deadline_label">By</string>
 </resources>
