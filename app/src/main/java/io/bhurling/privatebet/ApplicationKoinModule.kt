@@ -63,6 +63,12 @@ val applicationKoinModule = applicationContext {
                 .child("private")
                 .child(get<FirebaseUser>().uid)
     }
+
+    factory(Qualifiers.devices) {
+        get<FirebaseDatabase>()
+                .getReference("devices")
+                .child(get<FirebaseUser>().uid)
+    }
 }
 
 object Qualifiers {
@@ -70,6 +76,7 @@ object Qualifiers {
     const val feed = "feed"
     const val profiles = "profiles"
     const val links = "links"
+    const val devices = "devices"
 
     object Me {
         const val private = "me.private"

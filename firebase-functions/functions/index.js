@@ -11,8 +11,45 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
         const senderUid = context.params.senderUid;
 
         if (!change.after.val()) {
-            return console.log('Invitation for ', receiverUid, ' from ', senderUid, ' has been removed.');
+            console.log('Invitation for', receiverUid, 'from', senderUid, 'has been removed.');
+
+            return 0;
         }
 
-        return console.log(senderUid, 'wants to invite ', receiverUid, '.');
+        console.log(senderUid, 'wants to invite', receiverUid, '.');
+
+        const getDeviceTokensPromise = admin.database()
+                .ref(`/devices/${receiverUid}`).once('value');
+
+        const getUserProfilePromise = admin.auth().getUser(senderUid);
+
+        return Promise.all([getDeviceTokensPromise, getUserProfilePromise]).then(results => {
+            const tokensSnapshot = results[0]
+            const profileSnapshot = results[1]
+
+            if (tokensSnapshot.numChildren() == 0) {
+                console.log('There are no notification tokens to send to.');
+
+                return 0;
+            }
+
+            console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
+            console.log('Sender profile is', profileSnapshot)
+
+            const payload = {
+                notification: {
+                    title: 'You have a new invitation',
+                    body: `${profileSnapshot.displayName} wants to challenge you on Private Bet.`,
+                    icon: profileSnapshot.photoURL
+                }
+            };
+
+            const tokens = Object.keys(tokensSnapshot.val());
+
+            return admin.messaging().sendToDevice(tokens, payload);
+        }).then((response) => {
+            console.log(response)
+
+            return 0;
+        });
 });
