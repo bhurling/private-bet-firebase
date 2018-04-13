@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">?attr/colorPrimary</item>
         <item name="android:textColorTertiary">?attr/colorPrimary</item>
+
+        <item name="buttonStyle">@style/Widget.PrivateBet.Button.Flat</item>
     </style>
 
     <style name="Theme.PrivateBet.Signup">
@@ -37,6 +39,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">?android:attr/colorControlNormal</item>
+    </style>
+
+    <style name="Widget.PrivateBet.Button.Flat" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/btn_flat</item>
     </style>
 
     <style name="Widget.PrivateBet.Button.Outline" parent="Widget.AppCompat.Button">

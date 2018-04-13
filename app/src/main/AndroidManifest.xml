@@ -37,7 +37,7 @@
             android:label="I bet that"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PrivateBet.CleanTitle"
-            android:windowSoftInputMode="stateVisible" />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <service
             android:name=".signup.SignupService"
