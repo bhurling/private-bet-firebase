@@ -13,7 +13,9 @@ val applicationKoinModule = applicationContext {
     }
 
     provide {
-        FirebaseDatabase.getInstance()
+        FirebaseDatabase.getInstance().apply {
+            setPersistenceEnabled(true)
+        }
     }
 
     provide {
