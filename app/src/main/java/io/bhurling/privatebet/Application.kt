@@ -1,6 +1,7 @@
 package io.bhurling.privatebet
 
 import android.content.Context
+import io.bhurling.privatebet.add.addBetKoinModule
 import io.bhurling.privatebet.common.push.pushKoinModule
 import io.bhurling.privatebet.feed.feedKoinModule
 import io.bhurling.privatebet.friends.friendsKoinModule
@@ -30,6 +31,7 @@ class Application : android.app.Application() {
                 homeKoinModule,
                 friendsKoinModule,
                 feedKoinModule,
+                addBetKoinModule,
                 pushKoinModule
         ))
     }

@@ -5,6 +5,7 @@ buildscript {
     ext.KOIN_VERSION = '0.8.2'
     ext.KOTLIN_VERSION = '1.2.30'
     ext.PLAY_SERVICES_VERSION = '12.0.1'
+    ext.RX_BINDING_VERSION = '2.1.1'
     ext.SUPPORT_LIBS_VERSION='27.1.1'
 
     repositories {
