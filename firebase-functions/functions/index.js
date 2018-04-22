@@ -49,10 +49,14 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
                 console.log('Sender profile is', profileSnapshot)
 
                 const payload = {
-                    notification: {
-                        title: 'You have a new invitation',
-                        body: `${profileSnapshot.displayName} wants to challenge you on Private Bet.`,
-                        icon: profileSnapshot.photoURL
+                    data: {
+                        key: 'InvitationNew',
+                        id: profileSnapshot.uid,
+                        custom: JSON.stringify({
+                            senderImage: profileSnapshot.photoURL,
+                            senderId: profileSnapshot.uid,
+                            senderDisplayName: profileSnapshot.displayName
+                        })
                     }
                 };
 
