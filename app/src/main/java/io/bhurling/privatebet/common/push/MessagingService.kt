@@ -3,11 +3,14 @@ package io.bhurling.privatebet.common.push
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import io.bhurling.privatebet.common.job.InvitationReceivedNotificationService
+import io.bhurling.privatebet.common.notification.createChannels
 import org.json.JSONObject
 
 class MessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
+        createChannels(this)
+
         message.data.let {
             if (it.isNotEmpty()) {
                 onDataMessageReceived(it)
