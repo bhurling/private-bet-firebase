@@ -17,6 +17,7 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
 import io.bhurling.privatebet.common.notification.safeSetChannelId
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.friends.AcceptInvitationService
 import java.lang.Exception
 
 class InvitationReceivedNotificationService : JobService() {
@@ -35,6 +36,8 @@ class InvitationReceivedNotificationService : JobService() {
                     }
 
                     override fun onBitmapFailed(e: Exception, errorDrawable: Drawable?) {
+                        postNotification(params.extras.userId, params.extras.displayName)
+
                         jobFinished(params, false)
                     }
 
@@ -49,7 +52,7 @@ class InvitationReceivedNotificationService : JobService() {
         return true
     }
 
-    private fun postNotification(userId: String, displayName: String, bitmap: Bitmap) {
+    private fun postNotification(userId: String, displayName: String, bitmap: Bitmap? = null) {
         val notification = Notification.Builder(this)
                 .safeSetChannelId(CHANNEL_LINKS)
                 .setContentTitle("You have an invitation")
@@ -57,6 +60,13 @@ class InvitationReceivedNotificationService : JobService() {
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_person_black_32dp)
                 .setStyle(Notification.BigTextStyle())
+                .addAction(
+                        Notification.Action.Builder(
+                                0,
+                                "Accept",
+                                AcceptInvitationService.makePendingIntent(this, userId)
+                        ).build()
+                )
                 .build()
 
         // TODO set intents
