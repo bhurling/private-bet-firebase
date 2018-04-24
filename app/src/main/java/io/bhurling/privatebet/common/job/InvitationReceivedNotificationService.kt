@@ -73,10 +73,8 @@ class InvitationReceivedNotificationService : JobService() {
                 )
                 .build()
 
-        val hash = "Invitation_$userId".hashCode()
-
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .notify(hash, notification)
+                .notify(makeNotificationId(userId), notification)
     }
 
     companion object {
@@ -85,10 +83,9 @@ class InvitationReceivedNotificationService : JobService() {
         internal const val EXTRA_USER_ID = "io.bhurling.privatebet.extras.USER_ID"
 
         fun schedule(context: Context, userId: String, photoUrl: String, displayName: String) {
-            val hash = "Invitation_$userId".hashCode()
             val componentName = ComponentName(context, InvitationReceivedNotificationService::class.java)
 
-            val job = JobInfo.Builder(hash, componentName)
+            val job = JobInfo.Builder(makeJobId(userId), componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setExtras(PersistableBundle().apply {
                         this.userId = userId
@@ -100,6 +97,8 @@ class InvitationReceivedNotificationService : JobService() {
             (context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(job)
         }
 
+        private fun makeJobId(userId: String) = "Invitation_$userId".hashCode()
+        private fun makeNotificationId(userId: String) = makeJobId(userId)
     }
 }
 
