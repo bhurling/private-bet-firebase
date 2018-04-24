@@ -13,14 +13,17 @@ import android.graphics.drawable.Drawable
 import android.os.PersistableBundle
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
 import io.bhurling.privatebet.common.notification.safeSetChannelId
 import io.bhurling.privatebet.common.ui.CircleTransformation
-import io.bhurling.privatebet.friends.AcceptInvitationService
+import org.koin.inject
 import java.lang.Exception
 
 class InvitationReceivedNotificationService : JobService() {
+
+    private val navigator: Navigator by inject()
 
     override fun onStopJob(params: JobParameters): Boolean {
         return false
@@ -57,6 +60,7 @@ class InvitationReceivedNotificationService : JobService() {
                 .safeSetChannelId(CHANNEL_LINKS)
                 .setContentTitle("You have an invitation")
                 .setContentText("$displayName wants to connect to you on Private Bet")
+                .setContentIntent(navigator.makeHomeScreenIntent(this))
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_person_black_32dp)
                 .setStyle(Notification.BigTextStyle())
@@ -64,12 +68,10 @@ class InvitationReceivedNotificationService : JobService() {
                         Notification.Action.Builder(
                                 0,
                                 "Accept",
-                                AcceptInvitationService.makePendingIntent(this, userId)
+                                navigator.makeAcceptInvitationIntent(this, userId)
                         ).build()
                 )
                 .build()
-
-        // TODO set intents
 
         val hash = "Invitation_$userId".hashCode()
 
