@@ -8,11 +8,18 @@ import io.bhurling.privatebet.friends.friendsKoinModule
 import io.bhurling.privatebet.home.homeKoinModule
 import io.bhurling.privatebet.signup.signupKoinModule
 import org.koin.standalone.StandAloneContext.startKoin
+import timber.log.Timber
+import timber.log.Timber.DebugTree
+
 
 class Application : android.app.Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
 
         setupDependencies()
     }

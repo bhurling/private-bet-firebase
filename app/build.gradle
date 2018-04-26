@@ -53,6 +53,8 @@ dependencies {
 
     implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$RX_BINDING_VERSION"
 
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     provided 'javax.annotation:jsr250-api:1.0'
