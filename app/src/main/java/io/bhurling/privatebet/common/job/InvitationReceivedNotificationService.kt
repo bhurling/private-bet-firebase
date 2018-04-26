@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.BaseBundle
 import android.os.PersistableBundle
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -39,13 +40,13 @@ class InvitationReceivedNotificationService : JobService() {
                     }
 
                     override fun onBitmapFailed(e: Exception, errorDrawable: Drawable?) {
-                        postNotification(params.extras.userId, params.extras.displayName)
+                        with(params.extras) { postNotification(userId, displayName, isAccepted) }
 
                         jobFinished(params, false)
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                        postNotification(params.extras.userId, params.extras.displayName, bitmap)
+                        with(params.extras) { postNotification(userId, displayName, isAccepted, bitmap) }
 
                         jobFinished(params, false)
                     }
@@ -55,34 +56,51 @@ class InvitationReceivedNotificationService : JobService() {
         return true
     }
 
-    private fun postNotification(userId: String, displayName: String, bitmap: Bitmap? = null) {
+    private fun postNotification(userId: String, displayName: String, isAccepted: Boolean, bitmap: Bitmap? = null) {
         val notification = Notification.Builder(this)
                 .safeSetChannelId(CHANNEL_LINKS)
-                .setContentTitle("You have an invitation")
-                .setContentText("$displayName wants to connect to you on Private Bet")
+                .setContentTitle(getString(R.string.notification_invitation_received_title))
+                .setContentText(getString(R.string.notification_invitation_received_message, displayName))
                 .setContentIntent(navigator.makeHomeScreenIntent(this))
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_person_black_32dp)
                 .setStyle(Notification.BigTextStyle())
-                .addAction(
-                        Notification.Action.Builder(
-                                0,
-                                "Accept",
-                                navigator.makeAcceptInvitationIntent(this, userId)
-                        ).build()
-                )
+                .apply {
+                    if (isAccepted) {
+                        addAction(makeAcceptedAction())
+                    } else {
+                        addAction(makeAcceptAction(userId))
+                    }
+                }
                 .build()
 
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                 .notify(makeNotificationId(userId), notification)
     }
 
+    private fun makeAcceptedAction(): Notification.Action {
+        return Notification.Action.Builder(
+                0,
+                getString(R.string.action_accepted),
+                null
+        ).build()
+    }
+
+    private fun makeAcceptAction(userId: String): Notification.Action {
+        return Notification.Action.Builder(
+                0,
+                getString(R.string.action_accept),
+                navigator.makeAcceptInvitationIntent(this, userId)
+        ).build()
+    }
+
     companion object {
         internal const val EXTRA_PHOTO_URL = "io.bhurling.privatebet.extras.PHOTO_URL"
         internal const val EXTRA_DISPLAY_NAME = "io.bhurling.privatebet.extras.DISPLAY_NAME"
         internal const val EXTRA_USER_ID = "io.bhurling.privatebet.extras.USER_ID"
+        internal const val EXTRA_IS_ACCEPTED = "io.bhurling.privatebet.extras.IS_ACCEPTED"
 
-        fun schedule(context: Context, userId: String, photoUrl: String, displayName: String) {
+        fun schedule(context: Context, userId: String, photoUrl: String, displayName: String, isAccepted: Boolean = false) {
             val componentName = ComponentName(context, InvitationReceivedNotificationService::class.java)
 
             val job = JobInfo.Builder(makeJobId(userId), componentName)
@@ -91,6 +109,7 @@ class InvitationReceivedNotificationService : JobService() {
                         this.userId = userId
                         this.displayName = displayName
                         this.photoUrl = photoUrl
+                        this.isAccepted = isAccepted
                     })
                     .build()
 
@@ -102,20 +121,26 @@ class InvitationReceivedNotificationService : JobService() {
     }
 }
 
-private var PersistableBundle.userId
+private var BaseBundle.userId
     get() = getString(InvitationReceivedNotificationService.EXTRA_USER_ID)!!
     set(value) {
         putString(InvitationReceivedNotificationService.EXTRA_USER_ID, value)
     }
 
-private var PersistableBundle.displayName
+private var BaseBundle.displayName
     get() = getString(InvitationReceivedNotificationService.EXTRA_DISPLAY_NAME)!!
     set(value) {
         putString(InvitationReceivedNotificationService.EXTRA_DISPLAY_NAME, value)
     }
 
-private var PersistableBundle.photoUrl
+private var BaseBundle.photoUrl
     get() = getString(InvitationReceivedNotificationService.EXTRA_PHOTO_URL)!!
     set(value) {
         putString(InvitationReceivedNotificationService.EXTRA_PHOTO_URL, value)
+    }
+
+private var BaseBundle.isAccepted
+    get() = getBoolean(InvitationReceivedNotificationService.EXTRA_IS_ACCEPTED)
+    set(value) {
+        putBoolean(InvitationReceivedNotificationService.EXTRA_IS_ACCEPTED, value)
     }

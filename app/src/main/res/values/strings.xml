@@ -9,4 +9,7 @@
     <string name="deadline_hint">Get notified when the deadline approaches</string>
     <string name="deadline_label">By</string>
     <string name="next">Next</string>
+    <string name="notification_invitation_received_title">You have an invitation</string>
+    <string name="notification_invitation_received_message">%1$s wants to connect with you on Private Bet</string>
+    <string name="action_accepted">Accepted</string>
 </resources>
