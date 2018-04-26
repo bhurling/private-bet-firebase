@@ -2,8 +2,8 @@ package io.bhurling.privatebet.common.push
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import io.bhurling.privatebet.common.job.InvitationReceivedNotificationService
 import io.bhurling.privatebet.common.notification.createChannels
+import io.bhurling.privatebet.common.notification.invitation.InvitationReceivedNotificationService
 import org.json.JSONObject
 
 class MessagingService : FirebaseMessagingService() {

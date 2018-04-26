@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import io.bhurling.privatebet.add.AddBetActivity
-import io.bhurling.privatebet.friends.AcceptInvitationService
 import io.bhurling.privatebet.friends.InviteActivity
 import io.bhurling.privatebet.home.HomeActivity
 import io.bhurling.privatebet.signup.SignupActivity
@@ -28,10 +27,6 @@ class Navigator {
 
     fun launchCreationFlow(activity: Activity?) {
         activity?.startActivity(Intent(activity, AddBetActivity::class.java))
-    }
-
-    fun makeAcceptInvitationIntent(context: Context, userId: String): PendingIntent {
-        return AcceptInvitationService.makePendingIntent(context, userId)
     }
 
     fun makeHomeScreenIntent(context: Context): PendingIntent {
