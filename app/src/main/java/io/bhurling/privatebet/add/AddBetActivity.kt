@@ -38,7 +38,10 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         setContentView(R.layout.activity_add)
 
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowTitleEnabled(false)
+        }
 
         statement.setHorizontallyScrolling(false)
         statement.maxLines = 100
