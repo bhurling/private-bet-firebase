@@ -12,4 +12,5 @@
     <string name="notification_invitation_received_title">You have an invitation</string>
     <string name="notification_invitation_received_message">%1$s wants to connect with you on Private Bet</string>
     <string name="action_accepted">Accepted</string>
+    <string name="add_bet_statement_label">I bet that</string>
 </resources>

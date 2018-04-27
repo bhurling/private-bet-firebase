@@ -22,7 +22,7 @@
                 android:layout_marginStart="56dp"
                 android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
                 android:gravity="center_vertical"
-                android:text="I bet that" />
+                android:text="@string/add_bet_statement_label" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/bets_add_statement_layout"
