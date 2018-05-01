@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="80dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/bets_add_stake_title"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="56dp"
+            android:gravity="center_vertical"
+            android:text="@string/add_bet_stake_label"
+            android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/bets_add_stake_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="52dp"
+            android:layout_marginStart="52dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="80"
+            app:counterTextAppearance="@style/TextAppearance.Widget.PrivateBet.TextInputLayout.Label"
+            app:hintEnabled="false"
+            app:layout_constraintTop_toBottomOf="@+id/bets_add_stake_title">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/bets_add_stake"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:imeOptions="actionDone"
+                android:includeFontPadding="false"
+                android:inputType="textCapSentences"
+                android:lineSpacingExtra="4sp"
+                android:maxLength="80"
+                android:paddingBottom="16dp"
+                android:textSize="28sp"
+                tools:inputType="textMultiLine"
+                tools:text="A bottle of Wine on my balcony" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

@@ -1,101 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <io.bhurling.privatebet.common.ui.NonSwipeableViewPager
+        android:id="@+id/bets_add_pager"
+        android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp">
+        android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <include layout="@layout/partial_add_statement" />
 
-            <TextView
-                android:id="@+id/bets_add_title"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginStart="56dp"
-                android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
-                android:gravity="center_vertical"
-                android:text="@string/add_bet_statement_label" />
+        <include layout="@layout/partial_add_stake" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/bets_add_statement_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="52dp"
-                android:layout_marginStart="52dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="80"
-                app:counterTextAppearance="@style/TextAppearance.Widget.PrivateBet.TextInputLayout.Label"
-                app:hintEnabled="false"
-                app:layout_constraintTop_toBottomOf="@+id/bets_add_title">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/bets_add_statement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:imeOptions="actionDone"
-                    android:includeFontPadding="false"
-                    android:inputType="textCapSentences"
-                    android:lineSpacingExtra="4sp"
-                    android:maxLength="80"
-                    android:paddingBottom="16dp"
-                    android:textSize="28sp"
-                    tools:inputType="textMultiLine"
-                    tools:text="We will be unemployed by August 2016 with no money in our pockets" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:id="@+id/bets_add_deadline_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="56dp"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="32dp"
-                android:text="@string/deadline_label"
-                android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
-                app:layout_constraintTop_toBottomOf="@+id/bets_add_statement_layout" />
-
-            <TextView
-                android:id="@+id/bets_add_deadline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="52dp"
-                android:layout_marginStart="52dp"
-                android:background="?attr/editTextBackground"
-                android:focusable="false"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingBottom="16dp"
-                android:paddingTop="8dp"
-                android:text="@string/no_deadline"
-                android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/bets_add_deadline_label" />
-
-            <ImageView
-                android:id="@+id/bets_add_deadline_remove"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="center"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/bets_add_deadline"
-                app:layout_constraintEnd_toEndOf="@+id/bets_add_deadline"
-                app:layout_constraintTop_toTopOf="@+id/bets_add_deadline"
-                app:srcCompat="@drawable/ic_close_primary_24dp"
-                tools:visibility="visible" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </ScrollView>
+    </io.bhurling.privatebet.common.ui.NonSwipeableViewPager>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/bets_add_toolbar"
@@ -103,6 +21,7 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/bets_add_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
