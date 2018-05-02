@@ -5,18 +5,31 @@ import io.bhurling.privatebet.common.Optional
 import io.bhurling.privatebet.common.get
 import io.bhurling.privatebet.common.isSome
 import io.bhurling.privatebet.common.none
+import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 
 class AddBetPresenter constructor(
-
+        private val interactor: InvitationsInteractor // TODO should not reference this one
 ) : Presenter<AddBetPresenter.View>() {
 
     private val viewStateSubject = PublishSubject.create<ViewState>()
 
     override fun attachView(view: View) {
         super.attachView(view)
+
+        disposables += Observables
+                .combineLatest(
+                        interactor.confirmed(),
+                        viewStateSubject
+                )
+                .take(1) // TODO Allow updates to confirmed friends while on screen
+                .map { (opponentIds, state) ->
+                    state.copy(opponentIds = opponentIds)
+                }
+                .subscribe { viewStateSubject.onNext(it) }
 
         disposables += viewStateSubject
                 .switchMap { state ->
@@ -29,6 +42,9 @@ class AddBetPresenter constructor(
                         }
                         ViewStateStep.STAKE -> {
                             Observable.just(state.copy(step = ViewStateStep.STATEMENT))
+                        }
+                        AddBetPresenter.ViewStateStep.OPPONENT -> {
+                            Observable.just(state.copy(step = ViewStateStep.STAKE))
                         }
                     }
                 }
@@ -60,8 +76,12 @@ class AddBetPresenter constructor(
                             }
                             ViewStateStep.STAKE -> {
                                 state.copy(
-                                        stake = view.getStake()
+                                        stake = view.getStake(),
+                                        step = ViewStateStep.OPPONENT
                                 )
+                            }
+                            AddBetPresenter.ViewStateStep.OPPONENT -> {
+                                state
                             }
                         }
                     }
@@ -92,19 +112,43 @@ class AddBetPresenter constructor(
                     view.showStep(it)
                 }
 
+        disposables += viewStateSubject
+                .map { it.step }
+                .distinctUntilChanged()
+                .subscribe {
+                    updateButtonVisibility(it)
+                }
+
+        disposables += viewStateSubject
+                .map { it.opponentIds }
+                .distinctUntilChanged()
+                .map { it.map { OpponentsAdapterItem(it) } }
+                .subscribe {
+                    view.updateOpponents(it)
+                }
+
         viewStateSubject.onNext(ViewState())
+    }
+
+    private fun updateButtonVisibility(step: ViewStateStep) {
+        when (step) {
+            ViewStateStep.OPPONENT -> view.hideNextButton()
+            else -> view.showNextButton()
+        }
     }
 
     data class ViewState(
             val step: ViewStateStep = ViewStateStep.STATEMENT,
             val statement: String = "",
             val deadline: Optional<Long> = none(),
-            val stake: String = ""
+            val stake: String = "",
+            val opponentIds: List<String> = listOf()
     )
 
     enum class ViewStateStep {
         STATEMENT,
-        STAKE
+        STAKE,
+        OPPONENT
     }
 
     interface View : Presenter.View {
@@ -119,6 +163,9 @@ class AddBetPresenter constructor(
         fun removeDeadline()
         fun clearDeadlineClicks(): Observable<Unit>
         fun getStake(): String
+        fun updateOpponents(opponents: List<OpponentsAdapterItem>)
+        fun showNextButton()
+        fun hideNextButton()
         fun nextClicks(): Observable<Unit>
     }
 }

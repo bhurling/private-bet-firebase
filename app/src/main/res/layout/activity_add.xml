@@ -13,6 +13,8 @@
 
         <include layout="@layout/partial_add_stake" />
 
+        <include layout="@layout/partial_add_opponent" />
+
     </io.bhurling.privatebet.common.ui.NonSwipeableViewPager>
 
     <android.support.v7.widget.Toolbar

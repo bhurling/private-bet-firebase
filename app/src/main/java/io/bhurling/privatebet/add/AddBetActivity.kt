@@ -1,14 +1,19 @@
 package io.bhurling.privatebet.add
 
+import android.content.Context
 import android.os.Bundle
+import android.support.transition.TransitionManager
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.text.format.DateFormat
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.clicks
@@ -28,6 +33,7 @@ import java.util.concurrent.TimeUnit
 
 class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     private val presenter: AddBetPresenter by inject()
+    private val adapter: OpponentsAdapter by inject()
 
     private val toolbar: Toolbar by bindView(R.id.bets_add_toolbar)
     private val pager: ViewPager by bindView(R.id.bets_add_pager)
@@ -35,10 +41,15 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     private val deadline: TextView by bindView(R.id.bets_add_deadline)
     private val clearDeadline: View by bindView(R.id.bets_add_deadline_remove)
     private val stake: EditText by bindView(R.id.bets_add_stake)
+    private val opponents: RecyclerView by bindView(R.id.bets_add_opponent_list)
     private val next: View by bindView(R.id.bets_add_next)
 
     private val backClicks = PublishSubject.create<Unit>()
     private val deadlineChanges = PublishSubject.create<Optional<Long>>()
+
+    private val inputManager by lazy {
+        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,15 +64,20 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         pager.adapter = object : PagerAdapter() {
             override fun isViewFromObject(view: View, `object`: Any) = view == `object`
 
-            override fun getCount() = 2
+            override fun getCount() = 3
 
             override fun instantiateItem(container: ViewGroup, position: Int) = container.getChildAt(position)
         }
+
+        pager.offscreenPageLimit = 2
 
         statement.setHorizontallyScrolling(false)
         statement.maxLines = 100
         stake.setHorizontallyScrolling(false)
         stake.maxLines = 100
+
+        opponents.layoutManager = LinearLayoutManager(this)
+        opponents.adapter = adapter
 
         presenter.attachView(this)
     }
@@ -92,7 +108,15 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         when (step) {
             AddBetPresenter.ViewStateStep.STATEMENT -> pager.setCurrentItem(0, true)
             AddBetPresenter.ViewStateStep.STAKE -> pager.setCurrentItem(1, true)
+            AddBetPresenter.ViewStateStep.OPPONENT -> {
+                pager.setCurrentItem(2, true)
+                hideKeyboard()
+            }
         }
+    }
+
+    private fun hideKeyboard() {
+        inputManager.hideSoftInputFromWindow(opponents.windowToken, 0)
     }
 
     override fun getStatement() = statement.text.toString()
@@ -129,6 +153,22 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
             .delay(100, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
 
     override fun getStake() = stake.text.toString()
+
+    override fun updateOpponents(opponents: List<OpponentsAdapterItem>) {
+        adapter.items = opponents
+    }
+
+    override fun showNextButton() {
+        TransitionManager.beginDelayedTransition(next.parent as ViewGroup)
+
+        next.visibility = View.VISIBLE
+    }
+
+    override fun hideNextButton() {
+        TransitionManager.beginDelayedTransition(next.parent as ViewGroup)
+
+        next.visibility = View.INVISIBLE
+    }
 
     override fun nextClicks() = next.clicks()
 }
