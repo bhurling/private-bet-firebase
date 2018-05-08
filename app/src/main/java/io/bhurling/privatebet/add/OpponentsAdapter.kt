@@ -24,14 +24,14 @@ class OpponentsAdapter(
         private val profiles: DatabaseReference
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
-    private val actionsSubject = PublishSubject.create<Unit>()
+    private val actionsSubject = PublishSubject.create<OpponentsAction>()
 
     var items: List<OpponentsAdapterItem> by diffableList(
             { old, new -> old.id == new.id },
             { old, new -> old == new }
     )
 
-    fun actions(): Observable<Unit> = actionsSubject
+    fun actions(): Observable<OpponentsAction> = actionsSubject
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_opponent, parent, false)
@@ -86,6 +86,10 @@ class OpponentsAdapter(
         }
 
         private fun update(person: Person) {
+            itemView.setOnClickListener {
+                actionsSubject.onNext(OpponentsAction.Selected(person))
+            }
+
             Picasso.get()
                     .load(person.photoUrl)
                     .transform(CircleTransformation())

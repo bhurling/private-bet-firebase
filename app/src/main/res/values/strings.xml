@@ -15,4 +15,5 @@
     <string name="add_bet_statement_label">I bet that</string>
     <string name="add_bet_stake_label">At stake is</string>
     <string name="add_bet_opponent_label">Opponent is</string>
+    <string name="its_on">It\'s on</string>
 </resources>

@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="40dp"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
     android:paddingEnd="40dp"
-    android:orientation="horizontal">
+    android:paddingStart="40dp">
 
     <ImageView
         android:id="@+id/icon"

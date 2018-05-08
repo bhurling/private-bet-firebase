@@ -23,6 +23,7 @@ import io.bhurling.privatebet.common.get
 import io.bhurling.privatebet.common.isSome
 import io.bhurling.privatebet.common.toOptional
 import io.bhurling.privatebet.common.ui.datePickerDialog
+import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -43,6 +44,9 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     private val stake: EditText by bindView(R.id.bets_add_stake)
     private val opponents: RecyclerView by bindView(R.id.bets_add_opponent_list)
     private val next: View by bindView(R.id.bets_add_next)
+    private val summary by lazy {
+        SummaryViewHolder(findViewById(R.id.bets_add_summary_root))
+    }
 
     private val backClicks = PublishSubject.create<Unit>()
     private val deadlineChanges = PublishSubject.create<Optional<Long>>()
@@ -156,6 +160,28 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
     override fun updateOpponents(opponents: List<OpponentsAdapterItem>) {
         adapter.items = opponents
+    }
+
+    override fun setSummary(statement: String, opponent: Person) {
+        summary.bind(statement, opponent)
+    }
+
+    override fun showSummary() {
+        TransitionManager.beginDelayedTransition(summary.root.parent as ViewGroup)
+
+        summary.root.visibility = View.VISIBLE
+    }
+
+    override fun hideSummary() {
+        TransitionManager.beginDelayedTransition(summary.root.parent as ViewGroup)
+
+        summary.root.visibility = View.GONE
+    }
+
+    override fun opponentSelected(): Observable<Person> {
+        return adapter.actions()
+                .ofType(OpponentsAction.Selected::class.java)
+                .map { it.person }
     }
 
     override fun showNextButton() {

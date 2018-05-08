@@ -6,6 +6,7 @@ import io.bhurling.privatebet.common.get
 import io.bhurling.privatebet.common.isSome
 import io.bhurling.privatebet.common.none
 import io.bhurling.privatebet.friends.InvitationsInteractor
+import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -43,8 +44,12 @@ class AddBetPresenter constructor(
                         ViewStateStep.STAKE -> {
                             Observable.just(state.copy(step = ViewStateStep.STATEMENT))
                         }
-                        AddBetPresenter.ViewStateStep.OPPONENT -> {
-                            Observable.just(state.copy(step = ViewStateStep.STAKE))
+                        ViewStateStep.OPPONENT -> {
+                            if (state.opponent != null) {
+                                Observable.just(state.copy(opponent = null))
+                            } else {
+                                Observable.just(state.copy(step = ViewStateStep.STAKE))
+                            }
                         }
                     }
                 }
@@ -80,11 +85,16 @@ class AddBetPresenter constructor(
                                         step = ViewStateStep.OPPONENT
                                 )
                             }
-                            AddBetPresenter.ViewStateStep.OPPONENT -> {
-                                state
-                            }
+                            else -> state
                         }
                     }
+                }
+                .subscribe { viewStateSubject.onNext(it) }
+
+        disposables += viewStateSubject
+                .switchMap { state ->
+                    view.opponentSelected()
+                            .map { state.copy(opponent = it) }
                 }
                 .subscribe { viewStateSubject.onNext(it) }
 
@@ -120,6 +130,20 @@ class AddBetPresenter constructor(
                 }
 
         disposables += viewStateSubject
+                .map { it.statement to it.opponent }
+                .distinctUntilChanged()
+                .subscribe { (statement, opponent) ->
+                    updateSummary(statement, opponent)
+                }
+
+        disposables += viewStateSubject
+                .map { it.step to it.opponent }
+                .distinctUntilChanged()
+                .subscribe { (step, opponent) ->
+                    updateSummaryVisibility(step, opponent)
+                }
+
+        disposables += viewStateSubject
                 .map { it.opponentIds }
                 .distinctUntilChanged()
                 .map { it.map { OpponentsAdapterItem(it) } }
@@ -128,6 +152,20 @@ class AddBetPresenter constructor(
                 }
 
         viewStateSubject.onNext(ViewState())
+    }
+
+    private fun updateSummary(statement: String, opponent: Person?) {
+        opponent?.let {
+            view.setSummary(statement, it)
+        }
+    }
+
+    private fun updateSummaryVisibility(step: ViewStateStep, opponent: Person?) {
+        if (step == ViewStateStep.OPPONENT && opponent != null) {
+            view.showSummary()
+        } else {
+            view.hideSummary()
+        }
     }
 
     private fun updateButtonVisibility(step: ViewStateStep) {
@@ -142,7 +180,8 @@ class AddBetPresenter constructor(
             val statement: String = "",
             val deadline: Optional<Long> = none(),
             val stake: String = "",
-            val opponentIds: List<String> = listOf()
+            val opponentIds: List<String> = listOf(),
+            val opponent: Person? = null
     )
 
     enum class ViewStateStep {
@@ -164,6 +203,10 @@ class AddBetPresenter constructor(
         fun clearDeadlineClicks(): Observable<Unit>
         fun getStake(): String
         fun updateOpponents(opponents: List<OpponentsAdapterItem>)
+        fun opponentSelected(): Observable<Person>
+        fun setSummary(statement: String, opponent: Person)
+        fun showSummary()
+        fun hideSummary()
         fun showNextButton()
         fun hideNextButton()
         fun nextClicks(): Observable<Unit>
