@@ -57,6 +57,8 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    implementation 'androidx.core:core-ktx:0.3'
+
     provided 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'

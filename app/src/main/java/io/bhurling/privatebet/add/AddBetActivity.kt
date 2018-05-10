@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.view.doOnNextLayout
 import com.jakewharton.rxbinding2.view.clicks
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.Optional
@@ -166,15 +167,46 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         summary.bind(statement, opponent)
     }
 
-    override fun showSummary() {
-        TransitionManager.beginDelayedTransition(summary.root.parent as ViewGroup)
-
+    override fun showSummary(opponentId: String) {
         summary.root.visibility = View.VISIBLE
+
+        adapter.items.indexOfFirst { it.id == opponentId }.takeUnless { it == -1 }?.let { index ->
+            summary.opponent.doOnNextLayoutOrImmediate { opponent ->
+                val topBefore = IntArray(2).apply {
+                    opponents.layoutManager.findViewByPosition(index)
+                            .getLocationOnScreen(this)
+                }[1]
+
+                val topAfter = IntArray(2).apply {
+                    opponent.getLocationOnScreen(this)
+                }[1]
+
+                opponent.translationY = (topBefore - topAfter).toFloat()
+                opponent.animate().translationY(0F).start()
+            }
+
+            arrayOf(summary.statement, summary.vs).forEach {
+                it.alpha = 0F
+                it.animate()
+                        .alpha(1F)
+                        .setStartDelay(200)
+                        .withEndAction { it.alpha = 1F }
+                        .start()
+            }
+
+            arrayOf(summary.button).forEach {
+                it.alpha = 0F
+                it.animate()
+                        .alpha(1F)
+                        .setStartDelay(300)
+                        .withEndAction { it.alpha = 1F }
+                        .start()
+            }
+
+        }
     }
 
     override fun hideSummary() {
-        TransitionManager.beginDelayedTransition(summary.root.parent as ViewGroup)
-
         summary.root.visibility = View.GONE
     }
 
@@ -197,4 +229,12 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     }
 
     override fun nextClicks() = next.clicks()
+}
+
+inline fun View.doOnNextLayoutOrImmediate(crossinline action: (view: View) -> Unit) {
+    if (isLaidOut) {
+        action(this)
+    } else {
+        doOnNextLayout(action)
+    }
 }

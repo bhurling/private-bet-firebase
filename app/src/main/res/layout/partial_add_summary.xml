@@ -22,9 +22,19 @@
         android:textSize="42sp"
         tools:text="We will be unemployed by August 2018" />
 
+    <TextView
+        android:id="@+id/bets_add_summary_vs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        android:text="vs" />
+
     <include layout="@layout/item_opponent" />
 
     <Button
+        android:id="@+id/bets_add_summary_button"
         style="@style/Widget.PrivateBet.Button.Outline"
         android:layout_width="match_parent"
         android:layout_height="56dp"

@@ -162,7 +162,7 @@ class AddBetPresenter constructor(
 
     private fun updateSummaryVisibility(step: ViewStateStep, opponent: Person?) {
         if (step == ViewStateStep.OPPONENT && opponent != null) {
-            view.showSummary()
+            view.showSummary(opponent.id)
         } else {
             view.hideSummary()
         }
@@ -205,7 +205,7 @@ class AddBetPresenter constructor(
         fun updateOpponents(opponents: List<OpponentsAdapterItem>)
         fun opponentSelected(): Observable<Person>
         fun setSummary(statement: String, opponent: Person)
-        fun showSummary()
+        fun showSummary(opponentId: String)
         fun hideSummary()
         fun showNextButton()
         fun hideNextButton()
