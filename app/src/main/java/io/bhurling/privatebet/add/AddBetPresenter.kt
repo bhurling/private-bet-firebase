@@ -75,13 +75,13 @@ class AddBetPresenter constructor(
                         when (state.step) {
                             ViewStateStep.STATEMENT -> {
                                 state.copy(
-                                        statement = view.getStatement(),
+                                        statement = view.getStatement().trim(),
                                         step = ViewStateStep.STAKE
                                 )
                             }
                             ViewStateStep.STAKE -> {
                                 state.copy(
-                                        stake = view.getStake(),
+                                        stake = view.getStake().trim(),
                                         step = ViewStateStep.OPPONENT
                                 )
                             }
