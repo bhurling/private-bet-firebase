@@ -59,10 +59,10 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:0.3'
 
-    provided 'javax.annotation:jsr250-api:1.0'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
 }
 
