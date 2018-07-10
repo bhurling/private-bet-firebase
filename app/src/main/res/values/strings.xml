@@ -16,4 +16,5 @@
     <string name="add_bet_stake_label">At stake is</string>
     <string name="add_bet_opponent_label">Opponent is</string>
     <string name="its_on">It\'s on</string>
+    <string name="channel_name_links">Friend Requests</string>
 </resources>
