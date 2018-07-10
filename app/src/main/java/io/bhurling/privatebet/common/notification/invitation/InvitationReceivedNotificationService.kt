@@ -67,7 +67,7 @@ class InvitationReceivedNotificationService : JobService() {
                 .safeSetChannelId(CHANNEL_LINKS)
                 .setContentTitle(getString(R.string.notification_invitation_received_title))
                 .setContentText(getString(R.string.notification_invitation_received_message, extras.displayName))
-                .setContentIntent(navigator.makeHomeScreenIntent(this))
+                .setContentIntent(navigator.makeFriendsScreenIntent(this))
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_person_black_32dp)
                 .setStyle(Notification.BigTextStyle())

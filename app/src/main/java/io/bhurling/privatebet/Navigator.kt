@@ -29,9 +29,9 @@ class Navigator {
         activity?.startActivity(Intent(activity, AddBetActivity::class.java))
     }
 
-    fun makeHomeScreenIntent(context: Context): PendingIntent {
-        val intent = Intent(context, HomeActivity::class.java)
+    fun makeFriendsScreenIntent(context: Context): PendingIntent {
+        val intent = HomeActivity.makeFriendsIntent(context)
 
-        return PendingIntent.getActivity(context, 0, intent, 0)
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

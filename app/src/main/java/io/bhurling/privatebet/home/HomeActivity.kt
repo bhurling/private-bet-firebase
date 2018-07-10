@@ -1,5 +1,7 @@
 package io.bhurling.privatebet.home
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -47,6 +49,10 @@ class HomeActivity : AppCompatActivity(), HomePresenter.View {
         pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pager))
 
+        if (savedInstanceState == null && intent.defaultToFriends) {
+            pager.setCurrentItem(1, false)
+        }
+
         presenter.attachView(this)
     }
 
@@ -63,4 +69,18 @@ class HomeActivity : AppCompatActivity(), HomePresenter.View {
     override fun hidePrimaryAction() {
         fab.visibility = View.GONE
     }
+
+    companion object {
+        fun makeIntent(context: Context) = Intent(context, HomeActivity::class.java)
+
+        fun makeFriendsIntent(context: Context) = makeIntent(context).apply {
+            defaultToFriends = true
+        }
+    }
 }
+
+private var Intent.defaultToFriends: Boolean
+    get() = getBooleanExtra("io.bhurling.privatebet.DEFAULT_TO_FRIENDS", false)
+    set(value) {
+        putExtra("io.bhurling.privatebet.DEFAULT_TO_FRIENDS", value)
+    }
