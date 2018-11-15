@@ -1,37 +1,57 @@
 const test = require('firebase-functions-test')()
-const admin = require('firebase-admin')
 const sinon = require('sinon')
 
-const adminInitStub = sinon.stub(admin, 'initializeApp')
-const myFunctions = require('../index.js')
-const wrapped = test.wrap(myFunctions.sendNotificationToInvitee)
+// Require firebase-admin so we can stub out some of its methods.
+const admin = require('firebase-admin')
 
-const refStub = sinon.stub()
+describe('sendNotificationToInvitee', () => {
+    let myFunctions, adminInitStub
 
-describe('Given there is an existing invitation', function() {
-    let databaseStub, context, beforeSnap
-
-    before(function() {
-        context = { params: { receiverUid: "abc", senderUid: "def"} }
-
-        beforeSnap = {
-            val: () => true
-        }
+    before(() => {
+        adminInitStub = sinon.stub(admin, 'initializeApp')
+        myFunctions = require('../index')
     })
 
-    describe('when a user removes invitation', function() {
+    after(() => {
+        adminInitStub.restore()
+    })
 
-        let afterSnap, change
+    describe('Given there is no invitation from UserA to UserB', () => {
+        let beforeSnap, afterSnap, change, context
 
-        before(function() {
-            afterSnap = {
+        before(() => {
+            beforeSnap = {
                 val: () => false
             }
-            change = { before: beforeSnap, after: afterSnap }
         })
 
-        it('will not break', function() {
-            return wrapped(change, context)
+        describe('when UserA sends invitation to UserB', () => {
+            before (() => {
+                afterSnap = {
+                    val: () => true
+                }
+                change = { before: beforeSnap, after: afterSnap }
+                context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
+            })
+
+            it('does not throw an error', () => {
+                const refParams = '/links/UserA/incoming/UserB'
+                const databaseStub = sinon.stub()
+                const refStub = sinon.stub()
+                const onceStub = sinon.stub()
+
+                // Stub calls for admin.database().ref(...)
+                Object.defineProperty(admin, 'database', { get: () => databaseStub })
+                databaseStub.returns({ ref: refStub })
+                refStub.withArgs(refParams).returns({once: onceStub})
+
+                // Stub call for once('value') so it returns a snapshot with val() = true
+                onceStub.withArgs('value').returns({val: () => true})
+
+                return test.wrap(myFunctions.sendNotificationToInvitee)(change, context).then(() => {
+                    // TODO assert that stuff has been called
+                })
+            })
         })
     })
 })
