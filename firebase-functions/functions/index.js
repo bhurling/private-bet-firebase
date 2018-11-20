@@ -1,5 +1,9 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+
+const database = require('./wrappers/database.js')
+const authentication = require('./wrappers/authentication.js')
+
 admin.initializeApp();
 
 exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}/incoming/{senderUid}')
@@ -18,8 +22,7 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
         console.log(`${senderUid} wants to invite ${receiverUid}`);
         console.log(`Checking other link /links/${senderUid}/incoming/${receiverUid}`)
 
-        const otherLinkPromise = admin.database()
-                .ref(`/links/${senderUid}/incoming/${receiverUid}`).once('value');
+        const otherLinkPromise = database.fetchOnce(`/links/${senderUid}/incoming/${receiverUid}`)
 
         return Promise.all([otherLinkPromise]).then(results => {
             const linkSnapshot = results[0]
@@ -30,10 +33,8 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
                 return 0;
             }
 
-            const getDeviceTokensPromise = admin.database()
-                    .ref(`/devices/${receiverUid}`).once('value');
-
-            const getUserProfilePromise = admin.auth().getUser(senderUid);
+            const getDeviceTokensPromise = database.fetchOnce(`/devices/${receiverUid}`)
+            const getUserProfilePromise = authentication.getUser(senderUid);
 
             return Promise.all([getDeviceTokensPromise, getUserProfilePromise]).then(results => {
                 const tokensSnapshot = results[0]

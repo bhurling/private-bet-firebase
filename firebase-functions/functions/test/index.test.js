@@ -1,20 +1,16 @@
-const test = require('firebase-functions-test')()
 const sinon = require('sinon')
+const test = require('firebase-functions-test')()
 
 // Require firebase-admin so we can stub out some of its methods.
 const admin = require('firebase-admin')
 
+// Require dependencies so we can stub out their methods.
+const database = require('../wrappers/database.js')
+const authentication = require('../wrappers/authentication.js')
+
+const myFunctions = require('../index')
+
 describe('sendNotificationToInvitee', () => {
-    let myFunctions, adminInitStub
-
-    before(() => {
-        adminInitStub = sinon.stub(admin, 'initializeApp')
-        myFunctions = require('../index')
-    })
-
-    after(() => {
-        adminInitStub.restore()
-    })
 
     describe('Given there is no invitation from UserA to UserB', () => {
         let beforeSnap, afterSnap, change, context
@@ -35,18 +31,14 @@ describe('sendNotificationToInvitee', () => {
             })
 
             it('does not throw an error', () => {
-                const refParams = '/links/UserA/incoming/UserB'
-                const databaseStub = sinon.stub()
-                const refStub = sinon.stub()
-                const onceStub = sinon.stub()
+                const snap = test.database.makeDataSnapshot({}, '/devices/UserB')
 
-                // Stub calls for admin.database().ref(...)
-                Object.defineProperty(admin, 'database', { get: () => databaseStub })
-                databaseStub.returns({ ref: refStub })
-                refStub.withArgs(refParams).returns({once: onceStub})
+                const databaseStub = sinon.stub(database, 'fetchOnce')
+                const authStub = sinon.stub(authentication, 'getUser')
 
-                // Stub call for once('value') so it returns a snapshot with val() = true
-                onceStub.withArgs('value').returns({val: () => true})
+                databaseStub.withArgs('/links/UserA/incoming/UserB').returns({val: () => null})
+                databaseStub.withArgs('/devices/UserB').returns(snap)
+                authStub.withArgs('UserA').returns({})
 
                 return test.wrap(myFunctions.sendNotificationToInvitee)(change, context).then(() => {
                     // TODO assert that stuff has been called
