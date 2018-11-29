@@ -39,6 +39,8 @@ dependencies {
     implementation(Config.Libs.Rx.KOTLIN)
     implementation(Config.Libs.Rx.BINDING_KOTLIN)
 
+    implementation(Config.Libs.Arch.MVRX)
+
     implementation(Config.Libs.Ui.MATERIAL)
     implementation(Config.Libs.Ui.PICASSO)
 

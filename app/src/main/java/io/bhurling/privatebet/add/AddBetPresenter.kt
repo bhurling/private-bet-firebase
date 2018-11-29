@@ -1,106 +1,97 @@
 package io.bhurling.privatebet.add
 
+import com.airbnb.mvrx.RealMvRxStateStore
 import io.bhurling.privatebet.arch.*
 import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.subjects.PublishSubject
 
 class AddBetPresenter constructor(
         private val interactor: InvitationsInteractor // TODO should not reference this one
 ) : Presenter<AddBetPresenter.View>() {
 
-    private val viewStateSubject = PublishSubject.create<ViewState>()
+    private val store = RealMvRxStateStore(ViewState())
+    private val states = store.observable.observeOn(AndroidSchedulers.mainThread())
 
     override fun attachView(view: View) {
         super.attachView(view)
 
-        disposables += Observables
-                .combineLatest(
-                        interactor.confirmed(),
-                        viewStateSubject
-                )
+        disposables += interactor.confirmed()
                 .take(1) // TODO Allow updates to confirmed friends while on screen
-                .map { (opponentIds, state) ->
-                    state.copy(opponentIds = opponentIds)
+                .subscribe { opponentIds ->
+                    store.set { copy(opponentIds = opponentIds) }
                 }
-                .subscribe { viewStateSubject.onNext(it) }
 
-        disposables += viewStateSubject
+        disposables += states
                 .switchMap { state ->
                     view.backClicks().map { state }
                 }
-                .flatMap { state ->
+                .subscribe { state ->
                     when (state.step) {
                         ViewStateStep.STATEMENT -> {
-                            Observable.empty<ViewState>().doOnSubscribe { view.finish() }
+                            view.finish()
                         }
                         ViewStateStep.STAKE -> {
-                            Observable.just(state.copy(step = ViewStateStep.STATEMENT))
+                            store.set { copy(step = ViewStateStep.STATEMENT) }
                         }
                         ViewStateStep.OPPONENT -> {
                             if (state.opponent != null) {
-                                Observable.just(state.copy(opponent = null))
+                                store.set { copy(opponent = null) }
                             } else {
-                                Observable.just(state.copy(step = ViewStateStep.STAKE))
+                                store.set { copy(step = ViewStateStep.STAKE) }
                             }
                         }
                     }
                 }
-                .subscribe { viewStateSubject.onNext(it) }
 
-        disposables += viewStateSubject
+        disposables += view.deadlineChanges()
+                .subscribe { store.set { copy(deadline = it) } }
+
+        disposables += view.clearDeadlineClicks()
+                .subscribe { store.set { copy(deadline = none()) } }
+
+        disposables += states
                 .switchMap { state ->
-                    view.deadlineChanges()
-                            .map { state.copy(deadline = it) }
+                    view.nextClicks().map { state }
                 }
-                .subscribe { viewStateSubject.onNext(it) }
-
-        disposables += viewStateSubject
-                .switchMap { state ->
-                    view.clearDeadlineClicks()
-                            .map { state.copy(deadline = none()) }
-                }
-                .subscribe { viewStateSubject.onNext(it) }
-
-        disposables += viewStateSubject
-                .switchMap { state ->
-                    view.nextClicks().map {
-                        when (state.step) {
-                            ViewStateStep.STATEMENT -> {
-                                state.copy(
+                .subscribe { state ->
+                    when (state.step) {
+                        ViewStateStep.STATEMENT -> {
+                            store.set {
+                                copy(
                                         statement = view.getStatement().trim(),
                                         step = ViewStateStep.STAKE
                                 )
                             }
-                            ViewStateStep.STAKE -> {
-                                state.copy(
+                        }
+                        ViewStateStep.STAKE -> {
+                            store.set {
+                                copy(
                                         stake = view.getStake().trim(),
                                         step = ViewStateStep.OPPONENT
                                 )
                             }
-                            else -> state
+                        }
+                        else -> {
+                            // ignore
                         }
                     }
                 }
-                .subscribe { viewStateSubject.onNext(it) }
 
-        disposables += viewStateSubject
-                .switchMap { state ->
-                    view.opponentSelected()
-                            .map { state.copy(opponent = it) }
+        disposables += view.opponentSelected()
+                .subscribe {
+                    store.set { copy(opponent = it) }
                 }
-                .subscribe { viewStateSubject.onNext(it) }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.deadline }
                 .distinctUntilChanged()
                 .switchMap { deadline -> view.deadlineClicks().map { deadline } }
                 .subscribe { view.showDeadlinePicker(it) }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.deadline }
                 .distinctUntilChanged()
                 .subscribe {
@@ -111,43 +102,41 @@ class AddBetPresenter constructor(
                     }
                 }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.step }
                 .distinctUntilChanged()
                 .subscribe {
                     view.showStep(it)
                 }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.step }
                 .distinctUntilChanged()
                 .subscribe {
                     updateButtonVisibility(it)
                 }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.statement to it.opponent }
                 .distinctUntilChanged()
                 .subscribe { (statement, opponent) ->
                     updateSummary(statement, opponent)
                 }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.step to it.opponent }
                 .distinctUntilChanged()
                 .subscribe { (step, opponent) ->
                     updateSummaryVisibility(step, opponent)
                 }
 
-        disposables += viewStateSubject
+        disposables += states
                 .map { it.opponentIds }
                 .distinctUntilChanged()
                 .map { it.map { OpponentsAdapterItem(it) } }
                 .subscribe {
                     view.updateOpponents(it)
                 }
-
-        viewStateSubject.onNext(ViewState())
     }
 
     private fun updateSummary(statement: String, opponent: Person?) {

@@ -40,6 +40,10 @@ object Config {
             const val BINDING_KOTLIN = "com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.1"
         }
 
+        object Arch {
+            const val MVRX = "com.airbnb.android:mvrx:1.0.1"
+        }
+
         object Ui {
             const val MATERIAL = "com.google.android.material:material:1.0.0"
             const val PICASSO = "com.squareup.picasso:picasso:2.71828"
