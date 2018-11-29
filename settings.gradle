@@ -1,3 +1,4 @@
 include ':app',
         ':lib-di',
+        ':lib-arch',
         ':lib-kotterknife'
