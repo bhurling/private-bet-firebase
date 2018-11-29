@@ -62,10 +62,10 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
         setHasOptionsMenu(false)
     }
 
-    override fun showContent(ids: List<FriendsAdapterItem>) {
+    override fun showContent(items: List<FriendsAdapterItem>) {
         emptyView.visibility = View.GONE
         setHasOptionsMenu(true)
 
-        adapter.items = ids
+        adapter.items = items
     }
 }

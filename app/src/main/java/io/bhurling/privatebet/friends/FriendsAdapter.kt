@@ -76,7 +76,7 @@ class FriendsAdapter(
                 disposable = firebase
                         .observeValueEvents(profiles.child(item.id))
                         .map { it.toPerson() }
-                        .subscribe({ this.update(it, item.isInvited, item.isConfirmed) })
+                        .subscribe { update(it, item.isInvited) }
             }
         }
 
@@ -86,7 +86,7 @@ class FriendsAdapter(
             }
         }
 
-        private fun update(person: Person, isInvited: Boolean, isConfirmed: Boolean) {
+        private fun update(person: Person, isInvited: Boolean) {
             Picasso.get()
                     .load(person.photoUrl)
                     .transform(CircleTransformation())

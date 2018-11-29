@@ -25,7 +25,6 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     private fun handleNewInvitation(data: Map<String, String>) {
-        val id = data["id"]
         val custom = JSONObject(data["custom"])
 
         val senderImage = custom.optString("senderImage")
