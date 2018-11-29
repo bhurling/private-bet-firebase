@@ -19,10 +19,10 @@ import android.widget.TextView
 import androidx.core.view.doOnNextLayout
 import com.jakewharton.rxbinding2.view.clicks
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.common.Optional
-import io.bhurling.privatebet.common.get
-import io.bhurling.privatebet.common.isSome
-import io.bhurling.privatebet.common.toOptional
+import io.bhurling.privatebet.arch.Optional
+import io.bhurling.privatebet.arch.get
+import io.bhurling.privatebet.arch.isSome
+import io.bhurling.privatebet.arch.toOptional
 import io.bhurling.privatebet.common.ui.datePickerDialog
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable

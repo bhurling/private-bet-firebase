@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common
+package io.bhurling.privatebet.arch
 
 import java.util.*
 
