@@ -13,7 +13,7 @@
         android:text="@string/add_bet_opponent_label"
         android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bets_add_opponent_list"
         android:layout_width="0dp"
         android:layout_height="0dp"

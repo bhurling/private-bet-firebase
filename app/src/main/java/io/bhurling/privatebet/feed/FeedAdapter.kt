@@ -1,13 +1,11 @@
 package io.bhurling.privatebet.feed
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DatabaseReference
-
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.model.pojo.Bet
 import io.bhurling.privatebet.rx.ReactiveFirebase

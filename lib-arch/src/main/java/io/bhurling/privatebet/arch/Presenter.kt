@@ -1,6 +1,6 @@
 package io.bhurling.privatebet.arch
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 import io.reactivex.disposables.CompositeDisposable
 
