@@ -5,5 +5,5 @@ dependencies {
     api 'io.reactivex.rxjava2:rxjava:2.1.6'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN_VERSION"
-    implementation "androidx.annotation:annotation:+"
+    implementation 'androidx.annotation:annotation:1.0.2'
 }
