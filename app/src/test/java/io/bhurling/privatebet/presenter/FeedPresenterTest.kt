@@ -2,8 +2,9 @@ package io.bhurling.privatebet.presenter
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.Query
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.bhurling.privatebet.feed.FeedPresenter
 import io.bhurling.privatebet.rx.ReactiveFirebase
@@ -12,10 +13,10 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import java.util.*
 
@@ -40,8 +41,11 @@ class FeedPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         val snapshot = emptyFeed()
-        whenever(mockFirebase.observeValueEvents(ArgumentMatchers.any(Query::class.java)))
-                .thenReturn(Observable.just(snapshot))
+
+        whenever(mockFirebase.observeValueEvents(any()))
+             .thenReturn(Observable.just(snapshot))
+        whenever(mockFeed.orderByValue())
+            .thenReturn(mock())
     }
 
     @Test
@@ -54,8 +58,9 @@ class FeedPresenterTest {
     @Test
     fun whenFetchingTheFeed_weGetKeysInReversedOrder() {
         val snapshot = fullFeed()
-        whenever(mockFirebase.observeValueEvents(ArgumentMatchers.any(Query::class.java)))
-                .thenReturn(Observable.just(snapshot))
+
+        whenever(mockFirebase.observeValueEvents(any()))
+            .thenReturn(Observable.just(snapshot))
 
         presenter.attachView(mockView)
 
@@ -69,21 +74,21 @@ class FeedPresenterTest {
     }
 
     private fun emptyFeed(): DataSnapshot {
-        val feedSnapshot = mock(DataSnapshot::class.java)
+        val feedSnapshot = mock<DataSnapshot>()
         whenever(feedSnapshot.children).thenReturn(emptyList())
 
         return feedSnapshot
     }
 
     private fun fullFeed(): DataSnapshot {
-        val feedItem1 = mock(DataSnapshot::class.java)
+        val feedItem1 = mock<DataSnapshot>()
         whenever(feedItem1.key).thenReturn("key1")
-        val feedItem2 = mock(DataSnapshot::class.java)
+        val feedItem2 = mock<DataSnapshot>()
         whenever(feedItem2.key).thenReturn("key2")
-        val feedItem3 = mock(DataSnapshot::class.java)
+        val feedItem3 = mock<DataSnapshot>()
         whenever(feedItem3.key).thenReturn("key3")
 
-        val feedSnapshot = mock(DataSnapshot::class.java)
+        val feedSnapshot = mock<DataSnapshot>()
         whenever(feedSnapshot.children).thenReturn(Arrays.asList(
                 feedItem1,
                 feedItem2,
