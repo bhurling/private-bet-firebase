@@ -49,4 +49,4 @@ class InvitationsInteractor(
 
 }
 
-private fun Observable<DataSnapshot>.mapToChildKeys() = map { it.children.map { it.key } }
+private fun Observable<DataSnapshot>.mapToChildKeys() = map { it.children.mapNotNull { it.key } }

@@ -28,10 +28,7 @@ class FeedPresenter(
     }
 
     private fun keys(data: Iterable<DataSnapshot>): List<String> {
-        return Observable.fromIterable(data)
-                .map { it.key }
-                .toList()
-                .blockingGet()
+        return data.mapNotNull { it.key }
     }
 
     interface View : Presenter.View {
