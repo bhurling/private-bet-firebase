@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("com.google.gms.google-services") apply false
 }
 
 android {
@@ -11,8 +12,8 @@ android {
     }
 
     buildTypes {
-        release {
-            minifyEnabled = true
+        getByName("release") {
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -52,5 +53,5 @@ dependencies {
     testImplementation("com.nhaarman:mockito-kotlin:1.6.0")
 }
 
-// Docs say this plugin should go at the bottom of the file
-apply plugin: "com.google.gms.google-services"
+// Docs say this plugin should be applied at the bottom of the file
+apply(mapOf("plugin" to "com.google.gms.google-services"))
