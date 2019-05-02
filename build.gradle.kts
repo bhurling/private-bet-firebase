@@ -1,9 +1,12 @@
+import com.android.build.gradle.BaseExtension
+
 buildscript {
 
     repositories {
         jcenter()
         google()
     }
+
     dependencies {
         classpath("com.android.tools.build:gradle:3.3.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.20")
@@ -16,15 +19,13 @@ allprojects {
         google()
         jcenter()
 
-        maven {
-            url = "https://maven.fabric.io/public"
-        }
+        maven(url = "https://maven.fabric.io/public")
     }
 }
 
 subprojects {
     afterEvaluate {
-        android {
+        configure<BaseExtension> {
             compileSdkVersion(28)
 
             defaultConfig {
@@ -42,6 +43,6 @@ subprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+task("clean", Delete::class) {
+    delete = setOf(rootProject.buildDir)
 }
