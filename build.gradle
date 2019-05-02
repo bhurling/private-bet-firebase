@@ -1,16 +1,13 @@
 buildscript {
 
-    ext.KOTLIN_VERSION = '1.3.20'
-    ext.RX_BINDING_VERSION = '2.1.1'
-
     repositories {
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
-        classpath 'com.google.gms:google-services:4.2.0'
+        classpath("com.android.tools.build:gradle:3.3.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.20")
+        classpath("com.google.gms:google-services:4.2.0")
     }
 }
 
@@ -20,7 +17,7 @@ allprojects {
         jcenter()
 
         maven {
-            url 'https://maven.fabric.io/public'
+            url = "https://maven.fabric.io/public"
         }
     }
 }
@@ -28,18 +25,18 @@ allprojects {
 subprojects {
     afterEvaluate {
         android {
-            compileSdkVersion 28
+            compileSdkVersion(28)
 
             defaultConfig {
-                minSdkVersion 21
-                targetSdkVersion 28
+                minSdkVersion(21)
+                targetSdkVersion(28)
 
                 vectorDrawables.useSupportLibrary = true
             }
 
             compileOptions {
-                sourceCompatibility JavaVersion.VERSION_1_8
-                targetCompatibility JavaVersion.VERSION_1_8
+                sourceCompatibility = JavaVersion.VERSION_1_8
+                targetCompatibility = JavaVersion.VERSION_1_8
             }
         }
     }
