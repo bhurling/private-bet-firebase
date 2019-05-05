@@ -6,6 +6,7 @@ import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 
 class AddBetPresenter constructor(
@@ -26,7 +27,9 @@ class AddBetPresenter constructor(
 
         disposables += states
                 .switchMap { state ->
-                    view.backClicks().map { state }
+                    view.actions()
+                        .ofType<Action.BackClicked>()
+                        .map { state }
                 }
                 .subscribe { state ->
                     when (state.step) {
@@ -46,15 +49,19 @@ class AddBetPresenter constructor(
                     }
                 }
 
-        disposables += view.deadlineChanges()
-                .subscribe { store.set { copy(deadline = it) } }
+        disposables += view.actions()
+                .ofType<Action.DeadlineChanged>()
+                .subscribe { store.set { copy(deadline = it.deadline) } }
 
-        disposables += view.clearDeadlineClicks()
+        disposables += view.actions()
+                .ofType<Action.DeadlineCleared>()
                 .subscribe { store.set { copy(deadline = none()) } }
 
         disposables += states
                 .switchMap { state ->
-                    view.nextClicks().map { state }
+                    view.actions()
+                        .ofType<Action.NextClicked>()
+                        .map { state }
                 }
                 .subscribe { state ->
                     when (state.step) {
@@ -80,15 +87,20 @@ class AddBetPresenter constructor(
                     }
                 }
 
-        disposables += view.opponentSelected()
+        disposables += view.actions()
+                .ofType<Action.OpponentSelected>()
                 .subscribe {
-                    store.set { copy(opponent = it) }
+                    store.set { copy(opponent = it.opponent) }
                 }
 
         disposables += states
                 .map { it.deadline }
                 .distinctUntilChanged()
-                .switchMap { deadline -> view.deadlineClicks().map { deadline } }
+                .switchMap { deadline ->
+                    view.actions()
+                        .ofType<Action.DeadlineClicked>()
+                        .map { deadline }
+                }
                 .subscribe { view.showDeadlinePicker(it) }
 
         disposables += states
@@ -176,24 +188,24 @@ class AddBetPresenter constructor(
     }
 
     interface View : Presenter.View {
-        fun backClicks(): Observable<Unit>
+
+        // effects
         fun finish()
-        fun showStep(step: ViewStateStep)
-        fun getStatement(): String
-        fun deadlineClicks(): Observable<Unit>
-        fun deadlineChanges(): Observable<Optional<Long>>
         fun showDeadlinePicker(currentDeadline: Optional<Long>)
+
+        fun showStep(step: ViewStateStep)
         fun setDeadline(deadline: Long)
         fun removeDeadline()
-        fun clearDeadlineClicks(): Observable<Unit>
-        fun getStake(): String
         fun updateOpponents(opponents: List<OpponentsAdapterItem>)
-        fun opponentSelected(): Observable<Person>
         fun setSummary(statement: String, opponent: Person)
         fun showSummary(opponentId: String)
         fun hideSummary()
         fun showNextButton()
         fun hideNextButton()
-        fun nextClicks(): Observable<Unit>
+
+        // actions
+        fun actions(): Observable<Action>
+        fun getStake(): String
+        fun getStatement(): String
     }
 }

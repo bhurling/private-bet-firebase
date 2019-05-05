@@ -27,6 +27,9 @@ import io.bhurling.privatebet.common.ui.datePickerDialog
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.koin.inject
@@ -49,8 +52,8 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         SummaryViewHolder(findViewById(R.id.bets_add_summary_root))
     }
 
-    private val backClicks = PublishSubject.create<Unit>()
-    private val deadlineChanges = PublishSubject.create<Optional<Long>>()
+    private val actions = PublishSubject.create<Action>()
+    private val disposables = CompositeDisposable()
 
     private val inputManager by lazy {
         getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -85,6 +88,26 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         opponents.adapter = adapter
 
         presenter.attachView(this)
+
+        disposables += deadline.clicks()
+            .subscribe { actions.onNext(Action.DeadlineClicked) }
+
+        disposables += clearDeadline.clicks()
+            .delay(100, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                actions.onNext(Action.DeadlineCleared)
+            }
+
+        disposables += next.clicks()
+            .subscribe {
+                actions.onNext(Action.NextClicked)
+            }
+
+        disposables += adapter.actions()
+            .ofType<OpponentsAction.Selected>()
+            .subscribe {
+                actions.onNext(Action.OpponentSelected(it.person))
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -98,16 +121,18 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     }
 
     override fun onBackPressed() {
-        backClicks.onNext(Unit)
+        actions.onNext(Action.BackClicked)
     }
 
     override fun onDestroy() {
         presenter.detachView()
 
+        disposables.dispose()
+
         super.onDestroy()
     }
 
-    override fun backClicks(): Observable<Unit> = backClicks
+    override fun actions(): Observable<Action> = actions
 
     override fun showStep(step: AddBetPresenter.ViewStateStep) {
         when (step) {
@@ -126,10 +151,6 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
     override fun getStatement() = statement.text.toString()
 
-    override fun deadlineClicks() = deadline.clicks()
-
-    override fun deadlineChanges(): Observable<Optional<Long>> = deadlineChanges
-
     override fun showDeadlinePicker(currentDeadline: Optional<Long>) {
         val currentCalendar = Calendar.getInstance().apply {
             if (currentDeadline.isSome) {
@@ -137,9 +158,9 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
             }
         }
 
-        datePickerDialog(this, currentCalendar, { selected ->
-            deadlineChanges.onNext(selected.timeInMillis.toOptional())
-        }).apply {
+        datePickerDialog(this, currentCalendar) { selected ->
+            actions.onNext(Action.DeadlineChanged(selected.timeInMillis.toOptional()))
+        }.apply {
             datePicker.minDate = System.currentTimeMillis()
         }.show()
     }
@@ -153,9 +174,6 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         this.deadline.text = getString(R.string.no_deadline)
         this.clearDeadline.visibility = View.GONE
     }
-
-    override fun clearDeadlineClicks(): Observable<Unit> = clearDeadline.clicks()
-            .delay(100, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
 
     override fun getStake() = stake.text.toString()
 
@@ -210,12 +228,6 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         summary.root.visibility = View.GONE
     }
 
-    override fun opponentSelected(): Observable<Person> {
-        return adapter.actions()
-                .ofType(OpponentsAction.Selected::class.java)
-                .map { it.person }
-    }
-
     override fun showNextButton() {
         TransitionManager.beginDelayedTransition(next.parent as ViewGroup)
 
@@ -227,8 +239,6 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
         next.visibility = View.INVISIBLE
     }
-
-    override fun nextClicks() = next.clicks()
 }
 
 inline fun View.doOnNextLayoutOrImmediate(crossinline action: (view: View) -> Unit) {
