@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api("androidx.appcompat:appcompat:1.0.2")
-    api("androidx.recyclerview:recyclerview:1.0.0")
+    api(Config.Libs.AndroidX.APPCOMPAT)
+    api(Config.Libs.AndroidX.RECYCLERVIEW)
 
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.3.20")
+    api(Config.Libs.Kotlin.STDLIB)
 }

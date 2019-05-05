@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api("io.reactivex.rxjava2:rxjava:2.2.8")
+    api(Config.Libs.Rx.JAVA)
+    api(Config.Libs.AndroidX.ANNOTATION)
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.20")
-    implementation("androidx.annotation:annotation:1.0.2")
+    implementation(Config.Libs.Kotlin.STDLIB)
 }

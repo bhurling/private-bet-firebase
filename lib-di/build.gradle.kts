@@ -4,5 +4,5 @@ plugins {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.3.20")
+    api(Config.Libs.Kotlin.STDLIB)
 }
