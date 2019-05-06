@@ -2,6 +2,7 @@ package io.bhurling.privatebet.add
 
 import com.airbnb.mvrx.RealMvRxStateStore
 import io.bhurling.privatebet.arch.Presenter
+import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.none
 import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.reactivex.Observable
@@ -9,6 +10,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 
 class AddBetPresenter constructor(
         private val interactor: InvitationsInteractor // TODO should not reference this one
@@ -103,6 +105,13 @@ class AddBetPresenter constructor(
                     view.actions()
                         .ofType<AddAction.DeadlineClicked>()
                         .map { deadline }
+                }
+                .map { optional ->
+                    Calendar.getInstance().apply {
+                        optional.getOrNull()?.let { deadline ->
+                            timeInMillis = deadline
+                        }
+                    }
                 }
                 .subscribe {
                     effects.onNext(AddEffect.ShowDeadlinePicker(it))

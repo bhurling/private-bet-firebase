@@ -228,19 +228,13 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
     private fun handle(effect: AddEffect) {
         when (effect) {
-            is AddEffect.ShowDeadlinePicker -> showDeadlinePicker(effect.deadline)
+            is AddEffect.ShowDeadlinePicker -> showDeadlinePicker(effect.initialValue)
             is AddEffect.Finish -> finish()
         }
     }
 
-    private fun showDeadlinePicker(currentDeadline: Optional<Long>) {
-        val currentCalendar = Calendar.getInstance().apply {
-            if (currentDeadline.isSome) {
-                timeInMillis = currentDeadline.get()
-            }
-        }
-
-        datePickerDialog(this, currentCalendar) { selected ->
+    private fun showDeadlinePicker(initialValue: Calendar) {
+        datePickerDialog(this, initialValue) { selected ->
             actions.onNext(AddAction.DeadlineChanged(selected.timeInMillis.toOptional()))
         }.apply {
             datePicker.minDate = System.currentTimeMillis()

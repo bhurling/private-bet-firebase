@@ -1,8 +1,8 @@
 package io.bhurling.privatebet.add
 
-import io.bhurling.privatebet.arch.Optional
+import java.util.*
 
 sealed class AddEffect {
-    data class ShowDeadlinePicker(val deadline: Optional<Long>) : AddEffect()
+    data class ShowDeadlinePicker(val initialValue: Calendar) : AddEffect()
     object Finish : AddEffect()
 }
