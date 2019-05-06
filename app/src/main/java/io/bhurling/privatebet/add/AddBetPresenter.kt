@@ -8,8 +8,8 @@ import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import java.util.*
 
 class AddBetPresenter constructor(
@@ -38,12 +38,9 @@ class AddBetPresenter constructor(
                 store.set { copy(opponentIds = opponentIds) }
             }
 
-        disposables += states
-            .switchMap { state ->
-                actions
-                    .ofType<AddAction.BackClicked>()
-                    .map { state }
-            }
+        disposables += actions
+            .ofType<AddAction.BackClicked>()
+            .mapToLatestFrom(states)
             .subscribe { state ->
                 when (state.step) {
                     AddViewState.Step.STATEMENT -> {
@@ -63,6 +60,20 @@ class AddBetPresenter constructor(
             }
 
         disposables += actions
+            .ofType<AddAction.DeadlineClicked>()
+            .mapToLatestFrom(states)
+            .map { state ->
+                Calendar.getInstance().apply {
+                    state.deadline.getOrNull()?.let { deadline ->
+                        timeInMillis = deadline
+                    }
+                }
+            }
+            .subscribe {
+                effectsInternal.onNext(AddEffect.ShowDeadlinePicker(it))
+            }
+
+        disposables += actions
             .ofType<AddAction.DeadlineChanged>()
             .subscribe { store.set { copy(deadline = it.deadline) } }
 
@@ -70,12 +81,9 @@ class AddBetPresenter constructor(
             .ofType<AddAction.DeadlineCleared>()
             .subscribe { store.set { copy(deadline = none()) } }
 
-        disposables += states
-            .switchMap { state ->
-                actions
-                    .ofType<AddAction.NextClicked>()
-                    .map { state }
-            }
+        disposables += actions
+            .ofType<AddAction.NextClicked>()
+            .mapToLatestFrom(states)
             .subscribe { state ->
                 when (state.step) {
                     AddViewState.Step.STATEMENT -> {
@@ -105,25 +113,6 @@ class AddBetPresenter constructor(
             .subscribe {
                 store.set { copy(opponent = it.opponent) }
             }
-
-        disposables += states
-            .map { it.deadline }
-            .distinctUntilChanged()
-            .switchMap { deadline ->
-                actions
-                    .ofType<AddAction.DeadlineClicked>()
-                    .map { deadline }
-            }
-            .map { optional ->
-                Calendar.getInstance().apply {
-                    optional.getOrNull()?.let { deadline ->
-                        timeInMillis = deadline
-                    }
-                }
-            }
-            .subscribe {
-                effectsInternal.onNext(AddEffect.ShowDeadlinePicker(it))
-            }
     }
 
     interface View : Presenter.View {
@@ -132,4 +121,8 @@ class AddBetPresenter constructor(
         fun getStake(): String
         fun getStatement(): String
     }
+}
+
+private fun <T, R> Observable<T>.mapToLatestFrom(other: Observable<R>): Observable<R> {
+    return this.withLatestFrom(other).map { (_, other) -> other }
 }
