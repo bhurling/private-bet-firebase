@@ -13,7 +13,7 @@ import io.reactivex.subjects.Subject
 import java.util.*
 
 class AddBetPresenter constructor(
-        private val interactor: InvitationsInteractor // TODO should not reference this one
+    private val interactor: InvitationsInteractor // TODO should not reference this one
 ) : Presenter<AddBetPresenter.View>() {
 
     private val store = RealMvRxStateStore(AddViewState())
@@ -24,98 +24,102 @@ class AddBetPresenter constructor(
     override fun attachView(view: View) {
         super.attachView(view)
 
+        attach(view.actions())
+    }
+
+    private fun attach(actions: Observable<AddAction>) {
         disposables += interactor.confirmed()
-                .take(1) // TODO Allow updates to confirmed friends while on screen
-                .subscribe { opponentIds ->
-                    store.set { copy(opponentIds = opponentIds) }
-                }
+            .take(1) // TODO Allow updates to confirmed friends while on screen
+            .subscribe { opponentIds ->
+                store.set { copy(opponentIds = opponentIds) }
+            }
 
         disposables += states
-                .switchMap { state ->
-                    view.actions()
-                        .ofType<AddAction.BackClicked>()
-                        .map { state }
-                }
-                .subscribe { state ->
-                    when (state.step) {
-                        AddViewState.Step.STATEMENT -> {
-                            effects.onNext(AddEffect.Finish)
-                        }
-                        AddViewState.Step.STAKE -> {
-                            store.set { copy(step = AddViewState.Step.STATEMENT) }
-                        }
-                        AddViewState.Step.OPPONENT -> {
-                            if (state.opponent != null) {
-                                store.set { copy(opponent = null) }
-                            } else {
-                                store.set { copy(step = AddViewState.Step.STAKE) }
-                            }
+            .switchMap { state ->
+                actions
+                    .ofType<AddAction.BackClicked>()
+                    .map { state }
+            }
+            .subscribe { state ->
+                when (state.step) {
+                    AddViewState.Step.STATEMENT -> {
+                        effects.onNext(AddEffect.Finish)
+                    }
+                    AddViewState.Step.STAKE -> {
+                        store.set { copy(step = AddViewState.Step.STATEMENT) }
+                    }
+                    AddViewState.Step.OPPONENT -> {
+                        if (state.opponent != null) {
+                            store.set { copy(opponent = null) }
+                        } else {
+                            store.set { copy(step = AddViewState.Step.STAKE) }
                         }
                     }
                 }
+            }
 
-        disposables += view.actions()
-                .ofType<AddAction.DeadlineChanged>()
-                .subscribe { store.set { copy(deadline = it.deadline) } }
+        disposables += actions
+            .ofType<AddAction.DeadlineChanged>()
+            .subscribe { store.set { copy(deadline = it.deadline) } }
 
-        disposables += view.actions()
-                .ofType<AddAction.DeadlineCleared>()
-                .subscribe { store.set { copy(deadline = none()) } }
-
-        disposables += states
-                .switchMap { state ->
-                    view.actions()
-                        .ofType<AddAction.NextClicked>()
-                        .map { state }
-                }
-                .subscribe { state ->
-                    when (state.step) {
-                        AddViewState.Step.STATEMENT -> {
-                            store.set {
-                                copy(
-                                        statement = view.getStatement().trim(),
-                                        step = AddViewState.Step.STAKE
-                                )
-                            }
-                        }
-                        AddViewState.Step.STAKE -> {
-                            store.set {
-                                copy(
-                                        stake = view.getStake().trim(),
-                                        step = AddViewState.Step.OPPONENT
-                                )
-                            }
-                        }
-                        else -> {
-                            // ignore
-                        }
-                    }
-                }
-
-        disposables += view.actions()
-                .ofType<AddAction.OpponentSelected>()
-                .subscribe {
-                    store.set { copy(opponent = it.opponent) }
-                }
+        disposables += actions
+            .ofType<AddAction.DeadlineCleared>()
+            .subscribe { store.set { copy(deadline = none()) } }
 
         disposables += states
-                .map { it.deadline }
-                .distinctUntilChanged()
-                .switchMap { deadline ->
-                    view.actions()
-                        .ofType<AddAction.DeadlineClicked>()
-                        .map { deadline }
-                }
-                .map { optional ->
-                    Calendar.getInstance().apply {
-                        optional.getOrNull()?.let { deadline ->
-                            timeInMillis = deadline
+            .switchMap { state ->
+                actions
+                    .ofType<AddAction.NextClicked>()
+                    .map { state }
+            }
+            .subscribe { state ->
+                when (state.step) {
+                    AddViewState.Step.STATEMENT -> {
+                        store.set {
+                            copy(
+                                statement = view.getStatement().trim(),
+                                step = AddViewState.Step.STAKE
+                            )
                         }
                     }
+                    AddViewState.Step.STAKE -> {
+                        store.set {
+                            copy(
+                                stake = view.getStake().trim(),
+                                step = AddViewState.Step.OPPONENT
+                            )
+                        }
+                    }
+                    else -> {
+                        // ignore
+                    }
                 }
-                .subscribe {
-                    effects.onNext(AddEffect.ShowDeadlinePicker(it))
+            }
+
+        disposables += actions
+            .ofType<AddAction.OpponentSelected>()
+            .subscribe {
+                store.set { copy(opponent = it.opponent) }
+            }
+
+        disposables += states
+            .map { it.deadline }
+            .distinctUntilChanged()
+            .switchMap { deadline ->
+                actions
+                    .ofType<AddAction.DeadlineClicked>()
+                    .map { deadline }
+            }
+            .map { optional ->
+                Calendar.getInstance().apply {
+                    optional.getOrNull()?.let { deadline ->
+                        timeInMillis = deadline
+                    }
                 }
+            }
+            .subscribe {
+                effects.onNext(AddEffect.ShowDeadlinePicker(it))
+            }
     }
 
     interface View : Presenter.View {
