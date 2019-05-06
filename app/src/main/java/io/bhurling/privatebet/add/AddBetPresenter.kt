@@ -17,9 +17,13 @@ class AddBetPresenter constructor(
 ) : Presenter<AddBetPresenter.View>() {
 
     private val store = RealMvRxStateStore(AddViewState())
+    private val effectsInternal = PublishSubject.create<AddEffect>()
 
-    val states: Observable<AddViewState> = store.observable
-    val effects: Subject<AddEffect> = PublishSubject.create<AddEffect>()
+    val states: Observable<AddViewState>
+        get() = store.observable
+
+    val effects: Observable<AddEffect>
+        get() = effectsInternal.hide()
 
     override fun attachView(view: View) {
         super.attachView(view)
@@ -43,7 +47,7 @@ class AddBetPresenter constructor(
             .subscribe { state ->
                 when (state.step) {
                     AddViewState.Step.STATEMENT -> {
-                        effects.onNext(AddEffect.Finish)
+                        effectsInternal.onNext(AddEffect.Finish)
                     }
                     AddViewState.Step.STAKE -> {
                         store.set { copy(step = AddViewState.Step.STATEMENT) }
@@ -118,7 +122,7 @@ class AddBetPresenter constructor(
                 }
             }
             .subscribe {
-                effects.onNext(AddEffect.ShowDeadlinePicker(it))
+                effectsInternal.onNext(AddEffect.ShowDeadlinePicker(it))
             }
     }
 
