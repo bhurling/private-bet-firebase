@@ -27,6 +27,8 @@ fun <V : View> SupportFragment.bindView(id: Int)
         : ReadOnlyProperty<SupportFragment, V> = required(id, viewFinder)
 fun <V : View> ViewHolder.bindView(id: Int)
         : ReadOnlyProperty<ViewHolder, V> = required(id, viewFinder)
+fun <V : View> Any.bindView(root: View, id: Int)
+        : ReadOnlyProperty<Any, V> = required(id, viewFinder(root))
 
 fun <V : View> View.bindOptionalView(id: Int)
         : ReadOnlyProperty<View, V?> = optional(id, viewFinder)
@@ -95,6 +97,9 @@ private val SupportFragment.viewFinder: SupportFragment.(Int) -> View?
     get() = { view!!.findViewById(it) }
 private val ViewHolder.viewFinder: ViewHolder.(Int) -> View?
     get() = { itemView.findViewById(it) }
+private fun Any.viewFinder(root: View): Any.(Int) -> View? {
+    return { root.findViewById(it) }
+}
 
 private fun viewNotFound(id:Int, desc: KProperty<*>): Nothing =
         throw IllegalStateException("View ID $id for '${desc.name}' not found.")

@@ -8,32 +8,17 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.model.pojo.Person
+import kotterknife.bindView
 
 class SummaryViewHolder(val root: View) {
 
-    val statement by lazy {
-        root.findViewById<TextView>(R.id.bets_add_summary_statement)
-    }
+    private val statement: TextView by bindView(root, R.id.bets_add_summary_statement)
+    private val vs: TextView by bindView(root, R.id.bets_add_summary_vs)
+    private val displayName: TextView by bindView(root, R.id.title)
+    private val photo: ImageView by bindView(root, R.id.icon)
+    private val button: Button by bindView(root, R.id.bets_add_summary_button)
 
-    private val photo by lazy {
-        root.findViewById<ImageView>(R.id.icon)
-    }
-
-    private val displayName by lazy {
-        root.findViewById<TextView>(R.id.title)
-    }
-
-    val vs by lazy {
-        root.findViewById<TextView>(R.id.bets_add_summary_vs)
-    }
-
-    val opponent by lazy {
-        photo.parent as View
-    }
-
-    val button by lazy {
-        root.findViewById<Button>(R.id.bets_add_summary_button)
-    }
+    val opponent by lazy { photo.parent as View }
 
     fun bind(statement: String, opponent: Person) {
         this.statement.text = statement
@@ -43,5 +28,26 @@ class SummaryViewHolder(val root: View) {
                 .load(opponent.photoUrl)
                 .transform(CircleTransformation())
                 .into(photo)
+    }
+
+    fun fadeIn() {
+
+        arrayOf(statement, vs).forEach {
+            it.alpha = 0F
+            it.animate()
+                .alpha(1F)
+                .setStartDelay(200)
+                .withEndAction { it.alpha = 1F }
+                .start()
+        }
+
+        arrayOf(button).forEach {
+            it.alpha = 0F
+            it.animate()
+                .alpha(1F)
+                .setStartDelay(300)
+                .withEndAction { it.alpha = 1F }
+                .start()
+        }
     }
 }

@@ -11,19 +11,17 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.doOnNextLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.clicks
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.arch.*
 import io.bhurling.privatebet.arch.Optional
-import io.bhurling.privatebet.arch.get
-import io.bhurling.privatebet.arch.isSome
-import io.bhurling.privatebet.arch.toOptional
 import io.bhurling.privatebet.common.ui.datePickerDialog
+import io.bhurling.privatebet.common.ui.doOnNextLayoutOrImmediate
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,7 +50,7 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         SummaryViewHolder(findViewById(R.id.bets_add_summary_root))
     }
 
-    private val actions = PublishSubject.create<Action>()
+    private val actions = PublishSubject.create<AddAction>()
     private val disposables = CompositeDisposable()
 
     private val inputManager by lazy {
@@ -79,6 +77,7 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
         pager.offscreenPageLimit = 2
 
+        // TODO can we move this out?
         statement.setHorizontallyScrolling(false)
         statement.maxLines = 100
         stake.setHorizontallyScrolling(false)
@@ -87,27 +86,7 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         opponents.layoutManager = LinearLayoutManager(this)
         opponents.adapter = adapter
 
-        presenter.attachView(this)
-
-        disposables += deadline.clicks()
-            .subscribe { actions.onNext(Action.DeadlineClicked) }
-
-        disposables += clearDeadline.clicks()
-            .delay(100, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                actions.onNext(Action.DeadlineCleared)
-            }
-
-        disposables += next.clicks()
-            .subscribe {
-                actions.onNext(Action.NextClicked)
-            }
-
-        disposables += adapter.actions()
-            .ofType<OpponentsAction.Selected>()
-            .subscribe {
-                actions.onNext(Action.OpponentSelected(it.person))
-            }
+        attach()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -121,7 +100,7 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     }
 
     override fun onBackPressed() {
-        actions.onNext(Action.BackClicked)
+        actions.onNext(AddAction.BackClicked)
     }
 
     override fun onDestroy() {
@@ -132,67 +111,97 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
         super.onDestroy()
     }
 
-    override fun actions(): Observable<Action> = actions
-
-    override fun showStep(step: AddBetPresenter.ViewStateStep) {
-        when (step) {
-            AddBetPresenter.ViewStateStep.STATEMENT -> pager.setCurrentItem(0, true)
-            AddBetPresenter.ViewStateStep.STAKE -> pager.setCurrentItem(1, true)
-            AddBetPresenter.ViewStateStep.OPPONENT -> {
-                pager.setCurrentItem(2, true)
-                hideKeyboard()
-            }
-        }
-    }
-
-    private fun hideKeyboard() {
-        inputManager.hideSoftInputFromWindow(opponents.windowToken, 0)
-    }
+    override fun actions(): Observable<AddAction> = actions
 
     override fun getStatement() = statement.text.toString()
 
-    override fun showDeadlinePicker(currentDeadline: Optional<Long>) {
-        val currentCalendar = Calendar.getInstance().apply {
-            if (currentDeadline.isSome) {
-                timeInMillis = currentDeadline.get()
-            }
-        }
-
-        datePickerDialog(this, currentCalendar) { selected ->
-            actions.onNext(Action.DeadlineChanged(selected.timeInMillis.toOptional()))
-        }.apply {
-            datePicker.minDate = System.currentTimeMillis()
-        }.show()
-    }
-
-    override fun setDeadline(deadline: Long) {
-        this.deadline.text = DateFormat.getMediumDateFormat(this).format(deadline)
-        this.clearDeadline.visibility = View.VISIBLE
-    }
-
-    override fun removeDeadline() {
-        this.deadline.text = getString(R.string.no_deadline)
-        this.clearDeadline.visibility = View.GONE
-    }
-
     override fun getStake() = stake.text.toString()
 
-    override fun updateOpponents(opponents: List<OpponentsAdapterItem>) {
-        adapter.items = opponents
+    private fun attach() {
+        presenter.attachView(this)
+
+        disposables += deadline.clicks()
+            .subscribe { actions.onNext(AddAction.DeadlineClicked) }
+
+        disposables += clearDeadline.clicks()
+            .delay(100, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                actions.onNext(AddAction.DeadlineCleared)
+            }
+
+        disposables += next.clicks()
+            .subscribe {
+                actions.onNext(AddAction.NextClicked)
+            }
+
+        disposables += adapter.actions()
+            .ofType<OpponentsAction.Selected>()
+            .subscribe {
+                actions.onNext(AddAction.OpponentSelected(it.person))
+            }
+
+        disposables += presenter.states
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { render(it) }
+
+        disposables += presenter.effects
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { handle(it) }
     }
 
-    override fun setSummary(statement: String, opponent: Person) {
-        summary.bind(statement, opponent)
+    private fun render(state: AddViewState) {
+        updateStep(state.step)
+        updateDeadline(state.deadline)
+        updateOpponents(state.opponentIds)
+        updateSummary(state.step, state.statement, state.opponent)
+        updateButton(state.shouldShowNextButton)
     }
 
-    override fun showSummary(opponentId: String) {
+    private fun updateStep(step: AddViewState.Step) {
+        when (step) {
+            AddViewState.Step.STATEMENT -> pager.setCurrentItem(0, true)
+            AddViewState.Step.STAKE -> pager.setCurrentItem(1, true)
+            AddViewState.Step.OPPONENT -> {
+                pager.setCurrentItem(2, true)
+
+                inputManager.hideSoftInputFromWindow(opponents.windowToken, 0)
+            }
+        }
+    }
+
+    private fun updateDeadline(value: Optional<Long>) {
+        deadline.text = value.getOrNull()?.let { deadline ->
+            DateFormat.getMediumDateFormat(this).format(deadline)
+        } ?: getString(R.string.no_deadline)
+
+        clearDeadline.isVisible = value.isSome
+    }
+
+    private fun updateOpponents(opponentIds: List<String>) {
+        adapter.items = opponentIds.map { OpponentsAdapterItem(it) }
+    }
+
+    private fun updateSummary(step: AddViewState.Step, statement: String, opponent: Person?) {
+        opponent?.let { summary.bind(statement, it) }
+
+        if (step == AddViewState.Step.OPPONENT && opponent != null) {
+            showSummary(opponent.id)
+        } else {
+            hideSummary()
+        }
+    }
+
+    private fun showSummary(opponentId: String) {
+        if (summary.root.isVisible) return
+
         summary.root.visibility = View.VISIBLE
 
         adapter.items.indexOfFirst { it.id == opponentId }.takeUnless { it == -1 }?.let { index ->
             summary.opponent.doOnNextLayoutOrImmediate { opponent ->
                 val topBefore = IntArray(2).apply {
                     opponents.layoutManager?.findViewByPosition(index)
-                            ?.getLocationOnScreen(this)
+                        ?.getLocationOnScreen(this)
                 }[1]
 
                 val topAfter = IntArray(2).apply {
@@ -203,48 +212,38 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
                 opponent.animate().translationY(0F).start()
             }
 
-            arrayOf(summary.statement, summary.vs).forEach {
-                it.alpha = 0F
-                it.animate()
-                        .alpha(1F)
-                        .setStartDelay(200)
-                        .withEndAction { it.alpha = 1F }
-                        .start()
-            }
-
-            arrayOf(summary.button).forEach {
-                it.alpha = 0F
-                it.animate()
-                        .alpha(1F)
-                        .setStartDelay(300)
-                        .withEndAction { it.alpha = 1F }
-                        .start()
-            }
-
+            summary.fadeIn()
         }
     }
 
-    override fun hideSummary() {
-        summary.root.visibility = View.GONE
+    private fun hideSummary() {
+        if (!summary.root.isVisible) return
+
+        summary.root.isVisible = false
     }
 
-    override fun showNextButton() {
-        TransitionManager.beginDelayedTransition(next.parent as ViewGroup)
-
-        next.visibility = View.VISIBLE
+    private fun updateButton(shouldShowNextButton: Boolean) {
+        next.isVisible = shouldShowNextButton
     }
 
-    override fun hideNextButton() {
-        TransitionManager.beginDelayedTransition(next.parent as ViewGroup)
-
-        next.visibility = View.INVISIBLE
+    private fun handle(effect: AddEffect) {
+        when (effect) {
+            is AddEffect.ShowDeadlinePicker -> showDeadlinePicker(effect.deadline)
+            is AddEffect.Finish -> finish()
+        }
     }
-}
 
-inline fun View.doOnNextLayoutOrImmediate(crossinline action: (view: View) -> Unit) {
-    if (isLaidOut) {
-        action(this)
-    } else {
-        doOnNextLayout(action)
+    private fun showDeadlinePicker(currentDeadline: Optional<Long>) {
+        val currentCalendar = Calendar.getInstance().apply {
+            if (currentDeadline.isSome) {
+                timeInMillis = currentDeadline.get()
+            }
+        }
+
+        datePickerDialog(this, currentCalendar) { selected ->
+            actions.onNext(AddAction.DeadlineChanged(selected.timeInMillis.toOptional()))
+        }.apply {
+            datePicker.minDate = System.currentTimeMillis()
+        }.show()
     }
 }
