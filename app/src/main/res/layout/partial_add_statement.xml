@@ -18,18 +18,23 @@
             android:layout_marginStart="56dp"
             android:gravity="center_vertical"
             android:text="@string/add_bet_statement_label"
-            android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" />
+            android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/bets_add_statement_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="52dp"
             android:layout_marginStart="52dp"
+            android:layout_marginEnd="52dp"
             app:counterEnabled="true"
             app:counterMaxLength="80"
             app:counterTextAppearance="@style/TextAppearance.Widget.PrivateBet.TextInputLayout.Label"
             app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bets_add_title">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -37,7 +42,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:imeOptions="actionDone"
                 android:includeFontPadding="false"
                 android:inputType="textCapSentences"
                 android:lineSpacingExtra="4sp"
@@ -53,9 +57,9 @@
             android:id="@+id/bets_add_deadline_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="56dp"
             android:layout_marginStart="56dp"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="56dp"
             android:text="@string/deadline_label"
             android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
             app:layout_constraintTop_toBottomOf="@+id/bets_add_statement_layout" />
@@ -64,13 +68,13 @@
             android:id="@+id/bets_add_deadline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="52dp"
             android:layout_marginStart="52dp"
+            android:layout_marginEnd="52dp"
             android:background="?attr/editTextBackground"
             android:focusable="false"
             android:foreground="?attr/selectableItemBackground"
-            android:paddingBottom="16dp"
             android:paddingTop="8dp"
+            android:paddingBottom="16dp"
             android:text="@string/no_deadline"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/bets_add_deadline_label" />

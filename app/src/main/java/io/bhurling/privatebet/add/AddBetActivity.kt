@@ -6,6 +6,7 @@ import android.text.format.DateFormat
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
@@ -77,11 +78,15 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
 
         pager.offscreenPageLimit = 2
 
-        // TODO can we move this out?
+        // Setting this programmatically to force "done" action for multiline text
+        // https://stackoverflow.com/questions/36338563
         statement.setHorizontallyScrolling(false)
-        statement.maxLines = 100
+        statement.imeOptions = EditorInfo.IME_ACTION_DONE
+        statement.maxLines = 10
+
         stake.setHorizontallyScrolling(false)
-        stake.maxLines = 100
+        stake.imeOptions = EditorInfo.IME_ACTION_DONE
+        statement.maxLines = 10
 
         opponents.layoutManager = LinearLayoutManager(this)
         opponents.adapter = adapter

@@ -13,23 +13,28 @@
 
         <TextView
             android:id="@+id/bets_add_stake_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:layout_marginStart="56dp"
             android:gravity="center_vertical"
             android:text="@string/add_bet_stake_label"
-            android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" />
+            android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/bets_add_stake_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="52dp"
             android:layout_marginStart="52dp"
+            android:layout_marginEnd="52dp"
             app:counterEnabled="true"
             app:counterMaxLength="80"
             app:counterTextAppearance="@style/TextAppearance.Widget.PrivateBet.TextInputLayout.Label"
             app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bets_add_stake_title">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -37,7 +42,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:imeOptions="actionDone"
                 android:includeFontPadding="false"
                 android:inputType="textCapSentences"
                 android:lineSpacingExtra="4sp"
@@ -45,7 +49,7 @@
                 android:paddingBottom="16dp"
                 android:textSize="28sp"
                 tools:inputType="textMultiLine"
-                tools:text="A bottle of Wine on my balcony" />
+                tools:text="A bottle of wine on my balcony" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
