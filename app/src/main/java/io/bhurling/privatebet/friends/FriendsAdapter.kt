@@ -6,23 +6,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DatabaseReference
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.diffableList
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
-import io.bhurling.privatebet.model.toPerson
-import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 
-class FriendsAdapter(
-        private val firebase: ReactiveFirebase,
-        private val profiles: DatabaseReference
+internal class FriendsAdapter(
+        private val peopleInteractor: PeopleInteractor
 ) : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
@@ -60,22 +56,20 @@ class FriendsAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val icon: ImageView by bindView(R.id.icon)
-        val title: TextView by bindView(R.id.title)
-        val button: TextView by bindView(R.id.button)
+        private val icon: ImageView by bindView(R.id.icon)
+        private val title: TextView by bindView(R.id.title)
+        private val button: TextView by bindView(R.id.button)
 
-        private var _item: FriendsAdapterItem? = null
+        private var item: FriendsAdapterItem? = null
         private var disposable: Disposable? = null
 
         fun bind(item: FriendsAdapterItem) {
-            this._item = item
+            this.item = item
         }
 
         fun subscribe() {
-            _item?.let { item ->
-                disposable = firebase
-                        .observeValueEvents(profiles.child(item.id))
-                        .map { it.toPerson() }
+            item?.let { item ->
+                disposable = peopleInteractor.byId(item.id)
                         .subscribe { update(it, item.isInvited) }
             }
         }

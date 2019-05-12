@@ -17,7 +17,16 @@ class PeopleInteractor(
         return firebase
                 .observeValueEvents(profiles.orderByChild("displayName"))
                 .take(1)
-                .map { it.children.filter { it.key != me.uid }.map { it.toPerson() } }
+                .map { snapshot ->
+                    snapshot.children
+                        .filter { child -> child.key != me.uid }
+                        .map { it.toPerson() }
+                }
     }
 
+    fun byId(id: String): Observable<Person> {
+        return firebase
+            .observeValueEvents(profiles.child(id))
+            .map { it.toPerson() }
+    }
 }
