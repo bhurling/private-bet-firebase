@@ -5,16 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DatabaseReference
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.model.pojo.Bet
-import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.disposables.Disposable
 import kotterknife.bindView
 
-class FeedAdapter(
-        private val firebase: ReactiveFirebase,
-        private val bets: DatabaseReference
+internal class FeedAdapter(
+        private val interactor: GetBetInteractor
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
     var keys: List<String>? = null
@@ -61,9 +58,7 @@ class FeedAdapter(
         }
 
         fun subscribe() {
-            disposable = firebase
-                    .observeValueEvents(bets.child(key!!))
-                    .map<Bet> { dataSnapshot -> dataSnapshot.getValue<Bet>(Bet::class.java) }
+            disposable = interactor.getBet(key!!)
                     .subscribe({ this.update(it) }, { it.printStackTrace() })
         }
 

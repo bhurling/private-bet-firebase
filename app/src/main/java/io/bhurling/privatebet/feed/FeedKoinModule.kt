@@ -4,17 +4,30 @@ import io.bhurling.privatebet.Qualifiers
 import org.koin.dsl.module.applicationContext
 
 val feedKoinModule = applicationContext {
+
     factory {
         FeedPresenter(
-                firebase = get(),
-                feed = get(Qualifiers.feed)
+            interactor = get()
+        )
+    }
+
+    factory {
+        GetKeysInteractor(
+            firebase = get(),
+            feed = get(Qualifiers.feed)
         )
     }
 
     factory {
         FeedAdapter(
-                firebase = get(),
-                bets = get(Qualifiers.bets)
+            interactor = get()
+        )
+    }
+
+    factory {
+        GetBetInteractor(
+            firebase = get(),
+            bets = get(Qualifiers.bets)
         )
     }
 }

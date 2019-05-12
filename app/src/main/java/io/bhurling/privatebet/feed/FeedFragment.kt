@@ -13,7 +13,7 @@ import io.bhurling.privatebet.R
 import kotterknife.bindView
 import org.koin.inject
 
-class FeedFragment : Fragment(), FeedPresenter.View {
+internal class FeedFragment : Fragment(), FeedPresenter.View {
 
     private val presenter: FeedPresenter by inject()
     private val adapter: FeedAdapter by inject()
