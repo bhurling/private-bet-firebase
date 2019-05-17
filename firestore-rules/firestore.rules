@@ -1,24 +1,38 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /private_profiles/{userId} {
-      allow read, write: if request.auth.uid == userId;
+    match /private_profiles {
+      match /{userId} {
+        allow read, write: if request.auth.uid == userId
+      }
     }
-    
-    match /public_profiles/{userId} {
-      allow write: if request.auth.uid == userId;
-      allow read: if request.auth.uid != null;
+
+    match /public_profiles {
+      match /{userId} {
+        allow write: if request.auth.uid == userId
+        allow read: if request.auth.uid != null
+      }
     }
-    
-    match /devices/{userId} {
-    	allow read, write: if request.auth.uid == userId;
+
+    match /devices {
+      match /{userId} {
+      	allow read, write: if request.auth.uid == userId
+      }
     }
-    
-    match /links/{document=**} {
-    	allow read, write: if request.auth.uid != null;
+
+    match /links {
+      match /{userId}/outgoing/{document} {
+        allow write: if request.auth.uid == userId
+      }
+
+      match /{otherUserId}/incoming/{userId} {
+        allow write: if request.auth.uid != otherUserId && request.auth.uid == userId
+      }
     }
-    
-    match /feeds/{userId}/bets/{document=**} {
-    	allow read: if request.auth.uid == userId;
+
+    match /feeds {
+      match /{userId}/bets/{document=**} {
+      	allow read: if request.auth.uid == userId
+      }
     }
   }
 }
