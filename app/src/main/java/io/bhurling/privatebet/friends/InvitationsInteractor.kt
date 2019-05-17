@@ -1,46 +1,46 @@
 package io.bhurling.privatebet.friends
 
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.QuerySnapshot
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
 
 class InvitationsInteractor(
-        private val firebase: ReactiveFirebase,
-        private val links: DatabaseReference,
-        private val me: FirebaseUser
+    private val firebase: ReactiveFirebase,
+    private val links: CollectionReference,
+    private val me: FirebaseUser
 ) {
 
-    private val myLinks = links.child(me.uid)
+    private val myLinks = links.document(me.uid)
 
     fun incoming(): Observable<List<String>> = firebase
-            .observeValueEvents(myLinks.child("incoming"))
-            .mapToChildKeys()
+        .observeValueEvents(myLinks.collection("incoming"))
+        .mapToChildKeys()
 
     fun outgoing(): Observable<List<String>> = firebase
-            .observeValueEvents(myLinks.child("outgoing"))
-            .mapToChildKeys()
+        .observeValueEvents(myLinks.collection("outgoing"))
+        .mapToChildKeys()
 
     fun confirmed(): Observable<List<String>> = firebase
-            .observeValueEvents(myLinks.child("confirmed"))
-            .mapToChildKeys()
+        .observeValueEvents(myLinks.collection("confirmed"))
+        .mapToChildKeys()
 
     fun invite(id: String) {
-        links.child(id).child("incoming").child(me.uid).setValue(true)
-        links.child(me.uid).child("outgoing").child(id).setValue(true)
+        links.document(id).collection("incoming").document(me.uid).set(mapOf("linked" to true))
+        myLinks.collection("outgoing").document(id).set(mapOf("linked" to true))
     }
 
     fun revoke(id: String) {
-        links.child(id).child("incoming").child(me.uid).removeValue()
-        links.child(me.uid).child("outgoing").child(id).removeValue()
+        links.document(id).collection("incoming").document(me.uid).delete()
+        myLinks.collection("outgoing").document(id).delete()
     }
 
     fun accept(id: String) {
-        links.child(id).child("confirmed").child(me.uid).setValue(true)
-        links.child(me.uid).child("confirmed").child(id).setValue(true)
-        links.child(id).child("incoming").child(me.uid).setValue(true)
-        links.child(me.uid).child("outgoing").child(id).setValue(true)
+        links.document(id).collection("confirmed").document(me.uid).set(mapOf("linked" to true))
+        myLinks.collection("confirmed").document(id).set(mapOf("linked" to true))
+        links.document(id).collection("incoming").document(me.uid).set(mapOf("linked" to true))
+        myLinks.collection("outgoing").document(id).set(mapOf("linked" to true))
     }
 
     fun decline(id: String) {
@@ -49,4 +49,7 @@ class InvitationsInteractor(
 
 }
 
-private fun Observable<DataSnapshot>.mapToChildKeys() = map { it.children.mapNotNull { it.key } }
+private fun Observable<QuerySnapshot>.mapToChildKeys() =
+    map { snapshots ->
+        snapshots.documents.mapNotNull { snapshot -> snapshot.id }
+    }

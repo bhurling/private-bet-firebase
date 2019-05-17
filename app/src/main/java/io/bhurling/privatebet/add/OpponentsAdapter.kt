@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.CollectionReference
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.diffableList
@@ -21,7 +21,7 @@ import kotterknife.bindView
 
 class OpponentsAdapter(
         private val firebase: ReactiveFirebase,
-        private val profiles: DatabaseReference
+        private val profiles: CollectionReference
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
@@ -73,9 +73,9 @@ class OpponentsAdapter(
         fun subscribe() {
             _item?.let { item ->
                 disposable = firebase
-                        .observeValueEvents(profiles.child(item.id))
+                        .observeValueEvents(profiles.document(item.id))
                         .map { it.toPerson() }
-                        .subscribe({ this.update(it) })
+                        .subscribe { update(it) }
             }
         }
 

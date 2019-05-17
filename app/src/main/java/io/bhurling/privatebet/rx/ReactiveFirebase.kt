@@ -1,28 +1,45 @@
 package io.bhurling.privatebet.rx
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.*
 import io.reactivex.Observable
 
 class ReactiveFirebase {
 
-    class RxFirebaseDatabaseException(val error: DatabaseError) : Exception()
+    class RxFirebaseDatabaseException(val error: Exception) : Exception()
 
-    fun observeValueEvents(query: Query): Observable<DataSnapshot> {
+    fun observeValueEvents(reference: DocumentReference): Observable<DocumentSnapshot> {
         return Observable.create { emitter ->
-            val listener = query.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    emitter.onNext(dataSnapshot)
+            val listener = reference
+                .addSnapshotListener { snapshot, exception ->
+                    when {
+                        exception != null -> {
+                            emitter.onError(RxFirebaseDatabaseException(exception))
+                        }
+                        snapshot != null -> {
+                            emitter.onNext(snapshot)
+                        }
+                    }
                 }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    emitter.onError(RxFirebaseDatabaseException(databaseError))
-                }
-            })
+            emitter.setCancellable { listener.remove() }
+        }
+    }
 
-            emitter.setCancellable { query.removeEventListener(listener) }
+    fun observeValueEvents(query: Query): Observable<QuerySnapshot> {
+        return Observable.create { emitter ->
+            val listener = query
+                .addSnapshotListener { snapshot, exception ->
+                    when {
+                        exception != null -> {
+                            emitter.onError(RxFirebaseDatabaseException(exception))
+                        }
+                        snapshot != null -> {
+                            emitter.onNext(snapshot)
+                        }
+                    }
+                }
+
+            emitter.setCancellable { listener.remove() }
         }
     }
 

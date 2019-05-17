@@ -1,19 +1,18 @@
 package io.bhurling.privatebet.feed
 
-import com.google.firebase.database.DatabaseReference
-import io.bhurling.privatebet.model.pojo.Bet
+import com.google.firebase.firestore.CollectionReference
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
 
 internal class GetKeysInteractor(
     private val firebase: ReactiveFirebase,
-    private val feed: DatabaseReference
+    private val feed: CollectionReference
 ) {
     fun getKeys(): Observable<List<String>> {
-        return firebase.observeValueEvents(this.feed.orderByValue())
-            .map { it.children }
-            .map { children ->
-                children.mapNotNull { it.key }
+        return firebase.observeValueEvents(this.feed)
+            .map { it.documents }
+            .map { documents ->
+                documents.mapNotNull { it.id }
             }
             .map { it.asReversed() }
     }

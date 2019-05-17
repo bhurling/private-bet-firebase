@@ -1,11 +1,11 @@
 package io.bhurling.privatebet.common.push
 
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.DocumentReference
 
 class TokenInteractor(
-        private val devices: DatabaseReference
+        private val devices: DocumentReference
 ) {
     fun addDeviceToken(token: String) {
-        devices.child(token).setValue(true)
+        devices.set(mapOf(token to true))
     }
 }

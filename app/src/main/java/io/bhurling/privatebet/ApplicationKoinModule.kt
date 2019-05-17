@@ -2,7 +2,8 @@ package io.bhurling.privatebet
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import org.koin.dsl.module.applicationContext
 
@@ -13,8 +14,14 @@ val applicationKoinModule = applicationContext {
     }
 
     provide {
-        FirebaseDatabase.getInstance().apply {
-            setPersistenceEnabled(true)
+        FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+    }
+
+    provide {
+        FirebaseFirestore.getInstance().apply {
+            firestoreSettings = get()
         }
     }
 
@@ -31,45 +38,43 @@ val applicationKoinModule = applicationContext {
     }
 
     factory(Qualifiers.feed) {
-        get<FirebaseDatabase>()
-                .getReference("feeds")
-                .child(get<FirebaseUser>().uid)
+        get<FirebaseFirestore>()
+            .collection("feeds")
+            .document(get<FirebaseUser>().uid)
+            .collection("bets")
     }
 
     factory(Qualifiers.bets) {
-        get<FirebaseDatabase>()
-                .getReference("bets")
+        get<FirebaseFirestore>()
+            .collection("bets")
     }
 
     factory(Qualifiers.links) {
-        get<FirebaseDatabase>()
-                .getReference("links")
+        get<FirebaseFirestore>()
+            .collection("links")
     }
 
     factory(Qualifiers.profiles) {
-        get<FirebaseDatabase>()
-                .getReference("profiles")
-                .child("public")
+        get<FirebaseFirestore>()
+            .collection("public_profiles")
     }
 
     factory(Qualifiers.Me.public) {
-        get<FirebaseDatabase>()
-                .getReference("profiles")
-                .child("public")
-                .child(get<FirebaseUser>().uid)
+        get<FirebaseFirestore>()
+            .collection("public_profiles")
+            .document(get<FirebaseUser>().uid)
     }
 
     factory(Qualifiers.Me.private) {
-        get<FirebaseDatabase>()
-                .getReference("profiles")
-                .child("private")
-                .child(get<FirebaseUser>().uid)
+        get<FirebaseFirestore>()
+            .collection("private_profiles")
+            .document(get<FirebaseUser>().uid)
     }
 
     factory(Qualifiers.devices) {
-        get<FirebaseDatabase>()
-                .getReference("devices")
-                .child(get<FirebaseUser>().uid)
+        get<FirebaseFirestore>()
+            .collection("devices")
+            .document(get<FirebaseUser>().uid)
     }
 }
 
