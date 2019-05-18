@@ -1,9 +1,10 @@
 package io.bhurling.privatebet.presenter
 
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.bhurling.privatebet.feed.GetKeysInteractor
@@ -13,10 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import java.util.*
 
 internal class GetKeysInteractorTest {
 
@@ -24,12 +22,10 @@ internal class GetKeysInteractorTest {
     lateinit var mockFirebase: ReactiveFirebase
 
     @Mock
-    lateinit var mockFeed: DatabaseReference
+    lateinit var mockFeed: CollectionReference
 
     @InjectMocks
     lateinit var interactor: GetKeysInteractor
-
-    private val keysCaptor = argumentCaptor<List<String>>()
 
     @Before
     fun setup() {
@@ -37,24 +33,15 @@ internal class GetKeysInteractorTest {
 
         val snapshot = emptyFeed()
 
-        whenever(mockFirebase.observeValueEvents(any()))
-             .thenReturn(Observable.just(snapshot))
-        whenever(mockFeed.orderByValue())
-            .thenReturn(mock())
-    }
-
-    @Test
-    fun whenFetchingTheFeed_weOrderByValue() {
-        interactor.getKeys().test()
-
-        verify<DatabaseReference>(mockFeed, times(1)).orderByValue()
+        whenever(mockFirebase.observeValueEvents(any<Query>()))
+            .thenReturn(Observable.just(snapshot))
     }
 
     @Test
     fun whenFetchingTheFeed_weGetKeysInReversedOrder() {
         val snapshot = fullFeed()
 
-        whenever(mockFirebase.observeValueEvents(any()))
+        whenever(mockFirebase.observeValueEvents(any<Query>()))
             .thenReturn(Observable.just(snapshot))
 
         val testObserver = interactor.getKeys().test()
@@ -64,27 +51,29 @@ internal class GetKeysInteractorTest {
         }
     }
 
-    private fun emptyFeed(): DataSnapshot {
-        val feedSnapshot = mock<DataSnapshot>()
-        whenever(feedSnapshot.children).thenReturn(emptyList())
+    private fun emptyFeed(): QuerySnapshot {
+        val feedSnapshot = mock<QuerySnapshot>()
+        whenever(feedSnapshot.documents).thenReturn(emptyList())
 
         return feedSnapshot
     }
 
-    private fun fullFeed(): DataSnapshot {
-        val feedItem1 = mock<DataSnapshot>()
-        whenever(feedItem1.key).thenReturn("key1")
-        val feedItem2 = mock<DataSnapshot>()
-        whenever(feedItem2.key).thenReturn("key2")
-        val feedItem3 = mock<DataSnapshot>()
-        whenever(feedItem3.key).thenReturn("key3")
+    private fun fullFeed(): QuerySnapshot {
+        val feedItem1 = mock<DocumentSnapshot>()
+        whenever(feedItem1.id).thenReturn("key1")
+        val feedItem2 = mock<DocumentSnapshot>()
+        whenever(feedItem2.id).thenReturn("key2")
+        val feedItem3 = mock<DocumentSnapshot>()
+        whenever(feedItem3.id).thenReturn("key3")
 
-        val feedSnapshot = mock<DataSnapshot>()
-        whenever(feedSnapshot.children).thenReturn(Arrays.asList(
+        val feedSnapshot = mock<QuerySnapshot>()
+        whenever(feedSnapshot.documents).thenReturn(
+            listOf(
                 feedItem1,
                 feedItem2,
                 feedItem3
-        ))
+            )
+        )
 
         return feedSnapshot
     }
