@@ -10,9 +10,22 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("alice")
-      .collection("outgoing");
+      .collection("outgoing")
+      .doc("bob");
 
-    await firebase.assertSucceeds(outgoing.doc("bob").set({ linked: true }));
+    await firebase.assertSucceeds(outgoing.set({ linked: true }));
+  }
+
+  @test
+  async "can not write outgoing link to herself"() {
+    const outgoing = this.app()
+      .firestore()
+      .collection("links")
+      .doc("alice")
+      .collection("outgoing")
+      .doc("alice");
+
+    await firebase.assertFails(outgoing.set({ linked: true }));
   }
 
   @test
@@ -21,9 +34,10 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("alice")
-      .collection("incoming");
+      .collection("incoming")
+      .doc("bob");
 
-    await firebase.assertFails(incoming.doc("bob").set({ linked: true }));
+    await firebase.assertFails(incoming.set({ linked: true }));
   }
 
   @test
@@ -32,9 +46,10 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("bob")
-      .collection("outgoing");
+      .collection("outgoing")
+      .doc("alice");
 
-    await firebase.assertFails(outgoing.doc("alice").set({ linked: true }));
+    await firebase.assertFails(outgoing.set({ linked: true }));
   }
 
   @test
@@ -43,9 +58,10 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("bob")
-      .collection("incoming");
+      .collection("incoming")
+      .doc("alice");
 
-    await firebase.assertSucceeds(incoming.doc("alice").set({ linked: true }));
+    await firebase.assertSucceeds(incoming.set({ linked: true }));
   }
 
   @test
@@ -54,9 +70,10 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("bob")
-      .collection("incoming");
+      .collection("incoming")
+      .doc("charlie");
 
-    await firebase.assertFails(incoming.doc("charlie").set({ linked: true }));
+    await firebase.assertFails(incoming.set({ linked: true }));
   }
 
   @test
@@ -67,9 +84,64 @@ class LinkRules extends FirestoreTest {
       .firestore()
       .collection("links")
       .doc("alice")
-      .collection("confirmed");
+      .collection("confirmed")
+      .doc("bob");
 
-    await firebase.assertFails(confirmed.doc("bob").set({ linked: true }));
+    await firebase.assertSucceeds(confirmed.set({ linked: true }));
+  }
+
+  @test
+  async "can confirm incoming link in bob's collection"() {
+    await this.prepareIncoming({ from: "bob", to: "alice" })
+
+    const confirmed = this.app()
+      .firestore()
+      .collection("links")
+      .doc("bob")
+      .collection("confirmed")
+      .doc("alice");
+
+    await firebase.assertSucceeds(confirmed.set({ linked: true }));
+  }
+
+  @test
+  async "can not confirm link if not incoming"() {
+    const confirmed = this.app()
+      .firestore()
+      .collection("links")
+      .doc("alice")
+      .collection("confirmed")
+      .doc("bob");
+
+    await firebase.assertFails(confirmed.set({ linked: true }));
+  }
+
+  @test
+  async "can not confirm own invitation"() {
+    await this.prepareIncoming({ from: "alice", to: "bob" })
+
+    const confirmed = this.app()
+      .firestore()
+      .collection("links")
+      .doc("alice")
+      .collection("confirmed")
+      .doc("bob");
+
+    await firebase.assertFails(confirmed.set({ linked: true }));
+  }
+
+  @test
+  async "can not confirm own invitation in bob's collection"() {
+    await this.prepareIncoming({ from: "alice", to: "bob" })
+
+    const confirmed = this.app()
+      .firestore()
+      .collection("links")
+      .doc("bob")
+      .collection("confirmed")
+      .doc("alice");
+
+    await firebase.assertFails(confirmed.set({ linked: true }));
   }
 
   prepareIncoming(link: IncomingLink) {

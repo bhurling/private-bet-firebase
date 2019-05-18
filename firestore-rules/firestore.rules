@@ -1,37 +1,54 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isCurrentUser(userId) {
+      return request.auth.uid == userId
+    }
+
+    function isAuthenticated() {
+      return request.auth.uid != null
+    }
+
     match /private_profiles {
       match /{userId} {
-        allow read, write: if request.auth.uid == userId
+        allow read, write: if isCurrentUser(userId)
       }
     }
 
     match /public_profiles {
       match /{userId} {
-        allow write: if request.auth.uid == userId
-        allow read: if request.auth.uid != null
+        allow write: if isCurrentUser(userId)
+        allow read: if isAuthenticated()
       }
     }
 
     match /devices {
       match /{userId} {
-      	allow read, write: if request.auth.uid == userId
+      	allow read, write: if isCurrentUser(userId)
       }
     }
 
     match /links {
-      match /{userId}/outgoing/{document} {
-        allow write: if request.auth.uid == userId
+      match /{userId}/outgoing/{otherUserId} {
+        allow write: if isCurrentUser(userId) && !isCurrentUser(otherUserId)
       }
 
-      match /{otherUserId}/incoming/{userId} {
-        allow write: if request.auth.uid != otherUserId && request.auth.uid == userId
+      match /{userId}/incoming/{otherUserId} {
+        allow write: if isCurrentUser(otherUserId) && !isCurrentUser(userId)
+      }
+
+      match /{userId}/confirmed/{otherUserId} {
+        function hasIncomingLink(from, to) {
+          return get(/databases/$(database)/documents/links/$(to)/incoming/$(from)).data.linked == true
+        }
+
+        allow write: if (isCurrentUser(userId) && hasIncomingLink(otherUserId, userId))
+          || (isCurrentUser(otherUserId) && hasIncomingLink(userId, otherUserId))
       }
     }
 
     match /feeds {
       match /{userId}/bets/{document=**} {
-      	allow read: if request.auth.uid == userId
+      	allow read: if isCurrentUser(userId)
       }
     }
   }
