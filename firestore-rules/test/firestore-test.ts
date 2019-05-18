@@ -25,4 +25,10 @@ export class FirestoreTest {
       auth: { uid: "alice", email: "alice@example.com" }
     });
   }
+
+  adminApp() {
+    return firebase.initializeAdminApp({
+      projectId: this.projectId
+    });
+  }
 }

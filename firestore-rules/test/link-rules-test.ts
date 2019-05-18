@@ -27,7 +27,7 @@ class LinkRules extends FirestoreTest {
   }
 
   @test
-  async "can not write to bob\'s outgoing links"() {
+  async "can not write to bob's outgoing links"() {
     const outgoing = this.app()
       .firestore()
       .collection("links")
@@ -38,7 +38,7 @@ class LinkRules extends FirestoreTest {
   }
 
   @test
-  async "can write to bob\'s incoming links"() {
+  async "can write to bob's incoming links"() {
     const incoming = this.app()
       .firestore()
       .collection("links")
@@ -49,7 +49,7 @@ class LinkRules extends FirestoreTest {
   }
 
   @test
-  async "can not write to bob\s incoming links for another user"() {
+  async "can not write to bobs incoming links for another user"() {
     const incoming = this.app()
       .firestore()
       .collection("links")
@@ -58,4 +58,32 @@ class LinkRules extends FirestoreTest {
 
     await firebase.assertFails(incoming.doc("charlie").set({ linked: true }));
   }
+
+  @test
+  async "can confirm incoming link in own collection"() {
+    await this.prepareIncoming({ from: "bob", to: "alice" })
+
+    const confirmed = this.app()
+      .firestore()
+      .collection("links")
+      .doc("alice")
+      .collection("confirmed");
+
+    await firebase.assertFails(confirmed.doc("bob").set({ linked: true }));
+  }
+
+  prepareIncoming(link: IncomingLink) {
+    this.adminApp()
+      .firestore()
+      .collection("links")
+      .doc(link.to)
+      .collection("incoming")
+      .doc(link.from)
+      .set({ linked: true });
+  }
+}
+
+interface IncomingLink {
+  from: string;
+  to: string;
 }
