@@ -1,12 +1,23 @@
 package io.bhurling.privatebet.common.push
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import io.bhurling.privatebet.common.notification.createChannels
 import io.bhurling.privatebet.common.notification.invitation.InvitationReceivedNotificationService
 import org.json.JSONObject
+import org.koin.inject
 
 class MessagingService : FirebaseMessagingService() {
+
+    private val auth: FirebaseAuth by inject()
+    private val interactor: TokenInteractor by inject()
+
+    override fun onNewToken(token: String) {
+        if (auth.currentUser == null) return
+
+        interactor.addDeviceToken(token)
+    }
 
     override fun onMessageReceived(message: RemoteMessage) {
         createChannels(this)
@@ -33,10 +44,10 @@ class MessagingService : FirebaseMessagingService() {
 
         if (senderImage != null && senderId != null && senderDisplayName != null) {
             InvitationReceivedNotificationService.schedule(
-                    context = this,
-                    userId = senderId,
-                    photoUrl = senderImage,
-                    displayName = senderDisplayName
+                context = this,
+                userId = senderId,
+                photoUrl = senderImage,
+                displayName = senderDisplayName
             )
         }
     }
