@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("com.google.gms.google-services") apply false
+    id("com.github.ben-manes.versions")
 }
 
 android {

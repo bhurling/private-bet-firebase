@@ -8,6 +8,7 @@ object Config {
         const val ANDROID = "com.android.tools.build:gradle:3.3.2"
         const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
         const val GOOGLE = "com.google.gms:google-services:4.2.0"
+        const val VERSIONS = "com.github.ben-manes:gradle-versions-plugin:0.22.0"
     }
 
     object Libs {

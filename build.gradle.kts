@@ -11,6 +11,7 @@ buildscript {
         classpath(Config.Plugins.ANDROID)
         classpath(Config.Plugins.KOTLIN)
         classpath(Config.Plugins.GOOGLE)
+        classpath(Config.Plugins.VERSIONS)
     }
 }
 
