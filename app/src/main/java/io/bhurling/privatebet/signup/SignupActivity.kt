@@ -34,6 +34,8 @@ class SignupActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_AUTH) {
             if (resultCode == Activity.RESULT_OK) {
                 navigator.launchApp(this)
+
+                SignupService.launch(this)
             }
 
             finish()

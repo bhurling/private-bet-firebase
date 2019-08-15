@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.signup
 
 import android.app.IntentService
+import android.content.Context
 import android.content.Intent
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
@@ -22,6 +23,12 @@ class SignupService : IntentService("SignupService") {
 
         FirebaseInstanceId.getInstance().token?.let { token ->
             tokenInteractor.addDeviceToken(token)
+        }
+    }
+
+    companion object {
+        fun launch(context: Context) {
+            context.startService(Intent(context, SignupService::class.java))
         }
     }
 }
