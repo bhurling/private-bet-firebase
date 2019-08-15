@@ -29,10 +29,12 @@ service cloud.firestore {
 
     match /links {
       match /{userId}/outgoing/{otherUserId} {
+        allow read: if isCurrentUser(userId)
         allow write: if isCurrentUser(userId) && !isCurrentUser(otherUserId)
       }
 
       match /{userId}/incoming/{otherUserId} {
+        allow read: if isCurrentUser(userId)
         allow write: if isCurrentUser(otherUserId) && !isCurrentUser(userId)
       }
 
@@ -41,6 +43,7 @@ service cloud.firestore {
           return get(/databases/$(database)/documents/links/$(to)/incoming/$(from)).data.linked == true
         }
 
+        allow read: if isCurrentUser(userId)
         allow write: if (isCurrentUser(userId) && hasIncomingLink(otherUserId, userId))
           || (isCurrentUser(otherUserId) && hasIncomingLink(userId, otherUserId))
       }

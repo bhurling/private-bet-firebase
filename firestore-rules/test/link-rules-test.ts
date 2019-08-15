@@ -5,6 +5,17 @@ import { FirestoreTest } from "./firestore-test";
 @suite
 class LinkRules extends FirestoreTest {
   @test
+  async "can read own confirmed links"() {
+    const confirmed = this.app()
+          .firestore()
+          .collection("links")
+          .doc("alice")
+          .collection("confirmed")
+
+    await firebase.assertSucceeds(confirmed.get());
+  }
+
+  @test
   async "can write to own outgoing links"() {
     const outgoing = this.app()
       .firestore()
