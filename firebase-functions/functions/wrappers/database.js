@@ -1,5 +1,5 @@
 const admin = require('firebase-admin')
 
-module.exports.fetchOnce = (ref) => {
-    return admin.database().ref(ref).once('value')
+module.exports.fetchOnce = (doc) => {
+    return admin.firestore().doc(doc).get()
 }

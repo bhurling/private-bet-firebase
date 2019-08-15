@@ -6,14 +6,14 @@ const authentication = require('./wrappers/authentication.js')
 
 admin.initializeApp();
 
-exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}/incoming/{senderUid}')
+exports.sendNotificationToInvitee = functions.firestore.document('/links/{receiverUid}/incoming/{senderUid}')
     .onWrite((change, context) => {
         const receiverUid = context.params.receiverUid;
         const senderUid = context.params.senderUid;
 
         console.log(`Incoming change for /links/${receiverUid}/incoming/${senderUid}`);
 
-        if (!change.after.val()) {
+        if (!change.after.data()) {
             console.log('Invitation for', receiverUid, 'from', senderUid, 'has been removed');
 
             return 0;
@@ -27,7 +27,7 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
         return Promise.all([otherLinkPromise]).then(results => {
             const linkSnapshot = results[0]
 
-            if (linkSnapshot.val() == true) {
+            if (linkSnapshot.data() == true) {
                 console.log('Other link exists, skip notification');
 
                 return 0;
@@ -37,31 +37,29 @@ exports.sendNotificationToInvitee = functions.database.ref('/links/{receiverUid}
             const getUserProfilePromise = authentication.getUser(senderUid);
 
             return Promise.all([getDeviceTokensPromise, getUserProfilePromise]).then(results => {
-                const tokensSnapshot = results[0]
-                const profileSnapshot = results[1]
+                const tokens = Object.keys(results[0].data());
+                const profile = results[1];
 
-                if (tokensSnapshot.numChildren() == 0) {
+                if (tokens.length == 0) {
                     console.log('There are no notification tokens to send to');
 
                     return 0;
                 }
 
-                console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to');
-                console.log('Sender profile is', profileSnapshot)
+                console.log('There are', tokens.length, 'tokens to send notifications to');
+                console.log('Sender profile is', profile)
 
                 const payload = {
                     data: {
                         key: 'InvitationNew',
-                        id: profileSnapshot.uid,
+                        id: profile.uid,
                         custom: JSON.stringify({
-                            senderImage: profileSnapshot.photoURL,
-                            senderId: profileSnapshot.uid,
-                            senderDisplayName: profileSnapshot.displayName
+                            senderImage: profile.photoURL,
+                            senderId: profile.uid,
+                            senderDisplayName: profile.displayName
                         })
                     }
                 };
-
-                const tokens = Object.keys(tokensSnapshot.val());
 
                 return admin.messaging().sendToDevice(tokens, payload).then((response) => {
                     console.log(response)
