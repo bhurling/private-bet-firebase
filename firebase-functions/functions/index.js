@@ -1,8 +1,9 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
-const database = require('./wrappers/database.js')
 const authentication = require('./wrappers/authentication.js')
+const database = require('./wrappers/database.js')
+const messaging = require('./wrappers/messaging.js')
 
 admin.initializeApp();
 
@@ -61,7 +62,9 @@ exports.sendNotificationToInvitee = functions.firestore.document('/links/{receiv
                     }
                 };
 
-                return admin.messaging().sendToDevice(tokens, payload).then((response) => {
+                const messagingPromise = messaging.sendToDevice(tokens, payload)
+
+                return Promise.all([messagingPromise]).then((response) => {
                     console.log(response)
 
                     return 0;

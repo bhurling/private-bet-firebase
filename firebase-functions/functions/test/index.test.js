@@ -5,8 +5,9 @@ const test = require('firebase-functions-test')()
 const admin = require('firebase-admin')
 
 // Require dependencies so we can stub out their methods.
-const database = require('../wrappers/database.js')
 const authentication = require('../wrappers/authentication.js')
+const database = require('../wrappers/database.js')
+const messaging = require('../wrappers/messaging.js')
 
 const myFunctions = require('../index')
 
@@ -17,31 +18,39 @@ describe('sendNotificationToInvitee', () => {
 
         before(() => {
             beforeSnap = {
-                val: () => false
+                data: () => false
             }
         })
 
         describe('when UserA sends invitation to UserB', () => {
             before (() => {
                 afterSnap = {
-                    val: () => true
+                    data: () => true
                 }
                 change = { before: beforeSnap, after: afterSnap }
                 context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
             })
 
-            it('does not throw an error', () => {
-                const snap = test.database.makeDataSnapshot({}, '/devices/UserB')
+            it('sends InvitationNew message to UserB.', () => {
+                const snap = test.firestore.makeDocumentSnapshot({
+                    device_0: true
+                }, '/devices/UserB')
 
                 const databaseStub = sinon.stub(database, 'fetchOnce')
                 const authStub = sinon.stub(authentication, 'getUser')
+                const messagingStub = sinon.stub(messaging, 'sendToDevice')
 
-                databaseStub.withArgs('/links/UserA/incoming/UserB').returns({val: () => null})
+                databaseStub.withArgs('/links/UserA/incoming/UserB').returns({data: () => null})
                 databaseStub.withArgs('/devices/UserB').returns(snap)
-                authStub.withArgs('UserA').returns({})
+
+                authStub.withArgs('UserA').returns({uid: "user_a"})
 
                 return test.wrap(myFunctions.sendNotificationToInvitee)(change, context).then(() => {
-                    // TODO assert that stuff has been called
+                    sinon.assert.calledWith(
+                        messagingStub,
+                        ['device_0'],
+                        sinon.match.has('data', sinon.match.has('key', 'InvitationNew'))
+                    )
                 })
             })
         })
