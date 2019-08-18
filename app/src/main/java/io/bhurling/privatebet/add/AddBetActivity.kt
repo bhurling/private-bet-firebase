@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.textChanges
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.arch.*
 import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.common.ui.datePickerDialog
 import io.bhurling.privatebet.common.ui.doOnNextLayoutOrImmediate
 import io.bhurling.privatebet.model.pojo.Person
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
@@ -35,8 +35,8 @@ import org.koin.inject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
-    private val presenter: AddBetPresenter by inject()
+class AddBetActivity : AppCompatActivity() {
+    private val viewModel: AddBetViewModel by inject()
     private val adapter: OpponentsAdapter by inject()
 
     private val toolbar: Toolbar by bindView(R.id.bets_add_toolbar)
@@ -109,21 +109,21 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
     }
 
     override fun onDestroy() {
-        presenter.detachView()
+        viewModel.detach()
 
         disposables.dispose()
 
         super.onDestroy()
     }
 
-    override fun actions(): Observable<AddAction> = actions
-
-    override fun getStatement() = statement.text.toString()
-
-    override fun getStake() = stake.text.toString()
-
     private fun attach() {
-        presenter.attachView(this)
+        viewModel.attach(actions)
+
+        disposables += statement.textChanges().map { it.toString() }
+            .subscribe { actions.onNext(AddAction.StatementChanged(it)) }
+
+        disposables += stake.textChanges().map { it.toString() }
+            .subscribe { actions.onNext(AddAction.StakeChanged(it)) }
 
         disposables += deadline.clicks()
             .subscribe { actions.onNext(AddAction.DeadlineClicked) }
@@ -146,11 +146,11 @@ class AddBetActivity : AppCompatActivity(), AddBetPresenter.View {
                 actions.onNext(AddAction.OpponentSelected(it.person))
             }
 
-        disposables += presenter.states
+        disposables += viewModel.states()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { render(it) }
 
-        disposables += presenter.effects
+        disposables += viewModel.effects()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { handle(it) }
     }

@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.add
 
 import io.bhurling.privatebet.arch.Optional
+import io.bhurling.privatebet.arch.ViewModelState
 import io.bhurling.privatebet.arch.none
 import io.bhurling.privatebet.model.pojo.Person
 
@@ -11,7 +12,7 @@ data class AddViewState(
     val stake: String = "",
     val opponentIds: List<String> = listOf(),
     val opponent: Person? = null
-) {
+) : ViewModelState {
     val shouldShowNextButton
         get() = step != Step.OPPONENT
 

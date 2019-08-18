@@ -5,7 +5,7 @@ import org.koin.dsl.module.applicationContext
 
 val addBetKoinModule = applicationContext {
     factory {
-        AddBetPresenter(
+        AddBetViewModel(
                 interactor = get()
         )
     }
