@@ -106,6 +106,6 @@ class AddBetViewModel constructor(
     }
 }
 
-private fun <T, R> Observable<T>.mapToLatestFrom(other: Observable<R>): Observable<R> {
+private fun <T : Any, R : Any> Observable<T>.mapToLatestFrom(other: Observable<R>): Observable<R> {
     return this.withLatestFrom(other).map { (_, other) -> other }
 }
