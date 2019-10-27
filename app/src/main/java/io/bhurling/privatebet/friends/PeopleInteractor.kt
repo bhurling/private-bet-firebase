@@ -16,7 +16,6 @@ class PeopleInteractor(
     fun all(): Observable<List<Person>> {
         return firebase
                 .observeValueEvents(profiles.orderBy("displayName"))
-                .take(1)
                 .map { snapshot ->
                     snapshot.documents
                         .filter { child -> child.id != me.uid }
