@@ -4,6 +4,7 @@ import com.airbnb.mvrx.RealMvRxStateStore
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 
 open class BaseViewModel<
@@ -36,7 +37,7 @@ open class BaseViewModel<
     fun attach(actions: Observable<Action>? = null) {
         disposables.clear()
 
-        subscribeUpstream()
+        onAttach()
 
         // Let the subclass subscribe to and handle the actions
         actions?.let { handleActions(it) }
@@ -47,7 +48,7 @@ open class BaseViewModel<
      *
      * Override this function in your own ViewModel.
      */
-    protected open fun subscribeUpstream() {
+    protected open fun onAttach() {
         // Empty default implementation
     }
 
@@ -102,6 +103,20 @@ open class BaseViewModel<
     protected fun sendEffect(effect: Effect) {
         effects.onNext(effect)
     }
+
+    /**
+     * Convenience function to access the stream of changes to a single attribute of the view state.
+     *
+     * Emissions will always be on the main thread.
+     *
+     * @param extractor function to extract a single attribute of type [T] from the [State]
+     */
+    fun <T : Any> stateOf(extractor: State.() -> T): Observable<T> = state.observable
+        .mapNotNull { extractor(it) }
+        .distinctUntilChanged()
+        .observeOn(AndroidSchedulers.mainThread())
+
+
 }
 
 /**

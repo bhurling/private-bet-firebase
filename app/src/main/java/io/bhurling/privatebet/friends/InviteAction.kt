@@ -1,6 +1,8 @@
 package io.bhurling.privatebet.friends
 
-sealed class InviteAction {
+import io.bhurling.privatebet.arch.ViewModelAction
+
+sealed class InviteAction : ViewModelAction {
     data class Invite(val id: String) : InviteAction()
     data class Revoke(val id: String) : InviteAction()
     data class Accept(val id: String) : InviteAction()

@@ -9,15 +9,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import kotterknife.bindView
 import org.koin.inject
 
-internal class InviteActivity: AppCompatActivity(), InvitePresenter.View {
+internal class InviteActivity: AppCompatActivity() {
 
-    private val presenter: InvitePresenter by inject()
+    private val viewModel: InviteViewModel by inject()
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val list: RecyclerView by bindView(R.id.invite_list)
+
+    private val adapter = InviteAdapter()
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +34,14 @@ internal class InviteActivity: AppCompatActivity(), InvitePresenter.View {
 
         list.layoutManager = LinearLayoutManager(this)
         list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        list.adapter = InviteAdapter()
+        list.adapter = adapter
 
-        presenter.attachView(this)
+        viewModel.attach(adapter.actions())
+
+        disposables += viewModel.stateOf { items }
+                .subscribe { items ->
+                    adapter.items = items
+                }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -44,14 +55,10 @@ internal class InviteActivity: AppCompatActivity(), InvitePresenter.View {
     }
 
     override fun onDestroy() {
-        presenter.detachView()
+        viewModel.detach()
+
+        disposables.dispose()
 
         super.onDestroy()
-    }
-
-    override fun actions(): Observable<InviteAction> = (list.adapter as InviteAdapter).actions()
-
-    override fun updateItems(items: List<InviteAdapterItem>) {
-        (list.adapter as InviteAdapter).items = items
     }
 }

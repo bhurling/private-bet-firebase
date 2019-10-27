@@ -8,6 +8,7 @@ dependencies {
     api(Config.Libs.AndroidX.ANNOTATION)
 
     implementation(Config.Libs.Arch.MVRX)
+    implementation(Config.Libs.Rx.KOTLIN)
 
     implementation(Config.Libs.Kotlin.STDLIB)
 }

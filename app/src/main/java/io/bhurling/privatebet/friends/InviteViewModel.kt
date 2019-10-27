@@ -1,20 +1,21 @@
 package io.bhurling.privatebet.friends
 
 import com.google.firebase.auth.FirebaseUser
-import io.bhurling.privatebet.arch.Presenter
+import io.bhurling.privatebet.arch.BaseViewModel
+import io.bhurling.privatebet.arch.ViewModelEffect
+import io.bhurling.privatebet.arch.ViewModelState
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 
-class InvitePresenter(
+internal class InviteViewModel(
         private val peopleInteractor: PeopleInteractor,
         private val invitationsInteractor: InvitationsInteractor,
         private val me: FirebaseUser
-) : Presenter<InvitePresenter.View>() {
+) : BaseViewModel<InviteAction, InviteState, ViewModelEffect>(InviteState()) {
 
-    override fun attachView(view: View) {
-        super.attachView(view)
-
+    override fun onAttach() {
         disposables += Observables
                 .combineLatest(
                         peopleInteractor.all(),
@@ -32,35 +33,38 @@ class InvitePresenter(
                         )
                     }.filterNot { it.isIncoming }
                 }
-                .subscribe { view.updateItems(it) }
+                .subscribe { items ->
+                    updateState { copy(items = items) }
+                }
+    }
 
-        disposables += view.actions()
-                .ofType(InviteAction.Invite::class.java)
+    override fun handleActions(actions: Observable<InviteAction>) {
+        disposables += actions
+                .ofType<InviteAction.Invite>()
                 .subscribe {
                     invitationsInteractor.invite(it.id)
                 }
 
-        disposables += view.actions()
-                .ofType(InviteAction.Revoke::class.java)
+        disposables += actions
+                .ofType<InviteAction.Revoke>()
                 .subscribe {
                     invitationsInteractor.revoke(it.id)
                 }
 
-        disposables += view.actions()
-                .ofType(InviteAction.Accept::class.java)
+        disposables += actions
+                .ofType<InviteAction.Accept>()
                 .subscribe {
                     invitationsInteractor.accept(it.id)
                 }
 
-        disposables += view.actions()
-                .ofType(InviteAction.Decline::class.java)
+        disposables += actions
+                .ofType<InviteAction.Decline>()
                 .subscribe {
                     invitationsInteractor.decline(it.id)
                 }
     }
-
-    interface View : Presenter.View {
-        fun actions(): Observable<InviteAction>
-        fun updateItems(items: List<InviteAdapterItem>)
-    }
 }
+
+internal data class InviteState(
+        val items: List<InviteAdapterItem> = emptyList()
+) : ViewModelState

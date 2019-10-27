@@ -25,7 +25,7 @@ val friendsKoinModule = applicationContext {
     }
 
     factory {
-        InvitePresenter(
+        InviteViewModel(
             peopleInteractor = get(),
             invitationsInteractor = get(),
             me = get()
