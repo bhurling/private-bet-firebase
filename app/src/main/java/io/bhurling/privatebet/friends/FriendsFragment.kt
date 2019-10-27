@@ -2,24 +2,29 @@ package io.bhurling.privatebet.friends
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import kotterknife.bindView
 import org.koin.inject
 
-class FriendsFragment : Fragment(), FriendsPresenter.View {
+class FriendsFragment : Fragment() {
 
-    private val presenter: FriendsPresenter by inject()
+    private val viewModel: FriendsViewModel by inject()
     private val navigator: Navigator by inject()
     private val adapter: FriendsAdapter by inject()
 
     private val emptyView: View by bindView(R.id.friends_empty)
     private val list: RecyclerView by bindView(R.id.friends_list)
     private val connectButton: View by bindView(R.id.friends_connect)
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_friends, container, false)
@@ -32,7 +37,20 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
         list.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         list.adapter = adapter
 
-        presenter.attachView(this)
+        viewModel.attach(adapter.actions())
+
+        disposables += viewModel.stateOf { items }
+            .subscribe { items ->
+                onItemsChanged(items)
+            }
+    }
+
+    private fun onItemsChanged(items: List<FriendsAdapterItem>) {
+        emptyView.isVisible = items.isEmpty()
+
+        adapter.items = items
+
+        setHasOptionsMenu(items.isNotEmpty())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -50,22 +68,10 @@ class FriendsFragment : Fragment(), FriendsPresenter.View {
     }
 
     override fun onDestroyView() {
-        presenter.detachView()
+        viewModel.detach()
+
+        disposables.clear()
 
         super.onDestroyView()
-    }
-
-    override fun actions() = adapter.actions()
-
-    override fun showEmptyState() {
-        emptyView.visibility = View.VISIBLE
-        setHasOptionsMenu(false)
-    }
-
-    override fun showContent(items: List<FriendsAdapterItem>) {
-        emptyView.visibility = View.GONE
-        setHasOptionsMenu(true)
-
-        adapter.items = items
     }
 }

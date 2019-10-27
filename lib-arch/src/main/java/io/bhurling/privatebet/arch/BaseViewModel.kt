@@ -111,12 +111,10 @@ open class BaseViewModel<
      *
      * @param extractor function to extract a single attribute of type [T] from the [State]
      */
-    fun <T : Any> stateOf(extractor: State.() -> T): Observable<T> = state.observable
+    fun <T : Any> stateOf(extractor: State.() -> T?): Observable<T> = state.observable
         .mapNotNull { extractor(it) }
         .distinctUntilChanged()
         .observeOn(AndroidSchedulers.mainThread())
-
-
 }
 
 /**

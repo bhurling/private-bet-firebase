@@ -13,7 +13,7 @@ val friendsKoinModule = applicationContext {
     }
 
     factory {
-        FriendsPresenter(
+        FriendsViewModel(
             invitationsInteractor = get()
         )
     }
