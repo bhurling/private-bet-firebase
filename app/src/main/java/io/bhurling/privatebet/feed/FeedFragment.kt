@@ -10,15 +10,20 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import kotterknife.bindView
 import org.koin.inject
 
-internal class FeedFragment : Fragment(), FeedPresenter.View {
+internal class FeedFragment : Fragment() {
 
-    private val presenter: FeedPresenter by inject()
+    private val viewModel: FeedViewModel by inject()
     private val adapter: FeedAdapter by inject()
 
     private val feed: RecyclerView by bindView(R.id.feed)
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_feed, container, false)
@@ -34,20 +39,21 @@ internal class FeedFragment : Fragment(), FeedPresenter.View {
         decoration.setDrawable(ContextCompat.getDrawable(activity!!, R.drawable.transparent_divider)!!)
         feed.addItemDecoration(decoration)
 
-        presenter.attachView(this)
+        viewModel.attach(Observable.never())
+
+        disposables += viewModel.stateOf { keys }
+            .subscribe { keys -> adapter.keys = keys }
     }
 
     override fun onDestroyView() {
-        presenter.detachView()
+        viewModel.detach()
+
+        disposables.clear()
 
         // we need to unregister the adapter to make sure we call onViewDetachedFromWindow(ViewHolder)
         // for the visible items.
         feed.swapAdapter(null, true)
 
         super.onDestroyView()
-    }
-
-    override fun updateKeys(keys: List<String>) {
-        adapter.keys = keys
     }
 }

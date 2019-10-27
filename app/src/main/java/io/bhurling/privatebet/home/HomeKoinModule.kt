@@ -4,7 +4,7 @@ import org.koin.dsl.module.applicationContext
 
 val homeKoinModule = applicationContext {
     factory {
-        HomePresenter(
+        HomeViewModel(
                 invitationsInteractor = get()
         )
     }

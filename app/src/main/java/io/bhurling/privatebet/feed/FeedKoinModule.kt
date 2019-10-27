@@ -6,7 +6,7 @@ import org.koin.dsl.module.applicationContext
 val feedKoinModule = applicationContext {
 
     factory {
-        FeedPresenter(
+        FeedViewModel(
             interactor = get()
         )
     }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -14,18 +15,23 @@ import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.feed.FeedFragment
 import io.bhurling.privatebet.friends.FriendsFragment
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import kotterknife.bindView
 import org.koin.inject
 
-class HomeActivity : AppCompatActivity(), HomePresenter.View {
+class HomeActivity : AppCompatActivity() {
 
-    private val presenter: HomePresenter by inject()
+    private val viewModel: HomeViewModel by inject()
     private val navigator: Navigator by inject()
 
     private val toolbar: Toolbar by bindView(R.id.toolbar)
     private val pager: ViewPager by bindView(R.id.pager)
     private val tabs: TabLayout by bindView(R.id.navigation)
     private val fab: View by bindView(R.id.fab)
+
+    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,21 +59,18 @@ class HomeActivity : AppCompatActivity(), HomePresenter.View {
             pager.setCurrentItem(1, false)
         }
 
-        presenter.attachView(this)
+        viewModel.attach(Observable.never())
+
+        disposables += viewModel.stateOf { isPrimaryActionVisible }
+            .subscribe { isVisible ->
+                fab.isVisible = isVisible
+            }
     }
 
     override fun onDestroy() {
-        presenter.detachView()
+        viewModel.detach()
 
         super.onDestroy()
-    }
-
-    override fun showPrimaryAction() {
-        fab.visibility = View.VISIBLE
-    }
-
-    override fun hidePrimaryAction() {
-        fab.visibility = View.GONE
     }
 
     companion object {
