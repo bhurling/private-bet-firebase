@@ -8,8 +8,7 @@ val friendsKoinModule = applicationContext {
     factory {
         PeopleInteractor(
             firebase = get(),
-            profiles = get(Qualifiers.profiles),
-            me = get()
+            profiles = get(Qualifiers.profiles)
         )
     }
 
@@ -28,7 +27,8 @@ val friendsKoinModule = applicationContext {
     factory {
         InvitePresenter(
             peopleInteractor = get(),
-            invitationsInteractor = get()
+            invitationsInteractor = get(),
+            me = get()
         )
     }
 

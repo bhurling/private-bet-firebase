@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.friends
 
+import com.google.firebase.auth.FirebaseUser
 import io.bhurling.privatebet.arch.Presenter
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -7,7 +8,8 @@ import io.reactivex.rxkotlin.plusAssign
 
 class InvitePresenter(
         private val peopleInteractor: PeopleInteractor,
-        private val invitationsInteractor: InvitationsInteractor
+        private val invitationsInteractor: InvitationsInteractor,
+        private val me: FirebaseUser
 ) : Presenter<InvitePresenter.View>() {
 
     override fun attachView(view: View) {
@@ -20,7 +22,9 @@ class InvitePresenter(
                         invitationsInteractor.outgoing()
                 )
                 .map { (persons, incoming, outgoing) ->
-                    persons.map {
+                    persons.filter {
+                        it.id != me.uid
+                    }.map {
                         InviteAdapterItem(
                                 person = it,
                                 isIncoming = incoming.contains(it.id),
