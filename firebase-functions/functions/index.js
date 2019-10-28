@@ -28,7 +28,7 @@ exports.sendNotificationToInvitee = functions.firestore.document('/links/{receiv
         return Promise.all([otherLinkPromise]).then(results => {
             const linkSnapshot = results[0]
 
-            if (linkSnapshot.data() == true) {
+            if (linkSnapshot.exists) {
                 console.log('Other link exists, skip notification');
 
                 return 0;
