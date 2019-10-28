@@ -40,6 +40,11 @@ subprojects {
                 sourceCompatibility = JavaVersion.VERSION_1_8
                 targetCompatibility = JavaVersion.VERSION_1_8
             }
+
+            lintOptions {
+                // We don't care about accessibility features
+                disable("ContentDescription")
+            }
         }
     }
 }

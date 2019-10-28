@@ -43,7 +43,9 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <service android:name=".common.push.MessagingService">
+        <service
+            android:name=".common.push.MessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -51,8 +53,8 @@
 
         <service
             android:name=".common.notification.invitation.InvitationReceivedNotificationService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service android:name=".common.notification.invitation.AcceptInvitationService" />
 

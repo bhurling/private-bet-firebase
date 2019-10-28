@@ -11,7 +11,8 @@
         android:layout_marginStart="56dp"
         android:gravity="center_vertical"
         android:text="@string/add_bet_opponent_label"
-        android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle" />
+        android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bets_add_opponent_list"

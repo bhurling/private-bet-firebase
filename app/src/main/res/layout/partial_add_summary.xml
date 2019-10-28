@@ -8,14 +8,15 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.PrivateBet.Dark"
     android:visibility="gone"
+    tools:ignore="Overdraw"
     tools:visibility="visible">
 
     <TextView
         android:id="@+id/bets_add_summary_statement"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginEnd="56dp"
         android:layout_marginStart="56dp"
+        android:layout_marginEnd="56dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif-medium"
         android:gravity="bottom"
@@ -26,10 +27,10 @@
         android:id="@+id/bets_add_summary_vs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="56dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="8dp"
-        android:text="vs" />
+        android:layout_marginEnd="56dp"
+        android:text="@string/add_bet_summary_vs_label" />
 
     <include layout="@layout/item_opponent" />
 
@@ -38,10 +39,10 @@
         style="@style/Widget.PrivateBet.Button.Outline"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginEnd="56dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="40dp"
         android:text="@string/its_on" />
 
 </LinearLayout>
