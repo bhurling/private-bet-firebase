@@ -1,7 +1,6 @@
 {
   "scripts": {
     "format": "prettier --write **/*.ts",
-    "postinstall": "firebase setup:emulators:firestore",
     "start-emulator": "firebase serve --only firestore > /dev/null",
     "pretest": "tsc",
     "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
@@ -9,16 +8,15 @@
     "ci": "start-server-and-test start-emulator http-get://127.0.0.1:8080 test"
   },
   "devDependencies": {
-    "@firebase/testing": "^0.5.1",
-    "@types/mocha": "^5.2.5",
-    "@types/uuid": "^3.4.4",
-    "firebase-admin": "^6.4.0",
-    "mocha": "^5.2.0",
-    "mocha-typescript": "^1.1.17",
+    "@firebase/testing": "0.10.0",
+    "firebase-admin": "8.6.1",
+    "@types/mocha": "5.2.5",
+    "@types/uuid": "3.4.5",
     "prettier": "1.17.1",
-    "start-server-and-test": "^1.7.11",
-    "ts-node": "^7.0.1",
-    "typescript": "^3.2.2",
-    "uuid": "^3.3.2"
+    "mocha": "5.2.0",
+    "mocha-typescript": "1.1.17",
+    "ts-node": "7.0.1",
+    "typescript": "3.2.2",
+    "start-server-and-test": "1.10.6"
   }
 }

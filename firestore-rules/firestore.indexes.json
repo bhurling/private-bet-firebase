@@ -1,3 +1,15 @@
 {
-  "indexes": []
+  "indexes": [],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "bets",
+      "fieldPath": "atStake",
+      "indexes": []
+    },
+    {
+      "collectionGroup": "bets",
+      "fieldPath": "statement",
+      "indexes": []
+    }
+  ]
 }
