@@ -2,7 +2,6 @@ package io.bhurling.privatebet.common.notification.invitation
 
 import android.annotation.SuppressLint
 import android.app.IntentService
-import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobInfo
@@ -17,16 +16,15 @@ import android.graphics.drawable.Drawable
 import android.os.BaseBundle
 import android.os.Bundle
 import android.os.PersistableBundle
+import androidx.core.app.NotificationCompat
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
-import io.bhurling.privatebet.common.notification.safeSetChannelId
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.friends.InvitationsInteractor
 import org.koin.inject
-import java.lang.Exception
 
 class InvitationReceivedNotificationService : JobService() {
 
@@ -63,8 +61,7 @@ class InvitationReceivedNotificationService : JobService() {
     }
 
     private fun postNotification(extras: PersistableBundle, bitmap: Bitmap? = null) {
-        val notification = Notification.Builder(this)
-            .safeSetChannelId(CHANNEL_LINKS)
+        val notification = NotificationCompat.Builder(this, CHANNEL_LINKS)
             .setContentTitle(getString(R.string.notification_invitation_received_title))
             .setContentText(
                 getString(
@@ -75,7 +72,7 @@ class InvitationReceivedNotificationService : JobService() {
             .setContentIntent(navigator.makeFriendsScreenIntent(this))
             .setLargeIcon(bitmap)
             .setSmallIcon(R.drawable.ic_person_black_32dp)
-            .setStyle(Notification.BigTextStyle())
+            .setStyle(NotificationCompat.BigTextStyle())
             .setAutoCancel(true)
             .apply {
                 if (extras.isAccepted) {
@@ -90,16 +87,16 @@ class InvitationReceivedNotificationService : JobService() {
             .notify(makeNotificationId(extras.userId), notification)
     }
 
-    private fun makeAcceptedAction(): Notification.Action {
-        return Notification.Action.Builder(
+    private fun makeAcceptedAction(): NotificationCompat.Action {
+        return NotificationCompat.Action.Builder(
             0,
             getString(R.string.action_accepted),
             null
         ).build()
     }
 
-    private fun makeAcceptAction(extras: PersistableBundle): Notification.Action {
-        return Notification.Action.Builder(
+    private fun makeAcceptAction(extras: PersistableBundle): NotificationCompat.Action {
+        return NotificationCompat.Action.Builder(
             0,
             getString(R.string.action_accept),
             AcceptInvitationService.makePendingIntent(this, extras.toBundle())
