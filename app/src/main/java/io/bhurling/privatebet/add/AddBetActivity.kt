@@ -42,6 +42,7 @@ class AddBetActivity : AppCompatActivity() {
     private val toolbar: Toolbar by bindView(R.id.bets_add_toolbar)
     private val pager: ViewPager by bindView(R.id.bets_add_pager)
     private val statement: EditText by bindView(R.id.bets_add_statement)
+    private val deadlineBg: View by bindView(R.id.bets_add_deadline_bg)
     private val deadline: TextView by bindView(R.id.bets_add_deadline)
     private val clearDeadline: View by bindView(R.id.bets_add_deadline_remove)
     private val stake: EditText by bindView(R.id.bets_add_stake)
@@ -125,7 +126,7 @@ class AddBetActivity : AppCompatActivity() {
         disposables += stake.textChanges().map { it.toString() }
             .subscribe { actions.onNext(AddAction.StakeChanged(it)) }
 
-        disposables += deadline.clicks()
+        disposables += deadlineBg.clicks()
             .subscribe { actions.onNext(AddAction.DeadlineClicked) }
 
         disposables += clearDeadline.clicks()

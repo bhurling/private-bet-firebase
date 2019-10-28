@@ -64,20 +64,30 @@
             android:textAppearance="@style/TextAppearance.Widget.PrivateBet.Toolbar.CleanTitle"
             app:layout_constraintTop_toBottomOf="@+id/bets_add_statement_layout" />
 
-        <TextView
-            android:id="@+id/bets_add_deadline"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/bets_add_deadline_bg"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginEnd="52dp"
-            android:background="?attr/editTextBackground"
-            android:focusable="false"
-            android:foreground="?attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp"
-            android:text="@string/no_deadline"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/bets_add_deadline_label" />
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bets_add_deadline_label">
+
+            <TextView
+                android:id="@+id/bets_add_deadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/editTextBackground"
+                android:focusable="false"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:text="@string/no_deadline"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/bets_add_deadline_label" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/bets_add_deadline_remove"
@@ -87,9 +97,9 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="center"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/bets_add_deadline"
-            app:layout_constraintEnd_toEndOf="@+id/bets_add_deadline"
-            app:layout_constraintTop_toTopOf="@+id/bets_add_deadline"
+            app:layout_constraintBottom_toBottomOf="@+id/bets_add_deadline_bg"
+            app:layout_constraintEnd_toEndOf="@+id/bets_add_deadline_bg"
+            app:layout_constraintTop_toTopOf="@+id/bets_add_deadline_bg"
             app:srcCompat="@drawable/ic_close_primary_24dp"
             tools:visibility="visible" />
 
