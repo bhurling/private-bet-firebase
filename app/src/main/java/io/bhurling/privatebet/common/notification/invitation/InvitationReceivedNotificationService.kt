@@ -38,65 +38,71 @@ class InvitationReceivedNotificationService : JobService() {
 
     override fun onStartJob(params: JobParameters): Boolean {
         Picasso.get()
-                .load(params.extras.photoUrl)
-                .transform(CircleTransformation())
-                .into(object : Target {
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                        // ignore
-                    }
+            .load(params.extras.photoUrl)
+            .transform(CircleTransformation())
+            .into(object : Target {
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                    // ignore
+                }
 
-                    override fun onBitmapFailed(e: Exception, errorDrawable: Drawable?) {
-                        postNotification(params.extras)
+                override fun onBitmapFailed(e: Exception, errorDrawable: Drawable?) {
+                    postNotification(params.extras)
 
-                        jobFinished(params, false)
-                    }
+                    jobFinished(params, false)
+                }
 
-                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                        postNotification(params.extras, bitmap)
+                override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+                    postNotification(params.extras, bitmap)
 
-                        jobFinished(params, false)
-                    }
+                    jobFinished(params, false)
+                }
 
-                })
+            })
 
         return true
     }
 
     private fun postNotification(extras: PersistableBundle, bitmap: Bitmap? = null) {
         val notification = Notification.Builder(this)
-                .safeSetChannelId(CHANNEL_LINKS)
-                .setContentTitle(getString(R.string.notification_invitation_received_title))
-                .setContentText(getString(R.string.notification_invitation_received_message, extras.displayName))
-                .setContentIntent(navigator.makeFriendsScreenIntent(this))
-                .setLargeIcon(bitmap)
-                .setSmallIcon(R.drawable.ic_person_black_32dp)
-                .setStyle(Notification.BigTextStyle())
-                .apply {
-                    if (extras.isAccepted) {
-                        addAction(makeAcceptedAction())
-                    } else {
-                        addAction(makeAcceptAction(extras))
-                    }
+            .safeSetChannelId(CHANNEL_LINKS)
+            .setContentTitle(getString(R.string.notification_invitation_received_title))
+            .setContentText(
+                getString(
+                    R.string.notification_invitation_received_message,
+                    extras.displayName
+                )
+            )
+            .setContentIntent(navigator.makeFriendsScreenIntent(this))
+            .setLargeIcon(bitmap)
+            .setSmallIcon(R.drawable.ic_person_black_32dp)
+            .setStyle(Notification.BigTextStyle())
+            .setAutoCancel(true)
+            .apply {
+                if (extras.isAccepted) {
+                    addAction(makeAcceptedAction())
+                } else {
+                    addAction(makeAcceptAction(extras))
                 }
-                .build()
+            }
+            .build()
 
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .notify(makeNotificationId(extras.userId), notification)
+            .notify(makeNotificationId(extras.userId), notification)
     }
 
     private fun makeAcceptedAction(): Notification.Action {
         return Notification.Action.Builder(
-                0,
-                getString(R.string.action_accepted),
-                null
+            0,
+            getString(R.string.action_accepted),
+            null
         ).build()
     }
 
     private fun makeAcceptAction(extras: PersistableBundle): Notification.Action {
         return Notification.Action.Builder(
-                0,
-                getString(R.string.action_accept),
-                AcceptInvitationService.makePendingIntent(this, extras.toBundle())
+            0,
+            getString(R.string.action_accept),
+            AcceptInvitationService.makePendingIntent(this, extras.toBundle())
         ).build()
     }
 
@@ -106,18 +112,25 @@ class InvitationReceivedNotificationService : JobService() {
         internal const val EXTRA_USER_ID = "io.bhurling.privatebet.extras.USER_ID"
         internal const val EXTRA_IS_ACCEPTED = "io.bhurling.privatebet.extras.IS_ACCEPTED"
 
-        fun schedule(context: Context, userId: String, photoUrl: String, displayName: String, isAccepted: Boolean = false) {
-            val componentName = ComponentName(context, InvitationReceivedNotificationService::class.java)
+        fun schedule(
+            context: Context,
+            userId: String,
+            photoUrl: String,
+            displayName: String,
+            isAccepted: Boolean = false
+        ) {
+            val componentName =
+                ComponentName(context, InvitationReceivedNotificationService::class.java)
 
             val job = JobInfo.Builder(makeJobId(userId), componentName)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setExtras(PersistableBundle().apply {
-                        this.userId = userId
-                        this.displayName = displayName
-                        this.photoUrl = photoUrl
-                        this.isAccepted = isAccepted
-                    })
-                    .build()
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setExtras(PersistableBundle().apply {
+                    this.userId = userId
+                    this.displayName = displayName
+                    this.photoUrl = photoUrl
+                    this.isAccepted = isAccepted
+                })
+                .build()
 
             (context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler).schedule(job)
         }
@@ -136,14 +149,14 @@ class AcceptInvitationService : IntentService("AcceptInvitationService") {
             interactor.accept(userId)
 
             InvitationReceivedNotificationService
-                    .schedule(this@AcceptInvitationService, userId, photoUrl, displayName, true)
+                .schedule(this@AcceptInvitationService, userId, photoUrl, displayName, true)
         }
     }
 
     companion object {
         fun makePendingIntent(context: Context, bundle: Bundle): PendingIntent {
             val intent = Intent(context, AcceptInvitationService::class.java)
-                    .putExtras(bundle)
+                .putExtras(bundle)
 
             return PendingIntent.getService(context, 0, intent, 0)
         }
