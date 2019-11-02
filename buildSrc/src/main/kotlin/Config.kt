@@ -27,10 +27,9 @@ object Config {
         }
 
         object Firebase {
-            const val CORE = "com.google.firebase:firebase-core:17.2.0"
             const val AUTH = "com.google.firebase:firebase-auth:19.1.0"
             const val AUTH_UI = "com.firebaseui:firebase-ui-auth:6.0.2"
-            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.2.0"
+            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.2.1"
             const val MESSAGING = "com.google.firebase:firebase-messaging:20.0.0"
         }
 

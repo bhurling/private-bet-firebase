@@ -29,7 +29,6 @@ dependencies {
     implementation(Config.Libs.AndroidX.CONSTRAINT_LAYOUT)
     implementation(Config.Libs.AndroidX.TRANSITION)
 
-    implementation(Config.Libs.Firebase.CORE)
     implementation(Config.Libs.Firebase.AUTH)
     implementation(Config.Libs.Firebase.AUTH_UI)
     implementation(Config.Libs.Firebase.DATABASE)
