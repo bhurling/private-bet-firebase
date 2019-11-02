@@ -41,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
 
         fab.setOnClickListener { navigator.launchCreationFlow(this) }
 
-        pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+        pager.adapter = object : FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
                 if (position == 0) return FeedFragment()
                 if (position == 1) return FriendsFragment()

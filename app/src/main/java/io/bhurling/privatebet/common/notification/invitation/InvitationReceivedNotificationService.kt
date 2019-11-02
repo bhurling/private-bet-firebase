@@ -142,11 +142,17 @@ class AcceptInvitationService : IntentService("AcceptInvitationService") {
     private val interactor: InvitationsInteractor by inject()
 
     override fun onHandleIntent(intent: Intent) {
-        with(intent.extras) {
-            interactor.accept(userId)
+        intent.extras?.let { extras ->
+            interactor.accept(extras.userId)
 
             InvitationReceivedNotificationService
-                .schedule(this@AcceptInvitationService, userId, photoUrl, displayName, true)
+                .schedule(
+                    context = this@AcceptInvitationService,
+                    userId = extras.userId,
+                    photoUrl = extras.photoUrl,
+                    displayName = extras.displayName,
+                    isAccepted = true
+                )
         }
     }
 
