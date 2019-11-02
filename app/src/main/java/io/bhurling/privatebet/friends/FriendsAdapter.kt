@@ -18,14 +18,14 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 
 internal class FriendsAdapter(
-        private val peopleInteractor: PeopleInteractor
+    private val peopleInteractor: PeopleInteractor
 ) : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
     var items: List<FriendsAdapterItem> by diffableList(
-            { old, new -> old.id == new.id },
-            { old, new -> old == new }
+        { old, new -> old.id == new.id },
+        { old, new -> old == new }
     )
 
     fun actions(): Observable<InviteAction> = actionsSubject
@@ -70,7 +70,7 @@ internal class FriendsAdapter(
         fun subscribe() {
             item?.let { item ->
                 disposable = peopleInteractor.byId(item.id)
-                        .subscribe { update(it, item.isInvited) }
+                    .subscribe { update(it, item.isInvited) }
             }
         }
 
@@ -82,9 +82,10 @@ internal class FriendsAdapter(
 
         private fun update(person: Person, isInvited: Boolean) {
             Picasso.get()
-                    .load(person.photoUrl)
-                    .transform(CircleTransformation())
-                    .into(icon)
+                .load(person.photoUrl)
+                .error(R.drawable.default_avatar)
+                .transform(CircleTransformation())
+                .into(icon)
 
             title.text = person.displayName
 
