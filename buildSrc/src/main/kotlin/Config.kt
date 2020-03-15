@@ -18,12 +18,12 @@ object Config {
         }
 
         object AndroidX {
-            const val ANNOTATION = "androidx.annotation:annotation:1.0.2"
+            const val ANNOTATION = "androidx.annotation:annotation:1.1.0"
             const val APPCOMPAT = "androidx.appcompat:appcompat:1.1.0"
             const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:1.1.3"
             const val CORE = "androidx.core:core-ktx:1.1.0"
-            const val RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.0.0"
-            const val TRANSITION = "androidx.transition:transition:1.2.0"
+            const val RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.1.0"
+            const val TRANSITION = "androidx.transition:transition:1.3.1"
         }
 
         object Firebase {
