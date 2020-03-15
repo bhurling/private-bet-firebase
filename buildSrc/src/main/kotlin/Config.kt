@@ -5,7 +5,7 @@ object Config {
     }
 
     object Plugins {
-        const val ANDROID = "com.android.tools.build:gradle:3.5.1"
+        const val ANDROID = "com.android.tools.build:gradle:3.6.0"
         const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
         const val GOOGLE = "com.google.gms:google-services:4.3.2"
         const val VERSIONS = "com.github.ben-manes:gradle-versions-plugin:0.27.0"
@@ -34,7 +34,7 @@ object Config {
         }
 
         object Rx {
-            const val JAVA = "io.reactivex.rxjava2:rxjava:2.2.13"
+            const val JAVA = "io.reactivex.rxjava2:rxjava:2.2.19"
             const val ANDROID = "io.reactivex.rxjava2:rxandroid:2.1.1"
             const val KOTLIN = "io.reactivex.rxjava2:rxkotlin:2.4.0"
             const val BINDING_KOTLIN = "com.jakewharton.rxbinding2:rxbinding-kotlin:2.2.0"
