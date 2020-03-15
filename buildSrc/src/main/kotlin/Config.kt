@@ -1,7 +1,7 @@
 object Config {
 
     object Versions {
-        const val KOTLIN = "1.3.50"
+        const val KOTLIN = "1.3.70"
     }
 
     object Plugins {
@@ -27,10 +27,10 @@ object Config {
         }
 
         object Firebase {
-            const val AUTH = "com.google.firebase:firebase-auth:19.1.0"
-            const val AUTH_UI = "com.firebaseui:firebase-ui-auth:6.0.2"
-            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.2.1"
-            const val MESSAGING = "com.google.firebase:firebase-messaging:20.0.0"
+            const val AUTH = "com.google.firebase:firebase-auth:19.3.0"
+            const val AUTH_UI = "com.firebaseui:firebase-ui-auth:6.2.0"
+            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.4.1"
+            const val MESSAGING = "com.google.firebase:firebase-messaging:20.1.2"
         }
 
         object Rx {
