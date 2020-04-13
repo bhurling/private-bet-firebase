@@ -11,28 +11,19 @@ const messaging = require('../wrappers/messaging.js')
 
 const myFunctions = require('../index')
 
-describe('sendNotificationToInvitee', () => {
+describe('onInvitationReceived', () => {
 
     describe('Given there is no invitation from UserA to UserB', () => {
-        let beforeSnap, afterSnap, change, context
-
-        before(() => {
-            beforeSnap = {
-                data: () => false
-            }
-        })
+        let snap, context
 
         describe('when UserA sends invitation to UserB', () => {
             before (() => {
-                afterSnap = {
-                    data: () => true
-                }
-                change = { before: beforeSnap, after: afterSnap }
+                snap = { }
                 context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
             })
 
             it('sends InvitationNew message to UserB.', () => {
-                const snap = test.firestore.makeDocumentSnapshot({
+                const deviceSnap = test.firestore.makeDocumentSnapshot({
                     device_0: true
                 }, '/devices/UserB')
 
@@ -40,12 +31,10 @@ describe('sendNotificationToInvitee', () => {
                 const authStub = sinon.stub(authentication, 'getUser')
                 const messagingStub = sinon.stub(messaging, 'sendToDevice')
 
-                databaseStub.withArgs('/links/UserA/incoming/UserB').returns({data: () => null})
-                databaseStub.withArgs('/devices/UserB').returns(snap)
-
+                databaseStub.withArgs('/devices/UserB').returns(deviceSnap)
                 authStub.withArgs('UserA').returns({uid: "user_a"})
 
-                return test.wrap(myFunctions.sendNotificationToInvitee)(change, context).then(() => {
+                return test.wrap(myFunctions.onInvitationReceived)(snap, context).then(() => {
                     sinon.assert.calledWith(
                         messagingStub,
                         ['device_0'],
