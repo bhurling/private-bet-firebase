@@ -1,7 +1,7 @@
 {
   "scripts": {
     "format": "prettier --write **/*.ts",
-    "start-emulator": "firebase serve --only firestore",
+    "start-emulator": "firebase emulators:start",
     "pretest": "tsc",
     "test": "FIREBASE_FIRESTORE_EMULATOR_ADDRESS='127.0.0.1:8080' mocha",
     "posttest": "rm -f test/*.js test/*.map",
