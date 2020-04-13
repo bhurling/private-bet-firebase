@@ -23,7 +23,27 @@ exports.onInvitationSent = functions.firestore.document('/links/{senderUid}/outg
         } else {
             console.log(`Creating incoming link for ${receiverUid}`)
 
-            return database.create(`/links/${receiverUid}/incoming/${senderUid}`, { linked: true } )
+            const profiles = await Promise.all([
+                authentication.getUser(senderUid), 
+                authentication.getUser(receiverUid)
+            ])
+
+            const senderProfile = profiles[0]
+            const senderLinkData = {
+                photoUrl: senderProfile.photoURL,
+                displayName: senderProfile.displayName
+            }
+
+            const receiverProfile = profiles[1]
+            const receiverLinkData = {
+                photoUrl: receiverProfile.photoURL,
+                displayName: receiverProfile.displayName
+            }
+
+            return Promise.all([
+                database.update(`/links/${senderUid}/outgoing/${receiverUid}`, receiverLinkData),
+                database.create(`/links/${receiverUid}/incoming/${senderUid}`, senderLinkData)
+            ])
         }
 })
 
@@ -83,7 +103,27 @@ exports.onInvitationConfirmed = functions.firestore.document('/links/{receiverUi
         } else {
             console.log(`Creating confirmed link for ${senderUid}`)
 
-            return database.create(`/links/${senderUid}/confirmed/${receiverUid}`, { linked: true } )
+            const profiles = await Promise.all([
+                authentication.getUser(senderUid), 
+                authentication.getUser(receiverUid)
+            ])
+
+            const senderProfile = profiles[0]
+            const senderLinkData = {
+                photoUrl: senderProfile.photoURL,
+                displayName: senderProfile.displayName
+            }
+
+            const receiverProfile = profiles[1]
+            const receiverLinkData = {
+                photoUrl: receiverProfile.photoURL,
+                displayName: receiverProfile.displayName
+            }
+
+            return Promise.all([
+                database.update(`/links/${receiverUid}/confirmed/${senderUid}`, senderLinkData),
+                database.create(`/links/${senderUid}/confirmed/${receiverUid}`, receiverLinkData)
+            ])
         }
 })
 

@@ -40,7 +40,7 @@ service cloud.firestore {
 
       match /{userId}/confirmed/{otherUserId} {
         function hasIncomingLink(from, to) {
-          return get(/databases/$(database)/documents/links/$(to)/incoming/$(from)).data.linked == true
+          return exists(/databases/$(database)/documents/links/$(to)/incoming/$(from))
         }
 
         allow read: if isCurrentUser(userId)

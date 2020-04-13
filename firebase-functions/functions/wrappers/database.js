@@ -7,3 +7,7 @@ module.exports.fetchOnce = async (doc) => {
 module.exports.create = async (doc, data) => {
     return admin.firestore().doc(doc).create(data)
 }
+
+module.exports.update = async (doc, data) => {
+    return admin.firestore().doc(doc).update(data)
+}

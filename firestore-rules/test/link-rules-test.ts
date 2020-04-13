@@ -162,7 +162,7 @@ class LinkRules extends FirestoreTest {
       .doc(link.to)
       .collection("incoming")
       .doc(link.from)
-      .set({ linked: true });
+      .set({ displayName: "My name" });
   }
 }
 
