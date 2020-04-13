@@ -27,24 +27,19 @@ class InvitationsInteractor(
         .mapToChildKeys()
 
     fun invite(id: String) {
-        links.document(id).collection("incoming").document(me.uid).set(mapOf("linked" to true))
         myLinks.collection("outgoing").document(id).set(mapOf("linked" to true))
     }
 
     fun revoke(id: String) {
-        links.document(id).collection("incoming").document(me.uid).delete()
         myLinks.collection("outgoing").document(id).delete()
     }
 
     fun accept(id: String) {
-        links.document(id).collection("confirmed").document(me.uid).set(mapOf("linked" to true))
         myLinks.collection("confirmed").document(id).set(mapOf("linked" to true))
-        links.document(id).collection("incoming").document(me.uid).set(mapOf("linked" to true))
-        myLinks.collection("outgoing").document(id).set(mapOf("linked" to true))
     }
 
     fun decline(id: String) {
-        // TODO decline invitation
+        myLinks.collection("incoming").document(id).delete()
     }
 
 }

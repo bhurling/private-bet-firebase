@@ -64,7 +64,7 @@ class LinkRules extends FirestoreTest {
   }
 
   @test
-  async "can write to bob's incoming links"() {
+  async "can not write to bob's incoming links"() {
     const incoming = this.app()
       .firestore()
       .collection("links")
@@ -72,7 +72,7 @@ class LinkRules extends FirestoreTest {
       .collection("incoming")
       .doc("alice");
 
-    await firebase.assertSucceeds(incoming.set({ linked: true }));
+    await firebase.assertFails(incoming.set({ linked: true }));
   }
 
   @test
@@ -102,7 +102,7 @@ class LinkRules extends FirestoreTest {
   }
 
   @test
-  async "can confirm incoming link in bob's collection"() {
+  async "can not confirm incoming link in bob's collection"() {
     await this.prepareIncoming({ from: "bob", to: "alice" })
 
     const confirmed = this.app()
@@ -112,7 +112,7 @@ class LinkRules extends FirestoreTest {
       .collection("confirmed")
       .doc("alice");
 
-    await firebase.assertSucceeds(confirmed.set({ linked: true }));
+    await firebase.assertFails(confirmed.set({ linked: true }));
   }
 
   @test

@@ -7,6 +7,86 @@ const messaging = require('./wrappers/messaging.js')
 
 admin.initializeApp();
 
+exports.onInvitationSent = functions.firestore.document('/links/{senderUid}/outgoing/{receiverUid}')
+    .onCreate(async (snapshot, context) => {
+        const receiverUid = context.params.receiverUid
+        const senderUid = context.params.senderUid
+
+        console.log(`${senderUid} wants to invite ${receiverUid}`)
+
+        const receiverLink = await admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).get()
+
+        if (receiverLink.data()) {
+            console.log(`Incoming link for ${receiverUid} already exists`)
+
+            return null
+        } else {
+            console.log(`Creating incoming link for ${receiverUid}`)
+
+            return admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).create( { linked: true } )
+        }
+})
+
+exports.onInvitationRevoked = functions.firestore.document('/links/{senderUid}/outgoing/{receiverUid}')
+    .onDelete(async (snapshot, context) => {
+        const receiverUid = context.params.receiverUid
+        const senderUid = context.params.senderUid
+
+        console.log(`${senderUid} wants to revoke invitation for ${receiverUid}`)
+
+        const receiverLink = await admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).get()
+
+        if (receiverLink.data()) {
+            console.log(`Deleting incoming link for ${receiverUid}`)
+
+            return admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).delete()
+        } else {
+            console.log(`Incoming link for ${receiverUid} did not exist`)
+
+            return null
+        }
+})
+
+exports.onInvitationDeclined = functions.firestore.document('/links/{receiverUid}/incoming/{senderUid}')
+    .onDelete(async (snapshot, context) => {
+        const receiverUid = context.params.receiverUid
+        const senderUid = context.params.senderUid
+
+        console.log(`${receiverUid} wants to declined invitation from ${senderUid}`)
+
+        const senderLink = await admin.firestore().doc(`/links/${senderUid}/outgoing/${receiverUid}`).get()
+
+        if (senderLink.data()) {
+            console.log(`Deleting outgoing link from ${senderUid}`)
+
+            return admin.firestore().doc(`/links/${senderUid}/outgoing/${receiverUid}`).delete()
+        } else {
+            console.log(`Outgoing link fron ${senderUid} did not exist`)
+
+            return null
+        }
+})
+
+exports.onInvitationConfirmed = functions.firestore.document('/links/{receiverUid}/confirmed/{senderUid}')
+    .onCreate(async (snapshot, context) => {
+        const receiverUid = context.params.receiverUid
+        const senderUid = context.params.senderUid
+
+        console.log(`${receiverUid} wants to confirm invitation from ${senderUid}`)
+
+        const senderLink = await admin.firestore().doc(`/links/${senderUid}/confirmed/${receiverUid}`).get()
+
+        if (senderLink.data()) {
+            console.log(`Confirmed link for ${senderUid} already exists`)
+
+            return null
+        } else {
+            console.log(`Creating confirmed link for ${senderUid}`)
+
+            return admin.firestore().doc(`/links/${senderUid}/confirmed/${receiverUid}`).create( { linked: true } )
+        }
+})
+
 exports.sendNotificationToInvitee = functions.firestore.document('/links/{receiverUid}/incoming/{senderUid}')
     .onWrite((change, context) => {
         const receiverUid = context.params.receiverUid;

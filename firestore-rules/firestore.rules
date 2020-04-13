@@ -35,7 +35,7 @@ service cloud.firestore {
 
       match /{userId}/incoming/{otherUserId} {
         allow read: if isCurrentUser(userId)
-        allow write: if isCurrentUser(otherUserId) && !isCurrentUser(userId)
+        allow write: if false
       }
 
       match /{userId}/confirmed/{otherUserId} {
@@ -45,7 +45,6 @@ service cloud.firestore {
 
         allow read: if isCurrentUser(userId)
         allow write: if (isCurrentUser(userId) && hasIncomingLink(otherUserId, userId))
-          || (isCurrentUser(otherUserId) && hasIncomingLink(userId, otherUserId))
       }
     }
 
