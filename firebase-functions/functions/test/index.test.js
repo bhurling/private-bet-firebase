@@ -15,16 +15,22 @@ describe('onInvitationSent', () => {
     beforeEach (() => {
         databaseFetchStub = sinon.stub(database, 'fetchOnce')
         databaseCreateStub = sinon.stub(database, 'create')
+        databaseUpdateStub = sinon.stub(database, 'update')
+        authStub = sinon.stub(authentication, 'getUser')
     })
 
     afterEach (() => {
         databaseFetchStub.restore()
         databaseCreateStub.restore()
+        databaseUpdateStub.restore()
+        authStub.restore()
     })
 
     describe('when there is no incoming link for UserB yet', () => {
         beforeEach (() => {
             databaseFetchStub.withArgs('/links/UserB/incoming/UserA').returns(test.firestore.makeDocumentSnapshot())
+            authStub.withArgs('UserA').returns({ uid: 'user_a', photoURL: 'url_a', displayName: 'User A' })
+            authStub.withArgs('UserB').returns({ uid: 'user_b', photoURL: 'url_b', displayName: 'User B' })
         })
 
         describe('when UserA sends invitation to UserB', () => {
@@ -71,16 +77,22 @@ describe('onInvitationConfirmed', () => {
     beforeEach(() => {
         databaseFetchStub = sinon.stub(database, 'fetchOnce')
         databaseCreateStub = sinon.stub(database, 'create')
+        databaseUpdateStub = sinon.stub(database, 'update')
+        authStub = sinon.stub(authentication, 'getUser')
     })
 
     afterEach(() => {
         databaseFetchStub.restore()
         databaseCreateStub.restore()
+        databaseUpdateStub.restore()
+        authStub.restore()
     })
 
     describe('when UserA confirms invitation from UserB', () => {
         beforeEach(() => {
             databaseFetchStub.withArgs('/links/UserB/confirmed/UserA').returns(test.firestore.makeDocumentSnapshot())
+            authStub.withArgs('UserA').returns({ uid: 'user_a', photoURL: 'url_a', displayName: 'User A' })
+            authStub.withArgs('UserB').returns({ uid: 'user_b', photoURL: 'url_b', displayName: 'User B' })
         })
 
         it('would create confirmed link for UserB', () => {
