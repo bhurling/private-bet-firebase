@@ -1,5 +1,9 @@
 const admin = require('firebase-admin')
 
-module.exports.fetchOnce = (doc) => {
+module.exports.fetchOnce = async (doc) => {
     return admin.firestore().doc(doc).get()
+}
+
+module.exports.create = async (doc, data) => {
+    return admin.firestore().doc(doc).create(data)
 }

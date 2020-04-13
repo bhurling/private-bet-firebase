@@ -14,7 +14,7 @@ exports.onInvitationSent = functions.firestore.document('/links/{senderUid}/outg
 
         console.log(`${senderUid} wants to invite ${receiverUid}`)
 
-        const receiverLink = await admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).get()
+        const receiverLink = await database.fetchOnce(`/links/${receiverUid}/incoming/${senderUid}`)
 
         if (receiverLink.data()) {
             console.log(`Incoming link for ${receiverUid} already exists`)
@@ -23,7 +23,7 @@ exports.onInvitationSent = functions.firestore.document('/links/{senderUid}/outg
         } else {
             console.log(`Creating incoming link for ${receiverUid}`)
 
-            return admin.firestore().doc(`/links/${receiverUid}/incoming/${senderUid}`).create( { linked: true } )
+            return database.create(`/links/${receiverUid}/incoming/${senderUid}`, { linked: true } )
         }
 })
 
@@ -74,7 +74,7 @@ exports.onInvitationConfirmed = functions.firestore.document('/links/{receiverUi
 
         console.log(`${receiverUid} wants to confirm invitation from ${senderUid}`)
 
-        const senderLink = await admin.firestore().doc(`/links/${senderUid}/confirmed/${receiverUid}`).get()
+        const senderLink = await database.fetchOnce(`/links/${senderUid}/confirmed/${receiverUid}`)
 
         if (senderLink.data()) {
             console.log(`Confirmed link for ${senderUid} already exists`)
@@ -83,7 +83,7 @@ exports.onInvitationConfirmed = functions.firestore.document('/links/{receiverUi
         } else {
             console.log(`Creating confirmed link for ${senderUid}`)
 
-            return admin.firestore().doc(`/links/${senderUid}/confirmed/${receiverUid}`).create( { linked: true } )
+            return database.create(`/links/${senderUid}/confirmed/${receiverUid}`, { linked: true } )
         }
 })
 

@@ -11,34 +11,136 @@ const messaging = require('../wrappers/messaging.js')
 
 const myFunctions = require('../index')
 
-describe('onInvitationReceived', () => {
+describe('onInvitationSent', () => {
+    beforeEach (() => {
+        databaseFetchStub = sinon.stub(database, 'fetchOnce')
+        databaseCreateStub = sinon.stub(database, 'create')
+    })
 
-    describe('Given there is no invitation from UserA to UserB', () => {
-        let snap, context
+    afterEach (() => {
+        databaseFetchStub.restore()
+        databaseCreateStub.restore()
+    })
+
+    describe('when there is no incoming link for UserB yet', () => {
+        beforeEach (() => {
+            databaseFetchStub.withArgs('/links/UserB/incoming/UserA').returns(test.firestore.makeDocumentSnapshot())
+        })
 
         describe('when UserA sends invitation to UserB', () => {
-            before (() => {
-                snap = { }
-                context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
+            const snap = test.firestore.makeDocumentSnapshot()
+            const context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
+    
+            it('would create the incoming link for UserB', () => {
+                return test.wrap(myFunctions.onInvitationSent)(snap, context).then(() => {
+                    sinon.assert.calledWith(
+                        databaseCreateStub,
+                        "/links/UserB/incoming/UserA",
+                        sinon.match.any
+                    )
+                })
             })
+        })
+    })
 
-            it('sends InvitationNew message to UserB.', () => {
-                const deviceSnap = test.firestore.makeDocumentSnapshot({
+    describe('when there is an incoming link for UserB already', () => {
+        beforeEach (() => {
+            databaseFetchStub.withArgs('/links/UserB/incoming/UserA').returns(test.firestore.makeDocumentSnapshot( { linked: true }))
+        })
+
+        describe('when UserA sends invitation to UserB', () => {
+            const snap = test.firestore.makeDocumentSnapshot()
+            const context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
+    
+            it('would not create another incoming link for UserB', () => {
+                return test.wrap(myFunctions.onInvitationSent)(snap, context).then(() => {
+                    sinon.assert.neverCalledWith(
+                        databaseCreateStub,
+                        "/links/UserB/incoming/UserA",
+                        sinon.match.any
+                    )
+                })
+            })
+        })
+    })
+
+})
+
+describe('onInvitationConfirmed', () => {
+
+    beforeEach(() => {
+        databaseFetchStub = sinon.stub(database, 'fetchOnce')
+        databaseCreateStub = sinon.stub(database, 'create')
+    })
+
+    afterEach(() => {
+        databaseFetchStub.restore()
+        databaseCreateStub.restore()
+    })
+
+    describe('when UserA confirms invitation from UserB', () => {
+        beforeEach(() => {
+            databaseFetchStub.withArgs('/links/UserB/confirmed/UserA').returns(test.firestore.makeDocumentSnapshot())
+        })
+
+        it('would create confirmed link for UserB', () => {
+            const snap = test.firestore.makeDocumentSnapshot()
+            const context = { params: { receiverUid: "UserA", senderUid: "UserB" } }
+
+            return test.wrap(myFunctions.onInvitationConfirmed)(snap, context).then(() => {
+                sinon.assert.calledWith(
+                    databaseCreateStub,
+                    "/links/UserB/confirmed/UserA",
+                    sinon.match.any
+                )
+            })
+        })
+    })
+})
+
+describe('onInvitationReceived', () => {
+    beforeEach (() => {
+        snap = test.firestore.makeDocumentSnapshot()
+
+        databaseFetchStub = sinon.stub(database, 'fetchOnce')
+        authStub = sinon.stub(authentication, 'getUser')
+        messagingStub = sinon.stub(messaging, 'sendToDevice')    
+    })
+
+    afterEach (() => {
+        databaseFetchStub.restore()
+        authStub.restore()
+        messagingStub.restore()
+    })
+
+    describe('when UserB receives invitation from UserA', () => {
+
+        beforeEach(() => {
+            context = { params: { receiverUid: "UserB", senderUid: "UserA" } }
+        })
+
+        describe('when UserB has a device token registered', () => {
+
+            beforeEach(() => {
+                deviceSnap = test.firestore.makeDocumentSnapshot({
                     device_0: true
                 }, '/devices/UserB')
+    
+                databaseFetchStub.withArgs('/devices/UserB').returns(deviceSnap)
+            })
 
-                const databaseStub = sinon.stub(database, 'fetchOnce')
-                const authStub = sinon.stub(authentication, 'getUser')
-                const messagingStub = sinon.stub(messaging, 'sendToDevice')
-
-                databaseStub.withArgs('/devices/UserB').returns(deviceSnap)
+            it('would send message with key "InvitationNew" to UserB.', () => {
                 authStub.withArgs('UserA').returns({uid: "user_a"})
+    
+                expectedTokens = ['device_0']
+                expectedPayload = sinon.match.hasNested('data.key', 'InvitationNew')
+                    .and(sinon.match.hasNested('data.custom', '{"senderId":"user_a"}'))
 
                 return test.wrap(myFunctions.onInvitationReceived)(snap, context).then(() => {
                     sinon.assert.calledWith(
                         messagingStub,
-                        ['device_0'],
-                        sinon.match.has('data', sinon.match.has('key', 'InvitationNew'))
+                        expectedTokens,
+                        expectedPayload
                     )
                 })
             })
