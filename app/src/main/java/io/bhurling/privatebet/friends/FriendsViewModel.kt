@@ -18,9 +18,11 @@ internal class FriendsViewModel constructor(
                 .combineLatest(
                     incoming(),
                     confirmed()
-                ) { incoming, confirmed -> incoming + confirmed }
+                ) { incoming, confirmed ->
+                    incoming + confirmed
+                }
                 .map { invites ->
-                    invites.reversed().distinctBy { it.id }.reversed()
+                    invites.reversed().distinctBy { it.person.id }.reversed()
                 }
                 .subscribe { items ->
                     updateState { copy(items = items) }

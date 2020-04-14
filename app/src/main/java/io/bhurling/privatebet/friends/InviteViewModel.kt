@@ -28,8 +28,8 @@ internal class InviteViewModel(
                     }.map {
                         InviteAdapterItem(
                                 person = it,
-                                isIncoming = incoming.contains(it.id),
-                                isSent = outgoing.contains(it.id)
+                                isIncoming = incoming.contains(it),
+                                isSent = outgoing.contains(it)
                         )
                     }.filterNot { it.isIncoming }
                 }

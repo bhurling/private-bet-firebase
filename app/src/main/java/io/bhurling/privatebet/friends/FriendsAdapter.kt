@@ -13,18 +13,15 @@ import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 
-internal class FriendsAdapter(
-    private val peopleInteractor: PeopleInteractor
-) : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
+internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
     var items: List<FriendsAdapterItem> by diffableList(
-        { old, new -> old.id == new.id },
+        { old, new -> old.person.id == new.person.id },
         { old, new -> old == new }
     )
 
@@ -40,18 +37,6 @@ internal class FriendsAdapter(
         holder.bind(items[position])
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-
-        holder.unsubscribe()
-    }
-
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-
-        holder.subscribe()
-    }
-
     override fun getItemCount() = items.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,24 +45,8 @@ internal class FriendsAdapter(
         private val title: TextView by bindView(R.id.title)
         private val button: TextView by bindView(R.id.button)
 
-        private var item: FriendsAdapterItem? = null
-        private var disposable: Disposable? = null
-
         fun bind(item: FriendsAdapterItem) {
-            this.item = item
-        }
-
-        fun subscribe() {
-            item?.let { item ->
-                disposable = peopleInteractor.byId(item.id)
-                    .subscribe { update(it, item.isInvited) }
-            }
-        }
-
-        fun unsubscribe() {
-            disposable?.let {
-                if (!it.isDisposed) it.dispose()
-            }
+            update(item.person, item.isInvited)
         }
 
         private fun update(person: Person, isInvited: Boolean) {

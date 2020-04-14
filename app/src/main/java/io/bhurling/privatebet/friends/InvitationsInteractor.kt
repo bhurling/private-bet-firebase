@@ -3,6 +3,8 @@ package io.bhurling.privatebet.friends
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.QuerySnapshot
+import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
 
@@ -14,17 +16,23 @@ class InvitationsInteractor(
 
     private val myLinks = links.document(me.uid)
 
-    fun incoming(): Observable<List<String>> = firebase
+    fun incoming(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("incoming"))
-        .mapToChildKeys()
+        .map { it.documents }
+        .map { documents -> documents.mapSafely { it.toPerson() } }
+        .distinctUntilChanged()
 
-    fun outgoing(): Observable<List<String>> = firebase
+    fun outgoing(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("outgoing"))
-        .mapToChildKeys()
+        .map { it.documents }
+        .map { documents -> documents.mapSafely { it.toPerson() } }
+        .distinctUntilChanged()
 
-    fun confirmed(): Observable<List<String>> = firebase
+    fun confirmed(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("confirmed"))
-        .mapToChildKeys()
+        .map { it.documents }
+        .map { documents -> documents.mapSafely { it.toPerson() } }
+        .distinctUntilChanged()
 
     fun invite(id: String) {
         myLinks.collection("outgoing").document(id).set(mapOf("linked" to true))
@@ -44,7 +52,13 @@ class InvitationsInteractor(
 
 }
 
-private fun Observable<QuerySnapshot>.mapToChildKeys() =
-    map { snapshots ->
-        snapshots.documents.mapNotNull { snapshot -> snapshot.id }
+private fun <T, R : Any> List<T>.mapSafely(mapper: (T) -> R) : List<R> {
+    return mapNotNull {
+        try {
+            mapper(it)
+        } catch (e: Exception) {
+            null
+        }
     }
+}
+

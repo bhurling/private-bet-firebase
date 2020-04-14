@@ -17,6 +17,7 @@ class AddBetViewModel constructor(
     override fun handleActions(actions: Observable<AddAction>) {
         disposables += interactor.confirmed()
             .take(1) // TODO Allow updates to confirmed friends while on screen
+            .map { persons -> persons.map { it.id } } // TODO required?
             .subscribe { opponentIds ->
                 updateState { copy(opponentIds = opponentIds) }
             }

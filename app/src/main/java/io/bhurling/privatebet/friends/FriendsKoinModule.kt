@@ -19,9 +19,7 @@ val friendsKoinModule = applicationContext {
     }
 
     factory {
-        FriendsAdapter(
-            peopleInteractor = get()
-        )
+        FriendsAdapter()
     }
 
     factory {
