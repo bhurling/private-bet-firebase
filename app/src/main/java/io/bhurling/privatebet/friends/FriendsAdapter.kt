@@ -11,6 +11,7 @@ import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
+import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_invite.view.*
@@ -33,20 +34,24 @@ internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], actionsSubject)
     }
 
     override fun getItemCount() = items.size
 
-    inner class ViewHolder(
+    class ViewHolder(
         override val containerView: View
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(item: FriendsAdapterItem) {
-            update(item.person, item.isInvited)
+        fun bind(item: FriendsAdapterItem, actions: Observer<InviteAction>) {
+            update(item.person, item.isInvited, actions)
         }
 
-        private fun update(person: Person, isInvited: Boolean) {
+        private fun update(
+            person: Person,
+            isInvited: Boolean,
+            actions: Observer<InviteAction>
+        ) {
             Picasso.get()
                 .load(person.photoUrl)
                 .error(R.drawable.default_avatar)
@@ -61,7 +66,7 @@ internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>(
                     containerView.button.text = getString(R.string.action_accept)
 
                     containerView.button.setOnClickListener {
-                        actionsSubject.onNext(InviteAction.Accept(person.id))
+                        actions.onNext(InviteAction.Accept(person.id))
                     }
                 }
                 else -> {
