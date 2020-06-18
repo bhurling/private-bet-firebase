@@ -10,10 +10,6 @@ import org.koin.dsl.module.applicationContext
 val applicationKoinModule = applicationContext {
 
     provide {
-        Navigator()
-    }
-
-    provide {
         FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .build()

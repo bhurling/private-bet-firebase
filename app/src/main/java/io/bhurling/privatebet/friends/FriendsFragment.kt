@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.friends
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,8 +10,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.navigation.EntryPoint
+import io.bhurling.privatebet.navigation.launch
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_friends.*
@@ -19,13 +21,14 @@ import org.koin.inject
 class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     private val viewModel: FriendsViewModel by inject()
-    private val navigator: Navigator by inject()
     private val adapter: FriendsAdapter by inject()
 
     private val disposables = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        friends_connect.setOnClickListener { navigator.launchInviteFlow(activity) }
+        friends_connect.setOnClickListener {
+            activity?.let<Activity, Unit> { EntryPoint.Invite.launch(it) }
+        }
 
         friends_list.layoutManager = LinearLayoutManager(activity)
         friends_list.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
@@ -53,7 +56,7 @@ class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.option_invite) {
-            navigator.launchInviteFlow(activity)
+            activity?.let<Activity, Unit> { EntryPoint.Invite.launch(it) }
 
             return true
         }

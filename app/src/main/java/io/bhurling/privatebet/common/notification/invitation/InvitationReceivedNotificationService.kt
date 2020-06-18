@@ -19,16 +19,15 @@ import android.os.PersistableBundle
 import androidx.core.app.NotificationCompat
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.friends.InvitationsInteractor
+import io.bhurling.privatebet.navigation.EntryPoint
+import io.bhurling.privatebet.navigation.makeIntent
 import org.koin.inject
 
 class InvitationReceivedNotificationService : JobService() {
-
-    private val navigator: Navigator by inject()
 
     override fun onStopJob(params: JobParameters): Boolean {
         return false
@@ -69,7 +68,9 @@ class InvitationReceivedNotificationService : JobService() {
                     extras.displayName
                 )
             )
-            .setContentIntent(navigator.makeFriendsScreenIntent(this))
+            .setContentIntent(
+                makePendingIntent(this, EntryPoint.Friends.makeIntent(this))
+            )
             .setLargeIcon(bitmap)
             .setSmallIcon(R.drawable.ic_person_black_32dp)
             .setStyle(NotificationCompat.BigTextStyle())
@@ -85,6 +86,10 @@ class InvitationReceivedNotificationService : JobService() {
 
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
             .notify(makeNotificationId(extras.userId), notification)
+    }
+
+    private fun makePendingIntent(context: Context, intent: Intent) : PendingIntent {
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     private fun makeAcceptedAction(): NotificationCompat.Action {

@@ -5,13 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
-import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
-import org.koin.inject
+import io.bhurling.privatebet.navigation.EntryPoint
+import io.bhurling.privatebet.navigation.launch
 
 class SignupActivity : AppCompatActivity() {
-
-    private val navigator: Navigator by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +31,7 @@ class SignupActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_AUTH) {
             if (resultCode == Activity.RESULT_OK) {
-                navigator.launchApp(this)
+                EntryPoint.Home.launch(this)
 
                 SignupService.launch(this)
             }

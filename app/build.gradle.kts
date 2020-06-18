@@ -28,6 +28,7 @@ android {
 dependencies {
     implementation(project(":lib-arch"))
     implementation(project(":lib-di"))
+    implementation(project(":lib-navigation"))
 
     implementation(Config.Libs.AndroidX.CORE)
     implementation(Config.Libs.AndroidX.CONSTRAINT_LAYOUT)
