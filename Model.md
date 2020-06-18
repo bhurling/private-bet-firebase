@@ -27,6 +27,7 @@ The bets feed should sort bets as follows:
 ### Use Cases
 
 * Query: Show empty state if there are no incoming or confirmed invitations
+* Query: List all users by search term (or all users)
 * Query: List all users who have sent me an invitation
 * Query: List all users that I have confirmed invitations with
 * Query: List all users that I have sent invitations to
