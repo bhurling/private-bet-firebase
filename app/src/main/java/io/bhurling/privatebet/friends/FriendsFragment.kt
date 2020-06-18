@@ -1,41 +1,35 @@
 package io.bhurling.privatebet.friends
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.fragment_friends.*
 import org.koin.inject
 
-class FriendsFragment : Fragment() {
+class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     private val viewModel: FriendsViewModel by inject()
     private val navigator: Navigator by inject()
     private val adapter: FriendsAdapter by inject()
 
-    private val emptyView: View by bindView(R.id.friends_empty)
-    private val list: RecyclerView by bindView(R.id.friends_list)
-    private val connectButton: View by bindView(R.id.friends_connect)
-
     private val disposables = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_friends, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        connectButton.setOnClickListener { navigator.launchInviteFlow(activity) }
+        friends_connect.setOnClickListener { navigator.launchInviteFlow(activity) }
 
-        list.layoutManager = LinearLayoutManager(activity)
-        list.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-        list.adapter = adapter
+        friends_list.layoutManager = LinearLayoutManager(activity)
+        friends_list.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        friends_list.adapter = adapter
 
         viewModel.attach(adapter.actions())
 
@@ -46,7 +40,7 @@ class FriendsFragment : Fragment() {
     }
 
     private fun onItemsChanged(items: List<FriendsAdapterItem>) {
-        emptyView.isVisible = items.isEmpty()
+        friends_empty.isVisible = items.isEmpty()
 
         adapter.items = items
 

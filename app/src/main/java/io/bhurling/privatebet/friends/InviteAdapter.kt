@@ -3,8 +3,6 @@ package io.bhurling.privatebet.friends
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
@@ -13,7 +11,8 @@ import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.common.ui.getString
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_invite.view.*
 
 class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
@@ -38,29 +37,29 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
                 Picasso.get()
                         .load(item.person.photoUrl)
                         .transform(CircleTransformation())
-                        .into(icon)
+                        .into(containerView.icon)
 
-                title.text = item.person.displayName
+                containerView.title.text = item.person.displayName
 
                 when {
                     !item.isSent && !item.isIncoming -> {
-                        button.visibility = View.VISIBLE
-                        button.text = getString(R.string.action_add)
+                        containerView.button.visibility = View.VISIBLE
+                        containerView.button.text = getString(R.string.action_add)
 
-                        button.setOnClickListener {
+                        containerView.button.setOnClickListener {
                             actionsSubject.onNext(InviteAction.Invite(item.person.id))
                         }
                     }
                     item.isSent -> {
-                        button.visibility = View.VISIBLE
-                        button.text = getString(R.string.action_remove)
+                        containerView.button.visibility = View.VISIBLE
+                        containerView.button.text = getString(R.string.action_remove)
 
-                        button.setOnClickListener {
+                        containerView.button.setOnClickListener {
                             actionsSubject.onNext(InviteAction.Revoke(item.person.id))
                         }
                     }
                     else -> {
-                        button.visibility = View.GONE
+                        containerView.button.visibility = View.GONE
                     }
                 }
             }
@@ -69,11 +68,9 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
     override fun getItemCount() = items.size
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val icon: ImageView by bindView(R.id.icon)
-        val title: TextView by bindView(R.id.title)
-        val button: TextView by bindView(R.id.button)
+    class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
     }
 }

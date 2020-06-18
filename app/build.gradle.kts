@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("kotlin-android-extensions")
     id("com.google.gms.google-services") apply false
     id("com.github.ben-manes.versions")
 }
@@ -25,7 +26,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":lib-kotterknife"))
     implementation(project(":lib-arch"))
     implementation(project(":lib-di"))
 

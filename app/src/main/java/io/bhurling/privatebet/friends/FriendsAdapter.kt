@@ -3,8 +3,6 @@ package io.bhurling.privatebet.friends
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
@@ -14,7 +12,8 @@ import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_invite.view.*
 
 internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
@@ -39,11 +38,9 @@ internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>(
 
     override fun getItemCount() = items.size
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val icon: ImageView by bindView(R.id.icon)
-        private val title: TextView by bindView(R.id.title)
-        private val button: TextView by bindView(R.id.button)
+    inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(item: FriendsAdapterItem) {
             update(item.person, item.isInvited)
@@ -54,21 +51,21 @@ internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>(
                 .load(person.photoUrl)
                 .error(R.drawable.default_avatar)
                 .transform(CircleTransformation())
-                .into(icon)
+                .into(containerView.icon)
 
-            title.text = person.displayName
+            containerView.title.text = person.displayName
 
             when {
                 isInvited -> {
-                    button.visibility = View.VISIBLE
-                    button.text = getString(R.string.action_accept)
+                    containerView.button.visibility = View.VISIBLE
+                    containerView.button.text = getString(R.string.action_accept)
 
-                    button.setOnClickListener {
+                    containerView.button.setOnClickListener {
                         actionsSubject.onNext(InviteAction.Accept(person.id))
                     }
                 }
                 else -> {
-                    button.visibility = View.GONE
+                    containerView.button.visibility = View.GONE
                 }
             }
         }

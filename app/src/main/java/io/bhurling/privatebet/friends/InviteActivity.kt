@@ -3,23 +3,17 @@ package io.bhurling.privatebet.friends
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.activity_invite.*
 import org.koin.inject
 
-internal class InviteActivity: AppCompatActivity() {
+internal class InviteActivity: AppCompatActivity(R.layout.activity_invite) {
 
     private val viewModel: InviteViewModel by inject()
-
-    private val toolbar: Toolbar by bindView(R.id.toolbar)
-    private val list: RecyclerView by bindView(R.id.invite_list)
 
     private val adapter = InviteAdapter()
 
@@ -27,14 +21,13 @@ internal class InviteActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_invite)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        list.layoutManager = LinearLayoutManager(this)
-        list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        list.adapter = adapter
+        invite_list.layoutManager = LinearLayoutManager(this)
+        invite_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        invite_list.adapter = adapter
 
         viewModel.attach(adapter.actions())
 

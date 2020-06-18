@@ -3,8 +3,6 @@ package io.bhurling.privatebet.add
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.CollectionReference
 import com.squareup.picasso.Picasso
@@ -17,7 +15,8 @@ import io.bhurling.privatebet.rx.ReactiveFirebase
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_invite.view.*
 
 class OpponentsAdapter(
         private val firebase: ReactiveFirebase,
@@ -57,11 +56,9 @@ class OpponentsAdapter(
 
     override fun getItemCount() = items.size
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val icon: ImageView by bindView(R.id.icon)
-        val title: TextView by bindView(R.id.title)
-        val button: TextView by bindView(R.id.button)
+    inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         private var _item: OpponentsAdapterItem? = null
         private var disposable: Disposable? = null
@@ -93,9 +90,9 @@ class OpponentsAdapter(
             Picasso.get()
                     .load(person.photoUrl)
                     .transform(CircleTransformation())
-                    .into(icon)
+                    .into(containerView.icon)
 
-            title.text = person.displayName
+            containerView.title.text = person.displayName
         }
     }
 }

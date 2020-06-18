@@ -1,9 +1,7 @@
 package io.bhurling.privatebet.feed
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,21 +11,15 @@ import io.bhurling.privatebet.R
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.fragment_feed.*
 import org.koin.inject
 
-internal class FeedFragment : Fragment() {
+internal class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private val viewModel: FeedViewModel by inject()
     private val adapter: FeedAdapter by inject()
 
-    private val feed: RecyclerView by bindView(R.id.feed)
-
     private val disposables = CompositeDisposable()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_feed, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

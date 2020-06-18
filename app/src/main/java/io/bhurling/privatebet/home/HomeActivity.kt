@@ -3,13 +3,10 @@ package io.bhurling.privatebet.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import io.bhurling.privatebet.Navigator
 import io.bhurling.privatebet.R
@@ -18,24 +15,18 @@ import io.bhurling.privatebet.friends.FriendsFragment
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.inject
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val viewModel: HomeViewModel by inject()
     private val navigator: Navigator by inject()
-
-    private val toolbar: Toolbar by bindView(R.id.toolbar)
-    private val pager: ViewPager by bindView(R.id.pager)
-    private val tabs: TabLayout by bindView(R.id.navigation)
-    private val fab: View by bindView(R.id.fab)
 
     private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
 
@@ -52,8 +43,8 @@ class HomeActivity : AppCompatActivity() {
             override fun getCount() = 2
         }
 
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-        tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pager))
+        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(navigation))
+        navigation.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pager))
 
         if (savedInstanceState == null && intent.defaultToFriends) {
             pager.setCurrentItem(1, false)

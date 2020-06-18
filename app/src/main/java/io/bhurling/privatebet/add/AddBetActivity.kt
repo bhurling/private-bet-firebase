@@ -8,20 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.arch.*
 import io.bhurling.privatebet.arch.Optional
+import io.bhurling.privatebet.arch.getOrNull
+import io.bhurling.privatebet.arch.isSome
+import io.bhurling.privatebet.arch.toOptional
 import io.bhurling.privatebet.common.ui.datePickerDialog
 import io.bhurling.privatebet.common.ui.doOnNextLayoutOrImmediate
 import io.bhurling.privatebet.model.pojo.Person
@@ -30,7 +27,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.partial_add_opponent.*
+import kotlinx.android.synthetic.main.partial_add_stake.*
+import kotlinx.android.synthetic.main.partial_add_statement.*
 import org.koin.inject
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -39,15 +39,6 @@ class AddBetActivity : AppCompatActivity() {
     private val viewModel: AddBetViewModel by inject()
     private val adapter: OpponentsAdapter by inject()
 
-    private val toolbar: Toolbar by bindView(R.id.bets_add_toolbar)
-    private val pager: ViewPager by bindView(R.id.bets_add_pager)
-    private val statement: EditText by bindView(R.id.bets_add_statement)
-    private val deadlineBg: View by bindView(R.id.bets_add_deadline_bg)
-    private val deadline: TextView by bindView(R.id.bets_add_deadline)
-    private val clearDeadline: View by bindView(R.id.bets_add_deadline_remove)
-    private val stake: EditText by bindView(R.id.bets_add_stake)
-    private val opponents: RecyclerView by bindView(R.id.bets_add_opponent_list)
-    private val next: View by bindView(R.id.bets_add_next)
     private val summary by lazy {
         SummaryViewHolder(findViewById(R.id.bets_add_summary_root))
     }
@@ -63,13 +54,13 @@ class AddBetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(bets_add_toolbar)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowTitleEnabled(false)
         }
 
-        pager.adapter = object : PagerAdapter() {
+        bets_add_pager.adapter = object : PagerAdapter() {
             override fun isViewFromObject(view: View, `object`: Any) = view == `object`
 
             override fun getCount() = 3
@@ -77,20 +68,20 @@ class AddBetActivity : AppCompatActivity() {
             override fun instantiateItem(container: ViewGroup, position: Int) = container.getChildAt(position)
         }
 
-        pager.offscreenPageLimit = 2
+        bets_add_pager.offscreenPageLimit = 2
 
         // Setting this programmatically to force "done" action for multiline text
         // https://stackoverflow.com/questions/36338563
-        statement.setHorizontallyScrolling(false)
-        statement.imeOptions = EditorInfo.IME_ACTION_DONE
-        statement.maxLines = 10
+        bets_add_statement.setHorizontallyScrolling(false)
+        bets_add_statement.imeOptions = EditorInfo.IME_ACTION_DONE
+        bets_add_statement.maxLines = 10
 
-        stake.setHorizontallyScrolling(false)
-        stake.imeOptions = EditorInfo.IME_ACTION_DONE
-        statement.maxLines = 10
+        bets_add_stake.setHorizontallyScrolling(false)
+        bets_add_stake.imeOptions = EditorInfo.IME_ACTION_DONE
+        bets_add_statement.maxLines = 10
 
-        opponents.layoutManager = LinearLayoutManager(this)
-        opponents.adapter = adapter
+        bets_add_opponent_list.layoutManager = LinearLayoutManager(this)
+        bets_add_opponent_list.adapter = adapter
 
         attach()
     }
@@ -120,23 +111,23 @@ class AddBetActivity : AppCompatActivity() {
     private fun attach() {
         viewModel.attach(actions)
 
-        disposables += statement.textChanges().map { it.toString() }
+        disposables += bets_add_statement.textChanges().map { it.toString() }
             .subscribe { actions.onNext(AddAction.StatementChanged(it)) }
 
-        disposables += stake.textChanges().map { it.toString() }
+        disposables += bets_add_stake.textChanges().map { it.toString() }
             .subscribe { actions.onNext(AddAction.StakeChanged(it)) }
 
-        disposables += deadlineBg.clicks()
+        disposables += bets_add_deadline_bg.clicks()
             .subscribe { actions.onNext(AddAction.DeadlineClicked) }
 
-        disposables += clearDeadline.clicks()
+        disposables += bets_add_deadline_remove.clicks()
             .delay(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 actions.onNext(AddAction.DeadlineCleared)
             }
 
-        disposables += next.clicks()
+        disposables += bets_add_next.clicks()
             .subscribe {
                 actions.onNext(AddAction.NextClicked)
             }
@@ -166,22 +157,22 @@ class AddBetActivity : AppCompatActivity() {
 
     private fun updateStep(step: AddViewState.Step) {
         when (step) {
-            AddViewState.Step.STATEMENT -> pager.setCurrentItem(0, true)
-            AddViewState.Step.STAKE -> pager.setCurrentItem(1, true)
+            AddViewState.Step.STATEMENT -> bets_add_pager.setCurrentItem(0, true)
+            AddViewState.Step.STAKE -> bets_add_pager.setCurrentItem(1, true)
             AddViewState.Step.OPPONENT -> {
-                pager.setCurrentItem(2, true)
+                bets_add_pager.setCurrentItem(2, true)
 
-                inputManager.hideSoftInputFromWindow(opponents.windowToken, 0)
+                inputManager.hideSoftInputFromWindow(bets_add_opponent_list.windowToken, 0)
             }
         }
     }
 
     private fun updateDeadline(value: Optional<Long>) {
-        deadline.text = value.getOrNull()?.let { deadline ->
+        bets_add_deadline.text = value.getOrNull()?.let { deadline ->
             DateFormat.getMediumDateFormat(this).format(deadline)
         } ?: getString(R.string.no_deadline)
 
-        clearDeadline.isVisible = value.isSome
+        bets_add_deadline_remove.isVisible = value.isSome
     }
 
     private fun updateOpponents(opponentIds: List<String>) {
@@ -199,14 +190,14 @@ class AddBetActivity : AppCompatActivity() {
     }
 
     private fun showSummary(opponentId: String) {
-        if (summary.root.isVisible) return
+        if (summary.containerView.isVisible) return
 
-        summary.root.visibility = View.VISIBLE
+        summary.containerView.visibility = View.VISIBLE
 
         adapter.items.indexOfFirst { it.id == opponentId }.takeUnless { it == -1 }?.let { index ->
             summary.opponent.doOnNextLayoutOrImmediate { opponent ->
                 val topBefore = IntArray(2).apply {
-                    opponents.layoutManager?.findViewByPosition(index)
+                    bets_add_opponent_list.layoutManager?.findViewByPosition(index)
                         ?.getLocationOnScreen(this)
                 }[1]
 
@@ -223,13 +214,13 @@ class AddBetActivity : AppCompatActivity() {
     }
 
     private fun hideSummary() {
-        if (!summary.root.isVisible) return
+        if (!summary.containerView.isVisible) return
 
-        summary.root.isVisible = false
+        summary.containerView.isVisible = false
     }
 
     private fun updateButton(shouldShowNextButton: Boolean) {
-        next.isVisible = shouldShowNextButton
+        bets_add_next.isVisible = shouldShowNextButton
     }
 
     private fun handle(effect: AddEffect) {

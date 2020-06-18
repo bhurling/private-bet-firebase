@@ -3,12 +3,12 @@ package io.bhurling.privatebet.feed
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.model.pojo.Bet
 import io.reactivex.disposables.Disposable
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_feed.view.*
 
 internal class FeedAdapter(
         private val interactor: GetBetInteractor
@@ -45,9 +45,9 @@ internal class FeedAdapter(
         return if (keys == null) 0 else keys!!.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val statement: TextView by bindView(R.id.statement)
+    inner class ViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         private var key: String? = null
 
@@ -69,7 +69,7 @@ internal class FeedAdapter(
         }
 
         fun update(bet: Bet) {
-            this.statement.text = bet.statement
+            containerView.statement.text = bet.statement
         }
     }
 }
