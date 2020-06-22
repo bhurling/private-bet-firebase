@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.common.diffableList
 import io.bhurling.privatebet.common.ui.CircleTransformation
-import io.bhurling.privatebet.common.ui.getString
 import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.ui.diffableList
+import io.bhurling.privatebet.ui.getString
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject

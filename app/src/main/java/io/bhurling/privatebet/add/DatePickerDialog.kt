@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common.ui
+package io.bhurling.privatebet.add
 
 import android.app.DatePickerDialog
 import android.content.Context

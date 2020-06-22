@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common.ui
+package io.bhurling.privatebet.add
 
 import android.content.Context
 import android.util.AttributeSet

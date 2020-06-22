@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common.ui
+package io.bhurling.privatebet.ui
 
 import android.view.View
 import androidx.core.view.doOnNextLayout

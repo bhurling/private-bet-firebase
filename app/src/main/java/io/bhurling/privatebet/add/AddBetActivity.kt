@@ -19,9 +19,8 @@ import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.isSome
 import io.bhurling.privatebet.arch.toOptional
-import io.bhurling.privatebet.common.ui.datePickerDialog
-import io.bhurling.privatebet.common.ui.doOnNextLayoutOrImmediate
 import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.ui.doOnNextLayoutOrImmediate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType

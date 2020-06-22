@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.CollectionReference
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.common.diffableList
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.ui.diffableList
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject

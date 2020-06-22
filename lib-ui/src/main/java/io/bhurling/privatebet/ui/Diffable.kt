@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common
+package io.bhurling.privatebet.ui
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView

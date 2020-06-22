@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.common.ui
+package io.bhurling.privatebet.ui
 
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.bhurling.privatebet.common.ui.NonSwipeableViewPager
+    <io.bhurling.privatebet.add.NonSwipeableViewPager
         android:id="@+id/bets_add_pager"
         android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
 
         <include layout="@layout/partial_add_opponent" />
 
-    </io.bhurling.privatebet.common.ui.NonSwipeableViewPager>
+    </io.bhurling.privatebet.add.NonSwipeableViewPager>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/bets_add_toolbar"
