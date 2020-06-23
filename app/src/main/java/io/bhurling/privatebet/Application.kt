@@ -6,6 +6,7 @@ import io.bhurling.privatebet.common.push.pushKoinModule
 import io.bhurling.privatebet.feed.feedKoinModule
 import io.bhurling.privatebet.friends.friendsKoinModule
 import io.bhurling.privatebet.home.homeKoinModule
+import io.bhurling.privatebet.navigation.dryrun.DryRun
 import io.bhurling.privatebet.signup.signupKoinModule
 import org.koin.standalone.StandAloneContext.startKoin
 import timber.log.Timber
@@ -19,6 +20,10 @@ class Application : android.app.Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
+        }
+
+        if (BuildConfig.DEBUG) {
+            DryRun.checkEntryPoints()
         }
 
         setupDependencies()

@@ -6,33 +6,21 @@ import java.io.Serializable
 
 private const val KEY_PARAMS = "io.bhurling.privatebet.navigation.EXTRA_START_PARAMS"
 
-sealed class EntryPoint(
+enum class EntryPoint(
     val classPath: String,
     val params: ActivityStartParams? = null
 ) {
 
-    object Friends : EntryPoint(
+    Friends(
         classPath = "io.bhurling.privatebet.home.HomeActivity",
         params = HomeActivityStartParams(
             defaultToFriends = true
         )
-    )
-
-    object CreateBet : EntryPoint(
-        classPath = "io.bhurling.privatebet.add.AddBetActivity"
-    )
-
-    object Invite : EntryPoint(
-        classPath = "io.bhurling.privatebet.friends.InviteActivity"
-    )
-
-    object Home : EntryPoint(
-        classPath = "io.bhurling.privatebet.home.HomeActivity"
-    )
-
-    object Signup : EntryPoint(
-        classPath = "io.bhurling.privatebet.signup.SignupActivity"
-    )
+    ),
+    CreateBet(classPath = "io.bhurling.privatebet.add.AddBetActivity"),
+    Invite(classPath = "io.bhurling.privatebet.friends.InviteActivity"),
+    Home(classPath = "io.bhurling.privatebet.home.HomeActivity"),
+    Signup(classPath = "io.bhurling.privatebet.signup.SignupActivity")
 }
 
 abstract class ActivityStartParams : Serializable {
