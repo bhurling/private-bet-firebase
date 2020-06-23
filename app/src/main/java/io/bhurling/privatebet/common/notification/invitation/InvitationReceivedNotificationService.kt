@@ -25,7 +25,7 @@ import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.makeIntent
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class InvitationReceivedNotificationService : JobService() {
 

@@ -1,9 +1,9 @@
 package io.bhurling.privatebet.feed
 
 import io.bhurling.privatebet.Qualifiers
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val feedKoinModule = applicationContext {
+val feedKoinModule = module {
 
     factory {
         FeedViewModel(

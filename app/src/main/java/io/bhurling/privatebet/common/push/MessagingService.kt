@@ -6,7 +6,7 @@ import com.google.firebase.messaging.RemoteMessage
 import io.bhurling.privatebet.common.notification.createChannels
 import io.bhurling.privatebet.common.notification.invitation.InvitationReceivedNotificationService
 import org.json.JSONObject
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class MessagingService : FirebaseMessagingService() {
 

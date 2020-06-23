@@ -5,23 +5,23 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val applicationKoinModule = applicationContext {
+val applicationKoinModule = module {
 
-    provide {
+    single {
         FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .build()
     }
 
-    provide {
+    single {
         FirebaseFirestore.getInstance().apply {
             firestoreSettings = get()
         }
     }
 
-    provide {
+    single {
         FirebaseAuth.getInstance()
     }
 

@@ -1,9 +1,9 @@
 package io.bhurling.privatebet.friends
 
 import io.bhurling.privatebet.Qualifiers
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val friendsKoinModule = applicationContext {
+val friendsKoinModule = module {
 
     factory {
         PeopleInteractor(

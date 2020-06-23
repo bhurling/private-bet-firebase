@@ -1,8 +1,8 @@
 package io.bhurling.privatebet.home
 
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val homeKoinModule = applicationContext {
+val homeKoinModule = module {
     factory {
         HomeViewModel(
                 invitationsInteractor = get()

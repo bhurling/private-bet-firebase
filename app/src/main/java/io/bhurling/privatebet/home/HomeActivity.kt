@@ -18,7 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class HomeActivity : AppCompatActivity(R.layout.activity_main) {
 

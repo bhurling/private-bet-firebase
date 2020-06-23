@@ -16,7 +16,7 @@ import io.bhurling.privatebet.navigation.launch
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_friends.*
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class FriendsFragment : Fragment(R.layout.fragment_friends) {
 

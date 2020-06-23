@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.partial_add_opponent.*
 import kotlinx.android.synthetic.main.partial_add_stake.*
 import kotlinx.android.synthetic.main.partial_add_statement.*
-import org.koin.inject
+import org.koin.android.ext.android.inject
 import java.util.*
 import java.util.concurrent.TimeUnit
 

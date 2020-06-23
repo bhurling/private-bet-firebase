@@ -8,6 +8,7 @@ import io.bhurling.privatebet.friends.friendsKoinModule
 import io.bhurling.privatebet.home.homeKoinModule
 import io.bhurling.privatebet.navigation.dryrun.DryRun
 import io.bhurling.privatebet.signup.signupKoinModule
+import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
@@ -30,14 +31,13 @@ class Application : android.app.Application() {
     }
 
     private fun setupDependencies() {
-        val appContextKoinModule = org.koin.dsl.module.applicationContext {
-            provide {
-                applicationContext as Context
-            }
-        }
-
-        startKoin(listOf(
-                appContextKoinModule,
+        startKoin(
+            listOf(
+                module {
+                    single {
+                        applicationContext as Context
+                    }
+                },
                 applicationKoinModule,
                 signupKoinModule,
                 homeKoinModule,
@@ -45,7 +45,8 @@ class Application : android.app.Application() {
                 feedKoinModule,
                 addBetKoinModule,
                 pushKoinModule
-        ))
+            )
+        )
     }
 
 }

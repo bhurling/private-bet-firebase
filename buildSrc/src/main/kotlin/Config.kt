@@ -52,6 +52,10 @@ object Config {
         object Logging {
             const val TIMBER = "com.jakewharton.timber:timber:4.7.1"
         }
+
+        object Di {
+            const val KOIN = "org.koin:koin-android:1.0.2"
+        }
     }
 
     object TestLibs {

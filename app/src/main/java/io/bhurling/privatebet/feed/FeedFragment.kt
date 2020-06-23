@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_feed.*
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 internal class FeedFragment : Fragment(R.layout.fragment_feed) {
 

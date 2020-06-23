@@ -9,7 +9,7 @@ import io.bhurling.privatebet.R
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_invite.*
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 internal class InviteActivity: AppCompatActivity(R.layout.activity_invite) {
 

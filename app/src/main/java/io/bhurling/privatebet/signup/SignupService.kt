@@ -6,7 +6,7 @@ import android.content.Intent
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.iid.FirebaseInstanceId
 import io.bhurling.privatebet.common.push.TokenInteractor
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class SignupService : IntentService("SignupService") {
 

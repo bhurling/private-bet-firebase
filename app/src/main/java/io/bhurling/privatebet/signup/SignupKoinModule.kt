@@ -1,9 +1,9 @@
 package io.bhurling.privatebet.signup
 
 import io.bhurling.privatebet.Qualifiers
-import org.koin.dsl.module.applicationContext
+import org.koin.dsl.module.module
 
-val signupKoinModule = applicationContext {
+val signupKoinModule = module {
     factory {
         SignupInteractor(
                 privateProfile = get(Qualifiers.Me.private),

@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
-import org.koin.inject
+import org.koin.android.ext.android.inject
 
 class EntryActivity : Activity() {
 
