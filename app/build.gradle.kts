@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":lib-di"))
     implementation(project(":lib-navigation"))
     implementation(project(":lib-ui"))
+    implementation(project(":lib-rx-firebase"))
 
     implementation(Config.Libs.AndroidX.CORE)
     implementation(Config.Libs.AndroidX.CONSTRAINT_LAYOUT)

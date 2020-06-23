@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import org.koin.dsl.module.applicationContext
 
 val applicationKoinModule = applicationContext {

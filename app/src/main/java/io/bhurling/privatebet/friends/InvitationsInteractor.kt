@@ -2,10 +2,9 @@ package io.bhurling.privatebet.friends
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.QuerySnapshot
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
-import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.reactivex.Observable
 
 class InvitationsInteractor(

@@ -1,7 +1,7 @@
 package io.bhurling.privatebet.feed
 
 import com.google.firebase.firestore.CollectionReference
-import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.reactivex.Observable
 
 internal class GetKeysInteractor(

@@ -1,4 +1,4 @@
-package io.bhurling.privatebet.rx
+package io.bhurling.privatebet.rx.firebase
 
 import com.google.firebase.firestore.*
 import io.reactivex.Observable

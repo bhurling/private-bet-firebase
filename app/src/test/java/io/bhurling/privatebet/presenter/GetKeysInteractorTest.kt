@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import io.bhurling.privatebet.feed.GetKeysInteractor
-import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Test

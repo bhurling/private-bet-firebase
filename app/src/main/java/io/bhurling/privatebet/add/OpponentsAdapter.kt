@@ -10,7 +10,7 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
-import io.bhurling.privatebet.rx.ReactiveFirebase
+import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.bhurling.privatebet.ui.diffableList
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -19,8 +19,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_invite.view.*
 
 class OpponentsAdapter(
-        private val firebase: ReactiveFirebase,
-        private val profiles: CollectionReference
+    private val firebase: ReactiveFirebase,
+    private val profiles: CollectionReference
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
