@@ -1,19 +1,20 @@
 package io.bhurling.privatebet.add
 
 import io.bhurling.privatebet.Qualifiers
+import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
 val addBetKoinModule = module {
-    factory {
+    viewModel {
         AddBetViewModel(
-                interactor = get()
+            interactor = get()
         )
     }
 
     factory {
         OpponentsAdapter(
-                firebase = get(),
-                profiles = get(Qualifiers.profiles)
+            firebase = get(),
+            profiles = get(Qualifiers.profiles)
         )
     }
 }

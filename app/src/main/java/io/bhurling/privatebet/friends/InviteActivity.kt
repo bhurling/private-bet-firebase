@@ -9,11 +9,11 @@ import io.bhurling.privatebet.R
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_invite.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 internal class InviteActivity: AppCompatActivity(R.layout.activity_invite) {
 
-    private val viewModel: InviteViewModel by inject()
+    private val viewModel: InviteViewModel by viewModel()
 
     private val adapter = InviteAdapter()
 

@@ -13,10 +13,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_feed.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 internal class FeedFragment : Fragment(R.layout.fragment_feed) {
 
-    private val viewModel: FeedViewModel by inject()
+    private val viewModel: FeedViewModel by viewModel()
     private val adapter: FeedAdapter by inject()
 
     private val disposables = CompositeDisposable()

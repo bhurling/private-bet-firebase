@@ -17,10 +17,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_friends.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
-    private val viewModel: FriendsViewModel by inject()
+    private val viewModel: FriendsViewModel by viewModel()
     private val adapter: FriendsAdapter by inject()
 
     private val disposables = CompositeDisposable()

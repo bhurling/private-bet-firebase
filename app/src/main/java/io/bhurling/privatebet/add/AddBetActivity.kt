@@ -31,11 +31,12 @@ import kotlinx.android.synthetic.main.partial_add_opponent.*
 import kotlinx.android.synthetic.main.partial_add_stake.*
 import kotlinx.android.synthetic.main.partial_add_statement.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class AddBetActivity : AppCompatActivity() {
-    private val viewModel: AddBetViewModel by inject()
+    private val viewModel: AddBetViewModel by viewModel()
     private val adapter: OpponentsAdapter by inject()
 
     private val summary by lazy {

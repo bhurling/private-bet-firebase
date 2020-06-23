@@ -55,6 +55,7 @@ object Config {
 
         object Di {
             const val KOIN = "org.koin:koin-android:1.0.2"
+            const val KOIN_VIEWMODEL = "org.koin:koin-android-viewmodel:1.0.2"
         }
     }
 

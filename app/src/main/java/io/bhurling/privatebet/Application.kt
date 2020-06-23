@@ -1,6 +1,5 @@
 package io.bhurling.privatebet
 
-import android.content.Context
 import io.bhurling.privatebet.add.addBetKoinModule
 import io.bhurling.privatebet.common.push.pushKoinModule
 import io.bhurling.privatebet.feed.feedKoinModule
@@ -8,11 +7,9 @@ import io.bhurling.privatebet.friends.friendsKoinModule
 import io.bhurling.privatebet.home.homeKoinModule
 import io.bhurling.privatebet.navigation.dryrun.DryRun
 import io.bhurling.privatebet.signup.signupKoinModule
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext.startKoin
+import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-
 
 class Application : android.app.Application() {
 
@@ -32,12 +29,8 @@ class Application : android.app.Application() {
 
     private fun setupDependencies() {
         startKoin(
-            listOf(
-                module {
-                    single {
-                        applicationContext as Context
-                    }
-                },
+            androidContext = this,
+            modules = listOf(
                 applicationKoinModule,
                 signupKoinModule,
                 homeKoinModule,

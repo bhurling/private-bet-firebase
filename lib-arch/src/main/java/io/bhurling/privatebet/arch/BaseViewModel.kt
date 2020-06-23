@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.arch
 
+import androidx.lifecycle.ViewModel
 import com.airbnb.mvrx.RealMvRxStateStore
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -11,7 +12,7 @@ open class BaseViewModel<
         Action : ViewModelAction,
         State : ViewModelState,
         Effect : ViewModelEffect
-        >(emptyState: State) {
+        >(emptyState: State) : ViewModel() {
 
     /**
      * Stream of effects the UI can subscribe to.

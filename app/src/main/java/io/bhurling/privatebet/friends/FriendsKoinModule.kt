@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.friends
 
 import io.bhurling.privatebet.Qualifiers
+import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
 val friendsKoinModule = module {
@@ -12,7 +13,7 @@ val friendsKoinModule = module {
         )
     }
 
-    factory {
+    viewModel {
         FriendsViewModel(
             invitationsInteractor = get()
         )
@@ -22,7 +23,7 @@ val friendsKoinModule = module {
         FriendsAdapter()
     }
 
-    factory {
+    viewModel {
         InviteViewModel(
             peopleInteractor = get(),
             invitationsInteractor = get(),

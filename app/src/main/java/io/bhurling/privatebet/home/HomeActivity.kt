@@ -18,11 +18,11 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity(R.layout.activity_main) {
 
-    private val viewModel: HomeViewModel by inject()
+    private val viewModel: HomeViewModel by viewModel()
 
     private val disposables = CompositeDisposable()
 

@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":lib-rx-firebase"))
 
     implementation(Config.Libs.Di.KOIN)
+    implementation(Config.Libs.Di.KOIN_VIEWMODEL)
 
     implementation(Config.Libs.AndroidX.CORE)
     implementation(Config.Libs.AndroidX.CONSTRAINT_LAYOUT)
