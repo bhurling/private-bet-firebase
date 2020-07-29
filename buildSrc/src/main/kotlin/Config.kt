@@ -27,10 +27,10 @@ object Config {
         }
 
         object Firebase {
-            const val AUTH = "com.google.firebase:firebase-auth:19.3.1"
+            const val AUTH = "com.google.firebase:firebase-auth:19.3.2"
             const val AUTH_UI = "com.firebaseui:firebase-ui-auth:6.2.1"
-            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.4.3"
-            const val MESSAGING = "com.google.firebase:firebase-messaging:20.2.0"
+            const val DATABASE = "com.google.firebase:firebase-firestore-ktx:21.5.0"
+            const val MESSAGING = "com.google.firebase:firebase-messaging:20.2.3"
         }
 
         object Rx {
@@ -61,8 +61,8 @@ object Config {
 
     object TestLibs {
         const val JUNIT = "junit:junit:4.13"
-        const val MOCKITO = "org.mockito:mockito-core:3.3.3"
-        const val MOCKITO_INLINE = "org.mockito:mockito-inline:3.3.3"
+        const val MOCKITO = "org.mockito:mockito-core:3.4.4"
+        const val MOCKITO_INLINE = "org.mockito:mockito-inline:3.4.4"
         const val MOCKITO_KOTLIN = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     }
 }
