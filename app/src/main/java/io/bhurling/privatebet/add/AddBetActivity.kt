@@ -166,8 +166,13 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
 
     private fun updateStep(step: AddViewState.Step) {
         when (step) {
-            AddViewState.Step.STATEMENT -> bets_add_pager.setCurrentItem(0, true)
-            AddViewState.Step.STAKE -> bets_add_pager.setCurrentItem(1, true)
+            AddViewState.Step.STATEMENT -> {
+                bets_add_pager.setCurrentItem(0, true)
+                bets_add_statement.requestFocus()
+            }
+            AddViewState.Step.STAKE -> {
+                bets_add_pager.setCurrentItem(1, true)
+            }
             AddViewState.Step.OPPONENT -> {
                 bets_add_pager.setCurrentItem(2, true)
 
