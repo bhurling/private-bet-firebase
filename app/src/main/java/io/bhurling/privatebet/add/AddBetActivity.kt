@@ -30,17 +30,18 @@ import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.partial_add_opponent.*
 import kotlinx.android.synthetic.main.partial_add_stake.*
 import kotlinx.android.synthetic.main.partial_add_statement.*
+import kotlinx.android.synthetic.main.partial_add_summary.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class AddBetActivity : AppCompatActivity() {
+class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
     private val viewModel: AddBetViewModel by viewModel()
     private val adapter: OpponentsAdapter by inject()
 
     private val summary by lazy {
-        SummaryViewHolder(findViewById(R.id.bets_add_summary_root))
+        SummaryViewHolder(bets_add_summary_root)
     }
 
     private val actions = PublishSubject.create<AddAction>()
@@ -52,7 +53,6 @@ class AddBetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add)
 
         setSupportActionBar(bets_add_toolbar)
         supportActionBar?.let {
@@ -138,21 +138,31 @@ class AddBetActivity : AppCompatActivity() {
                 actions.onNext(AddAction.OpponentSelected(it.person))
             }
 
+        disposables += viewModel.stateOf { step }
+            .subscribe(this::updateStep)
+
+        disposables += viewModel.stateOf { deadline }
+            .subscribe(this::updateDeadline)
+
+        disposables += viewModel.stateOf { opponentIds }
+            .subscribe(this::updateOpponents)
+
+        disposables += viewModel.stateOf { shouldShowNextButton }
+            .subscribe(this::updateButton)
+
         disposables += viewModel.states()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { render(it) }
+            .subscribe {
+                updateSummary(it.step, it.statement, it.opponent)
+            }
 
         disposables += viewModel.effects()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { handle(it) }
-    }
+            .ofType<AddEffect.ShowDeadlinePicker>()
+            .map { it.initialValue }
+            .subscribe(this::showDeadlinePicker)
 
-    private fun render(state: AddViewState) {
-        updateStep(state.step)
-        updateDeadline(state.deadline)
-        updateOpponents(state.opponentIds)
-        updateSummary(state.step, state.statement, state.opponent)
-        updateButton(state.shouldShowNextButton)
+        disposables += viewModel.effects()
+            .ofType<AddEffect.Finish>()
+            .subscribe { finish() }
     }
 
     private fun updateStep(step: AddViewState.Step) {
@@ -221,13 +231,6 @@ class AddBetActivity : AppCompatActivity() {
 
     private fun updateButton(shouldShowNextButton: Boolean) {
         bets_add_next.isVisible = shouldShowNextButton
-    }
-
-    private fun handle(effect: AddEffect) {
-        when (effect) {
-            is AddEffect.ShowDeadlinePicker -> showDeadlinePicker(effect.initialValue)
-            is AddEffect.Finish -> finish()
-        }
     }
 
     private fun showDeadlinePicker(initialValue: Calendar) {
