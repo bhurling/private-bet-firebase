@@ -19,7 +19,6 @@ import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.isSome
 import io.bhurling.privatebet.model.pojo.Person
-import io.bhurling.privatebet.ui.doOnNextLayoutOrImmediate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
@@ -40,6 +39,13 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
 
     private val summary by lazy {
         SummaryViewHolder(bets_add_summary_root)
+    }
+
+    private val summaryAnimator by lazy {
+        SummaryAnimator(
+            list = bets_add_opponent_list,
+            summary = summary
+        )
     }
 
     private val actions = PublishSubject.create<AddAction>()
@@ -186,40 +192,10 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
         opponent?.let { summary.bind(statement, it) }
 
         if (step == AddViewState.Step.OPPONENT && opponent != null) {
-            showSummary(opponent.id)
+            summaryAnimator.show(opponent.id)
         } else {
-            hideSummary()
+            summaryAnimator.hide()
         }
-    }
-
-    private fun showSummary(opponentId: String) {
-        if (summary.containerView.isVisible) return
-
-        summary.containerView.visibility = View.VISIBLE
-
-        adapter.items.indexOfFirst { it.id == opponentId }.takeUnless { it == -1 }?.let { index ->
-            summary.opponent.doOnNextLayoutOrImmediate { opponent ->
-                val topBefore = IntArray(2).apply {
-                    bets_add_opponent_list.layoutManager?.findViewByPosition(index)
-                        ?.getLocationOnScreen(this)
-                }[1]
-
-                val topAfter = IntArray(2).apply {
-                    opponent.getLocationOnScreen(this)
-                }[1]
-
-                opponent.translationY = (topBefore - topAfter).toFloat()
-                opponent.animate().translationY(0F).start()
-            }
-
-            summary.fadeIn()
-        }
-    }
-
-    private fun hideSummary() {
-        if (!summary.containerView.isVisible) return
-
-        summary.containerView.isVisible = false
     }
 
     private fun updateButton(shouldShowNextButton: Boolean) {

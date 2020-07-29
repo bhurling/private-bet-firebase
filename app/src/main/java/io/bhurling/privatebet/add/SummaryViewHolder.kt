@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.add
 
 import android.view.View
+import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.model.pojo.Person
@@ -48,5 +49,14 @@ class SummaryViewHolder(override val containerView: View) : LayoutContainer {
                 .withEndAction { it.alpha = 1F }
                 .start()
         }
+    }
+
+    fun fadeOut() {
+        containerView.animate()
+            .alpha(0F)
+            .withEndAction {
+                containerView.isVisible = false
+                containerView.alpha = 1F
+            }
     }
 }
