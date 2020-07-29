@@ -18,7 +18,6 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.isSome
-import io.bhurling.privatebet.arch.toOptional
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.ui.doOnNextLayoutOrImmediate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,7 +32,6 @@ import kotlinx.android.synthetic.main.partial_add_statement.*
 import kotlinx.android.synthetic.main.partial_add_summary.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
@@ -46,6 +44,7 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
 
     private val actions = PublishSubject.create<AddAction>()
     private val disposables = CompositeDisposable()
+    private val effectHandler = AddBetEffectHandler(this, actions)
 
     private val inputManager by lazy {
         getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -156,13 +155,7 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
             }
 
         disposables += viewModel.effects()
-            .ofType<AddEffect.ShowDeadlinePicker>()
-            .map { it.initialValue }
-            .subscribe(this::showDeadlinePicker)
-
-        disposables += viewModel.effects()
-            .ofType<AddEffect.Finish>()
-            .subscribe { finish() }
+            .subscribe(effectHandler)
     }
 
     private fun updateStep(step: AddViewState.Step) {
@@ -231,13 +224,5 @@ class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
 
     private fun updateButton(shouldShowNextButton: Boolean) {
         bets_add_next.isVisible = shouldShowNextButton
-    }
-
-    private fun showDeadlinePicker(initialValue: Calendar) {
-        datePickerDialog(this, initialValue) { selected ->
-            actions.onNext(AddAction.DeadlineChanged(selected.timeInMillis.toOptional()))
-        }.apply {
-            datePicker.minDate = System.currentTimeMillis()
-        }.show()
     }
 }
