@@ -13,10 +13,10 @@
     "@types/mocha": "5.2.5",
     "@types/uuid": "3.4.5",
     "prettier": "1.17.1",
-    "mocha": "5.2.0",
+    "mocha": "8.1.0",
     "mocha-typescript": "1.1.17",
     "ts-node": "7.0.1",
     "typescript": "3.2.2",
-    "start-server-and-test": "1.10.6"
+    "start-server-and-test": "1.11.2"
   }
 }
