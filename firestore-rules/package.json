@@ -8,7 +8,7 @@
     "ci": "start-server-and-test start-emulator http-get://127.0.0.1:8080 test"
   },
   "devDependencies": {
-    "@firebase/testing": "0.10.0",
+    "@firebase/testing": "0.20.9",
     "firebase-admin": "8.6.1",
     "@types/mocha": "5.2.5",
     "@types/uuid": "3.4.5",
