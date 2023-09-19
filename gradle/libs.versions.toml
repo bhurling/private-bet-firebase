@@ -1,5 +1,6 @@
 [versions]
 agp = "7.4.2"
+hilt = "2.45"
 google_services = "4.4.0"
 kotlin = "1.7.22"
 
@@ -15,6 +16,8 @@ firebase_auth = "com.google.firebase:firebase-auth:19.3.2"
 firebase_authui = "com.firebaseui:firebase-ui-auth:7.2.0"
 firebase_database = "com.google.firebase:firebase-firestore-ktx:21.5.0"
 firebase_messaging = "com.google.firebase:firebase-messaging:20.2.3"
+hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
+hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt"}
 rx_java = "io.reactivex.rxjava2:rxjava:2.2.19"
 rx_android = "io.reactivex.rxjava2:rxandroid:2.1.1"
 rx_kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
@@ -35,6 +38,8 @@ mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:4.1.0"
 android_application = { id = "com.android.application", version.ref = "agp" }
 android_library = { id = "com.android.library", version.ref = "agp" }
 google_services = { id = "com.google.gms.google-services", version.ref = "google_services" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
 kotlin_android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin_android_extensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

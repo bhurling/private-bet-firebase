@@ -1,5 +1,6 @@
 package io.bhurling.privatebet
 
+import dagger.hilt.android.HiltAndroidApp
 import io.bhurling.privatebet.add.addBetKoinModule
 import io.bhurling.privatebet.common.push.pushKoinModule
 import io.bhurling.privatebet.feed.feedKoinModule
@@ -11,6 +12,7 @@ import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
+@HiltAndroidApp
 class Application : android.app.Application() {
 
     override fun onCreate() {
