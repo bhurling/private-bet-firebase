@@ -10,5 +10,5 @@ android {
 }
 
 dependencies {
-    api(Config.Libs.Kotlin.STDLIB)
+    api(libs.kotlin.stdlib)
 }

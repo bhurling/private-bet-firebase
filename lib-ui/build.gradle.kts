@@ -14,8 +14,8 @@ android {
 }
 
 dependencies {
-    api(Config.Libs.Kotlin.STDLIB)
+    api(libs.kotlin.stdlib)
 
-    api(Config.Libs.AndroidX.CORE)
-    api(Config.Libs.AndroidX.RECYCLERVIEW)
+    api(libs.androidx.core)
+    api(libs.androidx.recyclerview)
 }

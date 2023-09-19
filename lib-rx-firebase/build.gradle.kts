@@ -14,9 +14,9 @@ android {
 }
 
 dependencies {
-    api(Config.Libs.Kotlin.STDLIB)
+    api(libs.kotlin.stdlib)
 
-    api(Config.Libs.Firebase.DATABASE)
+    api(libs.firebase.database)
 
-    api(Config.Libs.Rx.JAVA)
+    api(libs.rx.java)
 }

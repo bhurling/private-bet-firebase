@@ -37,32 +37,32 @@ dependencies {
     implementation(project(":lib-ui"))
     implementation(project(":lib-rx-firebase"))
 
-    implementation(Config.Libs.Di.KOIN)
-    implementation(Config.Libs.Di.KOIN_VIEWMODEL)
+    implementation(libs.koin)
+    implementation(libs.koin.viewmodel)
 
-    implementation(Config.Libs.AndroidX.CORE)
-    implementation(Config.Libs.AndroidX.CONSTRAINT_LAYOUT)
-    implementation(Config.Libs.AndroidX.TRANSITION)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.transition)
 
-    implementation(Config.Libs.Firebase.AUTH)
-    implementation(Config.Libs.Firebase.AUTH_UI)
-    implementation(Config.Libs.Firebase.DATABASE)
-    implementation(Config.Libs.Firebase.MESSAGING)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.authui)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
 
-    implementation(Config.Libs.Rx.ANDROID)
-    implementation(Config.Libs.Rx.JAVA)
-    implementation(Config.Libs.Rx.KOTLIN)
-    implementation(Config.Libs.Rx.BINDING_KOTLIN)
+    implementation(libs.rx.android)
+    implementation(libs.rx.java)
+    implementation(libs.rx.kotlin)
+    implementation(libs.rx.binding)
 
-    implementation(Config.Libs.Ui.MATERIAL)
-    implementation(Config.Libs.Ui.PICASSO)
+    implementation(libs.material)
+    implementation(libs.picasso)
 
-    implementation(Config.Libs.Logging.TIMBER)
+    implementation(libs.timber)
 
-    testImplementation(Config.TestLibs.JUNIT)
-    testImplementation(Config.TestLibs.MOCKITO)
-    testImplementation(Config.TestLibs.MOCKITO_INLINE)
-    testImplementation(Config.TestLibs.MOCKITO_KOTLIN)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
 }
 
 // Docs say this plugin should be applied at the bottom of the file

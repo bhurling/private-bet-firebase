@@ -10,11 +10,11 @@ android {
 }
 
 dependencies {
-    api(Config.Libs.Rx.JAVA)
-    api(Config.Libs.AndroidX.ANNOTATION)
+    api(libs.rx.java)
+    api(libs.androidx.annotation)
 
-    implementation(Config.Libs.Arch.MVRX)
-    implementation(Config.Libs.Rx.KOTLIN)
+    implementation(libs.mvrx)
+    implementation(libs.rx.kotlin)
 
-    implementation(Config.Libs.Kotlin.STDLIB)
+    implementation(libs.kotlin.stdlib)
 }
