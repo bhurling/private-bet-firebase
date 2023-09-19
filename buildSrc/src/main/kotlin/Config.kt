@@ -60,9 +60,9 @@ object Config {
     }
 
     object TestLibs {
-        const val JUNIT = "junit:junit:4.13"
+        const val JUNIT = "junit:junit:4.13.2"
         const val MOCKITO = "org.mockito:mockito-core:5.5.0"
         const val MOCKITO_INLINE = "org.mockito:mockito-inline:5.2.0"
-        const val MOCKITO_KOTLIN = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+        const val MOCKITO_KOTLIN = "org.mockito.kotlin:mockito-kotlin:4.1.0"
     }
 }
