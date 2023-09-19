@@ -6,6 +6,9 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        namespace = "io.bhurling.privatebet.navigation"
+    }
     compileSdk = rootProject.ext["compileSdk"] as Int
 }
 

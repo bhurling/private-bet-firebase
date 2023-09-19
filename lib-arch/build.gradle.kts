@@ -7,6 +7,10 @@ plugins {
 
 android {
     compileSdk = rootProject.ext["compileSdk"] as Int
+
+    defaultConfig {
+        namespace = "io.bhurling.privatebet.arch"
+    }
 }
 
 dependencies {

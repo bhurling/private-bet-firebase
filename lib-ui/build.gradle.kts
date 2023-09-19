@@ -6,6 +6,10 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        namespace = "io.bhurling.privatebet.ui"
+    }
+
     compileSdk = rootProject.ext["compileSdk"] as Int
 
     kotlinOptions {

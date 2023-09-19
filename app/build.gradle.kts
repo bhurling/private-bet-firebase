@@ -12,6 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "io.bhurling.privatebet"
+        namespace = "io.bhurling.privatebet"
         versionCode = 1
         versionName = "1.0"
 
