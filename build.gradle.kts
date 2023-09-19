@@ -3,7 +3,8 @@ import com.android.build.gradle.BaseExtension
 buildscript {
 
     repositories {
-        jcenter()
+        gradlePluginPortal()
+        mavenCentral()
         google()
     }
 
@@ -18,9 +19,11 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
 
         maven(url = "https://maven.fabric.io/public")
+
+        jcenter()
     }
 }
 
