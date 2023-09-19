@@ -1,11 +1,11 @@
 object Config {
 
     object Versions {
-        const val KOTLIN = "1.3.72"
+        const val KOTLIN = "1.5.30"
     }
 
     object Plugins {
-        const val ANDROID = "com.android.tools.build:gradle:3.6.2"
+        const val ANDROID = "com.android.tools.build:gradle:7.2.2"
         const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
         const val GOOGLE = "com.google.gms:google-services:4.3.2"
         const val VERSIONS = "com.github.ben-manes:gradle-versions-plugin:0.27.0"
