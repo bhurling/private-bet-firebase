@@ -10,19 +10,25 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.fragment_friends.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.fragment_friends.friends_connect
+import kotlinx.android.synthetic.main.fragment_friends.friends_empty
+import kotlinx.android.synthetic.main.fragment_friends.friends_list
 import org.koin.android.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
-class FriendsFragment : Fragment(R.layout.fragment_friends) {
+@AndroidEntryPoint
+internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     private val viewModel: FriendsViewModel by viewModel()
-    private val adapter: FriendsAdapter by inject()
+
+    @Inject
+    lateinit var adapter: FriendsAdapter
 
     private val disposables = CompositeDisposable()
 

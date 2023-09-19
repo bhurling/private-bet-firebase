@@ -14,9 +14,13 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_invite.view.*
+import kotlinx.android.synthetic.main.item_invite.view.button
+import kotlinx.android.synthetic.main.item_invite.view.icon
+import kotlinx.android.synthetic.main.item_invite.view.title
+import javax.inject.Inject
 
-internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
+internal class FriendsAdapter @Inject constructor() :
+    RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
@@ -69,6 +73,7 @@ internal class FriendsAdapter : RecyclerView.Adapter<FriendsAdapter.ViewHolder>(
                         actions.onNext(InviteAction.Accept(person.id))
                     }
                 }
+
                 else -> {
                     containerView.button.visibility = View.GONE
                 }

@@ -8,9 +8,10 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.model.pojo.Bet
 import io.reactivex.disposables.Disposable
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_feed.view.*
+import kotlinx.android.synthetic.main.item_feed.view.statement
+import javax.inject.Inject
 
-internal class FeedAdapter(
+internal class FeedAdapter @Inject constructor(
         private val interactor: GetBetInteractor
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 

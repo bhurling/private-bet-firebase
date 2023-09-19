@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.feed.FeedFragment
 import io.bhurling.privatebet.friends.FriendsFragment
@@ -17,9 +18,13 @@ import io.bhurling.privatebet.navigation.launch
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.fab
+import kotlinx.android.synthetic.main.activity_main.navigation
+import kotlinx.android.synthetic.main.activity_main.pager
+import kotlinx.android.synthetic.main.activity_main.toolbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val viewModel: HomeViewModel by viewModel()

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.CollectionReference
 import com.squareup.picasso.Picasso
+import io.bhurling.privatebet.ProfilesCollection
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.model.pojo.Person
@@ -16,11 +17,13 @@ import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_invite.view.*
+import kotlinx.android.synthetic.main.item_invite.view.icon
+import kotlinx.android.synthetic.main.item_invite.view.title
+import javax.inject.Inject
 
-class OpponentsAdapter(
+class OpponentsAdapter @Inject constructor(
     private val firebase: ReactiveFirebase,
-    private val profiles: CollectionReference
+    @ProfilesCollection private val profiles: CollectionReference
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()

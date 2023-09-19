@@ -4,8 +4,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import org.koin.dsl.module.module
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
 val applicationKoinModule = module {
 
@@ -74,6 +80,34 @@ val applicationKoinModule = module {
     }
 }
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DeviceDocument
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MePrivateDocument
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MePublicDocument
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BetsCollection
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class FeedCollection
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ProfilesCollection
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class LinksCollection
+
 object Qualifiers {
     const val bets = "bets"
     const val feed = "feed"
@@ -85,4 +119,71 @@ object Qualifiers {
         const val private = "me.private"
         const val public = "me.public"
     }
+}
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+object ApplicationModule {
+    @Provides
+    @Singleton
+    fun provideFirestoreSettings() = FirebaseFirestoreSettings.Builder()
+        .setPersistenceEnabled(true)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideFirestore(settings: FirebaseFirestoreSettings) =
+        FirebaseFirestore.getInstance().apply {
+            firestoreSettings = settings
+        }
+
+    @Provides
+    @Singleton
+    fun provideAuth() = FirebaseAuth.getInstance()
+
+    @Provides
+    fun provideReactiveFirebase() = ReactiveFirebase()
+
+    @Provides
+    fun provideCurrentUser(auth: FirebaseAuth) = auth.currentUser!! // TODO nullable?
+
+    @Provides
+    @MePublicDocument
+    fun provideMePublicDoc(store: FirebaseFirestore, user: FirebaseUser) =
+        store.collection("public_profiles")
+            .document(user.uid)
+
+    @Provides
+    @MePrivateDocument
+    fun provideMePrivateDoc(store: FirebaseFirestore, user: FirebaseUser) =
+        store.collection("private_profiles")
+            .document(user.uid)
+
+    @Provides
+    @DeviceDocument
+    fun provideDeviceDoc(store: FirebaseFirestore, user: FirebaseUser) =
+        store.collection("devices").document(user.uid)
+
+    @Provides
+    @FeedCollection
+    fun provideFeedCollection(store: FirebaseFirestore, user: FirebaseUser) =
+        store.collection("feeds")
+            .document(user.uid)
+            .collection("bets")
+
+    @Provides
+    @BetsCollection
+    fun provideBetsCollection(store: FirebaseFirestore) =
+        store.collection("bets")
+
+    @Provides
+    @LinksCollection
+    fun provideLinksCollection(store: FirebaseFirestore) =
+        store.collection("links")
+
+    @Provides
+    @ProfilesCollection
+    fun provideProfilesCollection(store: FirebaseFirestore) =
+        store.collection("public_profiles")
 }

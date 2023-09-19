@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.PagerAdapter
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.getOrNull
@@ -24,18 +25,26 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.activity_add.*
-import kotlinx.android.synthetic.main.partial_add_opponent.*
-import kotlinx.android.synthetic.main.partial_add_stake.*
-import kotlinx.android.synthetic.main.partial_add_statement.*
-import kotlinx.android.synthetic.main.partial_add_summary.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.activity_add.bets_add_next
+import kotlinx.android.synthetic.main.activity_add.bets_add_pager
+import kotlinx.android.synthetic.main.activity_add.bets_add_toolbar
+import kotlinx.android.synthetic.main.partial_add_opponent.bets_add_opponent_list
+import kotlinx.android.synthetic.main.partial_add_stake.bets_add_stake
+import kotlinx.android.synthetic.main.partial_add_statement.bets_add_deadline
+import kotlinx.android.synthetic.main.partial_add_statement.bets_add_deadline_bg
+import kotlinx.android.synthetic.main.partial_add_statement.bets_add_deadline_remove
+import kotlinx.android.synthetic.main.partial_add_statement.bets_add_statement
+import kotlinx.android.synthetic.main.partial_add_summary.bets_add_summary_root
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
     private val viewModel: AddBetViewModel by viewModel()
-    private val adapter: OpponentsAdapter by inject()
+
+    @Inject
+    lateinit var adapter: OpponentsAdapter
 
     private val summary by lazy {
         SummaryViewHolder(bets_add_summary_root)

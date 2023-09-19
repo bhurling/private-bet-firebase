@@ -7,18 +7,22 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.fragment_feed.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.fragment_feed.feed
 import org.koin.android.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 internal class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private val viewModel: FeedViewModel by viewModel()
-    private val adapter: FeedAdapter by inject()
+
+    @Inject
+    lateinit var adapter: FeedAdapter
 
     private val disposables = CompositeDisposable()
 

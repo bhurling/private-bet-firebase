@@ -18,17 +18,4 @@ val feedKoinModule = module {
             feed = get(Qualifiers.feed)
         )
     }
-
-    factory {
-        FeedAdapter(
-            interactor = get()
-        )
-    }
-
-    factory {
-        GetBetInteractor(
-            firebase = get(),
-            bets = get(Qualifiers.bets)
-        )
-    }
 }

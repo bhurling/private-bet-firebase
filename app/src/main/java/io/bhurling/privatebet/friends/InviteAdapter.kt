@@ -14,8 +14,9 @@ import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_invite.view.*
+import javax.inject.Inject
 
-class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
+class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
@@ -59,6 +60,7 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
                         actions.onNext(InviteAction.Invite(item.person.id))
                     }
                 }
+
                 item.isSent -> {
                     containerView.button.visibility = View.VISIBLE
                     containerView.button.text = getString(R.string.action_remove)
@@ -67,6 +69,7 @@ class InviteAdapter : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
                         actions.onNext(InviteAction.Revoke(item.person.id))
                     }
                 }
+
                 else -> {
                     containerView.button.visibility = View.GONE
                 }

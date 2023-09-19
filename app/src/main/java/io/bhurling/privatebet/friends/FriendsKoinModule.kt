@@ -19,10 +19,6 @@ val friendsKoinModule = module {
         )
     }
 
-    factory {
-        FriendsAdapter()
-    }
-
     viewModel {
         InviteViewModel(
             peopleInteractor = get(),

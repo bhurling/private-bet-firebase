@@ -5,17 +5,22 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_invite.*
+import kotlinx.android.synthetic.main.activity_invite.invite_list
+import kotlinx.android.synthetic.main.activity_invite.toolbar
 import org.koin.android.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
-internal class InviteActivity: AppCompatActivity(R.layout.activity_invite) {
+@AndroidEntryPoint
+internal class InviteActivity : AppCompatActivity(R.layout.activity_invite) {
 
     private val viewModel: InviteViewModel by viewModel()
 
-    private val adapter = InviteAdapter()
+    @Inject
+    lateinit var adapter: InviteAdapter
 
     private val disposables = CompositeDisposable()
 
@@ -32,9 +37,9 @@ internal class InviteActivity: AppCompatActivity(R.layout.activity_invite) {
         viewModel.attach(adapter.actions())
 
         disposables += viewModel.stateOf { items }
-                .subscribe { items ->
-                    adapter.items = items
-                }
+            .subscribe { items ->
+                adapter.items = items
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
