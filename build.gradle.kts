@@ -1,21 +1,3 @@
-import com.android.build.gradle.BaseExtension
-
-buildscript {
-
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-        google()
-    }
-
-    dependencies {
-        classpath(Config.Plugins.ANDROID)
-        classpath(Config.Plugins.KOTLIN)
-        classpath(Config.Plugins.GOOGLE)
-        classpath(Config.Plugins.VERSIONS)
-    }
-}
-
 allprojects {
     repositories {
         google()
@@ -27,29 +9,10 @@ allprojects {
     }
 }
 
-subprojects {
-    afterEvaluate {
-        configure<BaseExtension> {
-            compileSdkVersion(33)
-
-            defaultConfig {
-                minSdk = 21
-                targetSdk = 33
-
-                vectorDrawables.useSupportLibrary = true
-            }
-
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_1_8
-                targetCompatibility = JavaVersion.VERSION_1_8
-            }
-
-            lintOptions {
-                // We don't care about accessibility features
-                disable("ContentDescription")
-            }
-        }
-    }
+ext {
+    set("compileSdk", 33)
+    set("targetSdk", 33)
+    set("minSdk", 21)
 }
 
 task("clean", Delete::class) {

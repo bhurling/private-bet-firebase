@@ -1,16 +1,22 @@
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
+
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("com.google.gms.google-services") apply false
-    id("com.github.ben-manes.versions")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android.extensions)
 }
 
 android {
+    compileSdk = rootProject.ext["compileSdk"] as Int
+
     defaultConfig {
         applicationId = "io.bhurling.privatebet"
         versionCode = 1
         versionName = "1.0"
+
+        minSdk = rootProject.ext["minSdk"] as Int
+        targetSdk = rootProject.ext["targetSdk"] as Int
     }
 
     buildTypes {
