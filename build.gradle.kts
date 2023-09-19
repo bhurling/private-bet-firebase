@@ -30,11 +30,11 @@ allprojects {
 subprojects {
     afterEvaluate {
         configure<BaseExtension> {
-            compileSdkVersion(28)
+            compileSdkVersion(29)
 
             defaultConfig {
-                minSdkVersion(21)
-                targetSdkVersion(28)
+                minSdk = 21
+                targetSdk = 29
 
                 vectorDrawables.useSupportLibrary = true
             }

@@ -146,8 +146,8 @@ class AcceptInvitationService : IntentService("AcceptInvitationService") {
 
     private val interactor: InvitationsInteractor by inject()
 
-    override fun onHandleIntent(intent: Intent) {
-        intent.extras?.let { extras ->
+    override fun onHandleIntent(intent: Intent?) {
+        intent?.extras?.let { extras ->
             interactor.accept(extras.userId)
 
             InvitationReceivedNotificationService
