@@ -65,6 +65,3 @@ dependencies {
     testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.kotlin)
 }
-
-// Docs say this plugin should be applied at the bottom of the file
-apply(plugin = "com.google.gms.google-services")
