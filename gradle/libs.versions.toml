@@ -1,7 +1,7 @@
 [versions]
 agp = "7.4.2"
 google_services = "4.3.2"
-kotlin = "1.6.21"
+kotlin = "1.7.22"
 
 [libraries]
 kotlin_stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
