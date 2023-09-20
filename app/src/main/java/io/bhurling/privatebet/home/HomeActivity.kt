@@ -2,6 +2,7 @@ package io.bhurling.privatebet.home
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,12 +23,11 @@ import kotlinx.android.synthetic.main.activity_main.fab
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.activity_main.pager
 import kotlinx.android.synthetic.main.activity_main.toolbar
-import org.koin.android.viewmodel.ext.android.viewModel
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(R.layout.activity_main) {
 
-    private val viewModel: HomeViewModel by viewModel()
+    private val viewModel: HomeViewModel by viewModels()
 
     private val disposables = CompositeDisposable()
 

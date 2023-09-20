@@ -2,6 +2,7 @@ package io.bhurling.privatebet.friends
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,13 +12,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.activity_invite.invite_list
 import kotlinx.android.synthetic.main.activity_invite.toolbar
-import org.koin.android.viewmodel.ext.android.viewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class InviteActivity : AppCompatActivity(R.layout.activity_invite) {
 
-    private val viewModel: InviteViewModel by viewModel()
+    private val viewModel: InviteViewModel by viewModels()
 
     @Inject
     lateinit var adapter: InviteAdapter

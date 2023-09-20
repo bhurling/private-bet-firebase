@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.add
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.none
@@ -8,9 +9,11 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
-import java.util.*
+import java.util.Calendar
+import javax.inject.Inject
 
-class AddBetViewModel constructor(
+@HiltViewModel
+class AddBetViewModel @Inject constructor(
     private val interactor: InvitationsInteractor // TODO should not reference this one
 ) : BaseViewModel<AddAction, AddViewState, AddEffect>(AddViewState()) {
 

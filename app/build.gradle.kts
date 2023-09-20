@@ -40,11 +40,10 @@ dependencies {
     implementation(project(":lib-ui"))
     implementation(project(":lib-rx-firebase"))
 
-    implementation(libs.koin)
-    implementation(libs.koin.viewmodel)
-
+    implementation(libs.androidx.activity)
     implementation(libs.androidx.core)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.fragment)
     implementation(libs.androidx.transition)
 
     implementation(libs.firebase.auth)

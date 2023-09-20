@@ -19,13 +19,14 @@ import android.os.PersistableBundle
 import androidx.core.app.NotificationCompat
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.friends.InvitationsInteractor
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.makeIntent
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class InvitationReceivedNotificationService : JobService() {
 
@@ -142,9 +143,11 @@ class InvitationReceivedNotificationService : JobService() {
     }
 }
 
+@AndroidEntryPoint
 class AcceptInvitationService : IntentService("AcceptInvitationService") {
 
-    private val interactor: InvitationsInteractor by inject()
+    @Inject
+    lateinit var interactor: InvitationsInteractor
 
     override fun onHandleIntent(intent: Intent?) {
         intent?.extras?.let { extras ->

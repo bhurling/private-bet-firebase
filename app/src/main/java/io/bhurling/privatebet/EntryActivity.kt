@@ -1,15 +1,18 @@
 package io.bhurling.privatebet
 
-import android.app.Activity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
-class EntryActivity : Activity() {
+@AndroidEntryPoint
+class EntryActivity : ComponentActivity() {
 
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

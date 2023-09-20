@@ -1,5 +1,6 @@
 package io.bhurling.privatebet.friends
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.ViewModelEffect
 import io.bhurling.privatebet.arch.ViewModelState
@@ -7,8 +8,10 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import javax.inject.Inject
 
-internal class FriendsViewModel constructor(
+@HiltViewModel
+internal class FriendsViewModel @Inject constructor(
         private val invitationsInteractor: InvitationsInteractor
 ) : BaseViewModel<InviteAction, FriendsState, ViewModelEffect>(FriendsState()) {
 

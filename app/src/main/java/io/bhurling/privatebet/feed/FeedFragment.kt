@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,13 +14,12 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_feed.feed
-import org.koin.android.viewmodel.ext.android.viewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class FeedFragment : Fragment(R.layout.fragment_feed) {
 
-    private val viewModel: FeedViewModel by viewModel()
+    private val viewModel: FeedViewModel by viewModels()
 
     @Inject
     lateinit var adapter: FeedAdapter

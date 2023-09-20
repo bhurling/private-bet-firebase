@@ -1,12 +1,15 @@
 package io.bhurling.privatebet.home
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.ViewModelAction
 import io.bhurling.privatebet.arch.ViewModelEffect
 import io.bhurling.privatebet.arch.ViewModelState
 import io.bhurling.privatebet.friends.InvitationsInteractor
+import javax.inject.Inject
 
-internal class HomeViewModel(
+@HiltViewModel
+internal class HomeViewModel @Inject constructor(
         private val invitationsInteractor: InvitationsInteractor
 ) : BaseViewModel<ViewModelAction, HomeState, ViewModelEffect>(HomeState()) {
 

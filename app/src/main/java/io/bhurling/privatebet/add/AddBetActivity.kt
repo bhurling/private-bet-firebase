@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,13 +36,12 @@ import kotlinx.android.synthetic.main.partial_add_statement.bets_add_deadline_bg
 import kotlinx.android.synthetic.main.partial_add_statement.bets_add_deadline_remove
 import kotlinx.android.synthetic.main.partial_add_statement.bets_add_statement
 import kotlinx.android.synthetic.main.partial_add_summary.bets_add_summary_root
-import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddBetActivity : AppCompatActivity(R.layout.activity_add) {
-    private val viewModel: AddBetViewModel by viewModel()
+    private val viewModel: AddBetViewModel by viewModels()
 
     @Inject
     lateinit var adapter: OpponentsAdapter

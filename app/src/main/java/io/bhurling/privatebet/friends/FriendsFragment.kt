@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,13 +20,12 @@ import io.reactivex.rxkotlin.plusAssign
 import kotlinx.android.synthetic.main.fragment_friends.friends_connect
 import kotlinx.android.synthetic.main.fragment_friends.friends_empty
 import kotlinx.android.synthetic.main.fragment_friends.friends_list
-import org.koin.android.viewmodel.ext.android.viewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
-    private val viewModel: FriendsViewModel by viewModel()
+    private val viewModel: FriendsViewModel by viewModels()
 
     @Inject
     lateinit var adapter: FriendsAdapter

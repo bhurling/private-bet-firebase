@@ -1,19 +1,23 @@
 package io.bhurling.privatebet.friends
 
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import io.bhurling.privatebet.LinksCollection
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class InvitationsInteractor(
+class InvitationsInteractor @Inject constructor(
     private val firebase: ReactiveFirebase,
-    private val links: CollectionReference,
-    private val me: FirebaseUser
+    @LinksCollection private val links: CollectionReference,
+    private val auth: FirebaseAuth
 ) {
 
-    private val myLinks = links.document(me.uid)
+    private val myLinks by lazy {
+        links.document(auth.currentUser?.uid ?: "")
+    }
 
     fun incoming(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("incoming"))
@@ -51,7 +55,7 @@ class InvitationsInteractor(
 
 }
 
-private fun <T, R : Any> List<T>.mapSafely(mapper: (T) -> R) : List<R> {
+private fun <T, R : Any> List<T>.mapSafely(mapper: (T) -> R): List<R> {
     return mapNotNull {
         try {
             mapper(it)

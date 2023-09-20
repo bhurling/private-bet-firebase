@@ -1,7 +1,6 @@
 package io.bhurling.privatebet
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import dagger.Module
@@ -9,76 +8,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
-import org.koin.dsl.module.module
 import javax.inject.Qualifier
 import javax.inject.Singleton
-
-val applicationKoinModule = module {
-
-    single {
-        FirebaseFirestoreSettings.Builder()
-            .setPersistenceEnabled(true)
-            .build()
-    }
-
-    single {
-        FirebaseFirestore.getInstance().apply {
-            firestoreSettings = get()
-        }
-    }
-
-    single {
-        FirebaseAuth.getInstance()
-    }
-
-    factory {
-        ReactiveFirebase()
-    }
-
-    factory {
-        get<FirebaseAuth>().currentUser!! // TODO nullable?
-    }
-
-    factory(Qualifiers.feed) {
-        get<FirebaseFirestore>()
-            .collection("feeds")
-            .document(get<FirebaseUser>().uid)
-            .collection("bets")
-    }
-
-    factory(Qualifiers.bets) {
-        get<FirebaseFirestore>()
-            .collection("bets")
-    }
-
-    factory(Qualifiers.links) {
-        get<FirebaseFirestore>()
-            .collection("links")
-    }
-
-    factory(Qualifiers.profiles) {
-        get<FirebaseFirestore>()
-            .collection("public_profiles")
-    }
-
-    factory(Qualifiers.Me.public) {
-        get<FirebaseFirestore>()
-            .collection("public_profiles")
-            .document(get<FirebaseUser>().uid)
-    }
-
-    factory(Qualifiers.Me.private) {
-        get<FirebaseFirestore>()
-            .collection("private_profiles")
-            .document(get<FirebaseUser>().uid)
-    }
-
-    factory(Qualifiers.devices) {
-        get<FirebaseFirestore>()
-            .collection("devices")
-            .document(get<FirebaseUser>().uid)
-    }
-}
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -146,30 +77,28 @@ object ApplicationModule {
     fun provideReactiveFirebase() = ReactiveFirebase()
 
     @Provides
-    fun provideCurrentUser(auth: FirebaseAuth) = auth.currentUser!! // TODO nullable?
-
-    @Provides
     @MePublicDocument
-    fun provideMePublicDoc(store: FirebaseFirestore, user: FirebaseUser) =
+    fun provideMePublicDoc(store: FirebaseFirestore, auth: FirebaseAuth) =
         store.collection("public_profiles")
-            .document(user.uid)
+            .document(auth.currentUser?.uid ?: "")
 
     @Provides
     @MePrivateDocument
-    fun provideMePrivateDoc(store: FirebaseFirestore, user: FirebaseUser) =
+    fun provideMePrivateDoc(store: FirebaseFirestore, auth: FirebaseAuth) =
         store.collection("private_profiles")
-            .document(user.uid)
+            .document(auth.currentUser?.uid ?: "")
 
     @Provides
     @DeviceDocument
-    fun provideDeviceDoc(store: FirebaseFirestore, user: FirebaseUser) =
-        store.collection("devices").document(user.uid)
+    fun provideDeviceDoc(store: FirebaseFirestore, auth: FirebaseAuth) =
+        store.collection("devices")
+            .document(auth.currentUser?.uid ?: "")
 
     @Provides
     @FeedCollection
-    fun provideFeedCollection(store: FirebaseFirestore, user: FirebaseUser) =
+    fun provideFeedCollection(store: FirebaseFirestore, auth: FirebaseAuth) =
         store.collection("feeds")
-            .document(user.uid)
+            .document(auth.currentUser?.uid ?: "")
             .collection("bets")
 
     @Provides

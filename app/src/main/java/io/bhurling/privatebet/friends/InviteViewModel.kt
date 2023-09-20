@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.friends
 
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.ViewModelEffect
 import io.bhurling.privatebet.arch.ViewModelState
@@ -8,11 +9,13 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import javax.inject.Inject
 
-internal class InviteViewModel(
+@HiltViewModel
+internal class InviteViewModel @Inject constructor(
         private val peopleInteractor: PeopleInteractor,
         private val invitationsInteractor: InvitationsInteractor,
-        private val me: FirebaseUser
+        private val auth: FirebaseAuth
 ) : BaseViewModel<InviteAction, InviteState, ViewModelEffect>(InviteState()) {
 
     override fun onAttach() {
@@ -24,7 +27,7 @@ internal class InviteViewModel(
                 )
                 .map { (persons, incoming, outgoing) ->
                     persons.filter {
-                        it.id != me.uid
+                        it.id != auth.currentUser?.uid
                     }.map {
                         InviteAdapterItem(
                                 person = it,
