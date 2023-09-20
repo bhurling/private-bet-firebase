@@ -4,8 +4,6 @@ allprojects {
         mavenCentral()
 
         maven(url = "https://maven.fabric.io/public")
-
-        jcenter()
     }
 }
 
