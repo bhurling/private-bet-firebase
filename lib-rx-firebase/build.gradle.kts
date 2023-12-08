@@ -11,10 +11,6 @@ android {
     }
     
     compileSdk = rootProject.ext["compileSdk"] as Int
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
 }
 
 dependencies {
