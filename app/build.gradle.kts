@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.android.extensions)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kapt)
 }
@@ -20,6 +19,10 @@ android {
 
         minSdk = rootProject.ext["minSdk"] as Int
         targetSdk = rootProject.ext["targetSdk"] as Int
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {

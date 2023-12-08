@@ -5,15 +5,21 @@
 
     <io.bhurling.privatebet.add.NonSwipeableViewPager
         android:id="@+id/bets_add_pager"
-        android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="false">
 
-        <include layout="@layout/partial_add_statement" />
+        <include
+            android:id="@+id/bets_add_statement_include"
+            layout="@layout/partial_add_statement" />
 
-        <include layout="@layout/partial_add_stake" />
+        <include
+            android:id="@+id/bets_add_stake_include"
+            layout="@layout/partial_add_stake" />
 
-        <include layout="@layout/partial_add_opponent" />
+        <include
+            android:id="@+id/bets_add_opponent_include"
+            layout="@layout/partial_add_opponent" />
 
     </io.bhurling.privatebet.add.NonSwipeableViewPager>
 
@@ -29,6 +35,8 @@
         android:layout_gravity="bottom"
         android:text="@string/next" />
 
-    <include layout="@layout/partial_add_summary" />
+    <include
+        android:id="@+id/bets_add_summary_include"
+        layout="@layout/partial_add_summary" />
 
 </FrameLayout>

@@ -4,32 +4,30 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.databinding.PartialAddSummaryBinding
 import io.bhurling.privatebet.model.pojo.Person
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_invite.view.*
-import kotlinx.android.synthetic.main.partial_add_summary.view.*
 
-class SummaryViewHolder(override val containerView: View) : LayoutContainer {
+class SummaryViewHolder(val containerView: View) {
+    private val binding = PartialAddSummaryBinding.bind(containerView)
 
     val opponent by lazy {
-        containerView.icon.parent as View
+        binding.itemOpponentInclude.icon.parent as View
     }
 
     fun bind(statement: String, opponent: Person) {
-        containerView.bets_add_summary_statement.text = statement
-        containerView.title.text = opponent.displayName
+        binding.betsAddSummaryStatement.text = statement
+        binding.itemOpponentInclude.title.text = opponent.displayName
 
         Picasso.get()
                 .load(opponent.photoUrl)
                 .transform(CircleTransformation())
-                .into(containerView.icon)
+                .into(binding.itemOpponentInclude.icon)
     }
 
     fun fadeIn() {
-
         arrayOf(
-            containerView.bets_add_summary_statement,
-            containerView.bets_add_summary_vs
+            binding.betsAddSummaryStatement,
+            binding.betsAddSummaryVs
         ).forEach {
             it.alpha = 0F
             it.animate()
@@ -40,7 +38,7 @@ class SummaryViewHolder(override val containerView: View) : LayoutContainer {
         }
 
         arrayOf(
-            containerView.bets_add_summary_button
+            binding.betsAddSummaryButton
         ).forEach {
             it.alpha = 0F
             it.animate()

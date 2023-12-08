@@ -2,10 +2,12 @@ package io.bhurling.privatebet.friends
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,17 +15,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.databinding.FragmentFriendsBinding
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.fragment_friends.friends_connect
-import kotlinx.android.synthetic.main.fragment_friends.friends_empty
-import kotlinx.android.synthetic.main.fragment_friends.friends_list
 import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
+
+    private var _binding: FragmentFriendsBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: FriendsViewModel by viewModels()
 
@@ -32,14 +35,29 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     private val disposables = CompositeDisposable()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return FragmentFriendsBinding.inflate(inflater, container, false).apply {
+            _binding = this
+        }.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        friends_connect.setOnClickListener {
+        binding.friendsConnect.setOnClickListener {
             activity?.let<Activity, Unit> { EntryPoint.Invite.launch(it) }
         }
 
-        friends_list.layoutManager = LinearLayoutManager(activity)
-        friends_list.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-        friends_list.adapter = adapter
+        binding.friendsList.layoutManager = LinearLayoutManager(activity)
+        binding.friendsList.addItemDecoration(
+            DividerItemDecoration(
+                activity,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        binding.friendsList.adapter = adapter
 
         viewModel.attach(adapter.actions())
 
@@ -50,7 +68,7 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
     }
 
     private fun onItemsChanged(items: List<FriendsAdapterItem>) {
-        friends_empty.isVisible = items.isEmpty()
+        binding.friendsEmpty.isVisible = items.isEmpty()
 
         adapter.items = items
 
@@ -77,5 +95,7 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
         disposables.clear()
 
         super.onDestroyView()
+
+        _binding = null
     }
 }

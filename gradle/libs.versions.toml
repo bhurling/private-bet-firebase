@@ -41,6 +41,5 @@ google_services = { id = "com.google.gms.google-services", version.ref = "google
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
 kotlin_android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin_android_extensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 versions = { id = "com.github.ben-manes.versions", version = "0.44.0" }

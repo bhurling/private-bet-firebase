@@ -32,7 +32,9 @@
         android:layout_marginEnd="56dp"
         android:text="@string/add_bet_summary_vs_label" />
 
-    <include layout="@layout/item_opponent" />
+    <include
+        android:id="@+id/item_opponent_include"
+        layout="@layout/item_opponent" />
 
     <Button
         android:id="@+id/bets_add_summary_button"

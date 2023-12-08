@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import io.bhurling.privatebet.R
+import io.bhurling.privatebet.databinding.ActivityMainBinding
 import io.bhurling.privatebet.feed.FeedFragment
 import io.bhurling.privatebet.friends.FriendsFragment
 import io.bhurling.privatebet.navigation.ActivityStartParams
@@ -19,13 +19,11 @@ import io.bhurling.privatebet.navigation.launch
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_main.fab
-import kotlinx.android.synthetic.main.activity_main.navigation
-import kotlinx.android.synthetic.main.activity_main.pager
-import kotlinx.android.synthetic.main.activity_main.toolbar
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(R.layout.activity_main) {
+class HomeActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -34,13 +32,17 @@ class HomeActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        fab.setOnClickListener {
+        setSupportActionBar(binding.toolbar)
+
+        binding.fab.setOnClickListener {
             this?.let<Activity, Unit> { EntryPoint.CreateBet.launch(it) }
         }
 
-        pager.adapter = object : FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        binding.pager.adapter = object :
+            FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): Fragment {
                 if (position == 0) return FeedFragment()
                 if (position == 1) return FriendsFragment()
@@ -51,22 +53,22 @@ class HomeActivity : AppCompatActivity(R.layout.activity_main) {
             override fun getCount() = 2
         }
 
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(navigation))
-        navigation.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(pager))
+        binding.pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(binding.navigation))
+        binding.navigation.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(binding.pager))
 
         val params = intent?.let {
             ActivityStartParams.from<HomeActivityStartParams>(it)
         }
 
         if (savedInstanceState == null && params?.defaultToFriends == true) {
-            pager.setCurrentItem(1, false)
+            binding.pager.setCurrentItem(1, false)
         }
 
         viewModel.attach(Observable.never())
 
         disposables += viewModel.stateOf { isPrimaryActionVisible }
             .subscribe { isVisible ->
-                fab.isVisible = isVisible
+                binding.fab.isVisible = isVisible
             }
     }
 

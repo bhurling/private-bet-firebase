@@ -7,13 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.databinding.ItemInviteBinding
 import io.bhurling.privatebet.ui.diffableList
 import io.bhurling.privatebet.ui.getString
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_invite.view.*
 import javax.inject.Inject
 
 class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
@@ -40,38 +39,39 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
     override fun getItemCount() = items.size
 
     class ViewHolder(
-        override val containerView: View
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        private val containerView: View
+    ) : RecyclerView.ViewHolder(containerView) {
+        private val binding = ItemInviteBinding.bind(containerView)
         fun bind(item: InviteAdapterItem, actions: Observer<InviteAction>) {
             Picasso.get()
                 .load(item.person.photoUrl)
                 .error(R.drawable.default_avatar)
                 .transform(CircleTransformation())
-                .into(containerView.icon)
+                .into(binding.icon)
 
-            containerView.title.text = item.person.displayName
+            binding.title.text = item.person.displayName
 
             when {
                 !item.isSent && !item.isIncoming -> {
-                    containerView.button.visibility = View.VISIBLE
-                    containerView.button.text = getString(R.string.action_add)
+                    binding.button.visibility = View.VISIBLE
+                    binding.button.text = getString(R.string.action_add)
 
-                    containerView.button.setOnClickListener {
+                    binding.button.setOnClickListener {
                         actions.onNext(InviteAction.Invite(item.person.id))
                     }
                 }
 
                 item.isSent -> {
-                    containerView.button.visibility = View.VISIBLE
-                    containerView.button.text = getString(R.string.action_remove)
+                    binding.button.visibility = View.VISIBLE
+                    binding.button.text = getString(R.string.action_remove)
 
-                    containerView.button.setOnClickListener {
+                    binding.button.setOnClickListener {
                         actions.onNext(InviteAction.Revoke(item.person.id))
                     }
                 }
 
                 else -> {
-                    containerView.button.visibility = View.GONE
+                    binding.button.visibility = View.GONE
                 }
             }
         }

@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
+import io.bhurling.privatebet.databinding.ItemFeedBinding
 import io.bhurling.privatebet.model.pojo.Bet
 import io.reactivex.disposables.Disposable
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_feed.view.statement
 import javax.inject.Inject
 
 internal class FeedAdapter @Inject constructor(
-        private val interactor: GetBetInteractor
+    private val interactor: GetBetInteractor
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
     var keys: List<String>? = null
@@ -23,7 +22,9 @@ internal class FeedAdapter @Inject constructor(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -47,8 +48,9 @@ internal class FeedAdapter @Inject constructor(
     }
 
     inner class ViewHolder(
-        override val containerView: View
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        private val containerView: View
+    ) : RecyclerView.ViewHolder(containerView) {
+        private val binding = ItemFeedBinding.bind(containerView)
 
         private var key: String? = null
 
@@ -60,7 +62,7 @@ internal class FeedAdapter @Inject constructor(
 
         fun subscribe() {
             disposable = interactor.getBet(key!!)
-                    .subscribe({ this.update(it) }, { it.printStackTrace() })
+                .subscribe({ this.update(it) }, { it.printStackTrace() })
         }
 
         fun unsubscribe() {
@@ -70,7 +72,7 @@ internal class FeedAdapter @Inject constructor(
         }
 
         fun update(bet: Bet) {
-            containerView.statement.text = bet.statement
+            binding.statement.text = bet.statement
         }
     }
 }

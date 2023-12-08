@@ -7,15 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import io.bhurling.privatebet.R
+import io.bhurling.privatebet.databinding.ActivityInviteBinding
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import kotlinx.android.synthetic.main.activity_invite.invite_list
-import kotlinx.android.synthetic.main.activity_invite.toolbar
 import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class InviteActivity : AppCompatActivity(R.layout.activity_invite) {
+internal class InviteActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityInviteBinding
 
     private val viewModel: InviteViewModel by viewModels()
 
@@ -27,12 +27,20 @@ internal class InviteActivity : AppCompatActivity(R.layout.activity_invite) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setSupportActionBar(toolbar)
+        binding = ActivityInviteBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        invite_list.layoutManager = LinearLayoutManager(this)
-        invite_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        invite_list.adapter = adapter
+        binding.inviteList.layoutManager = LinearLayoutManager(this)
+        binding.inviteList.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        binding.inviteList.adapter = adapter
 
         viewModel.attach(adapter.actions())
 

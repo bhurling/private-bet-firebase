@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.ProfilesCollection
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
+import io.bhurling.privatebet.databinding.ItemOpponentBinding
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
@@ -16,9 +17,6 @@ import io.bhurling.privatebet.ui.diffableList
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_invite.view.icon
-import kotlinx.android.synthetic.main.item_invite.view.title
 import javax.inject.Inject
 
 class OpponentsAdapter @Inject constructor(
@@ -29,14 +27,15 @@ class OpponentsAdapter @Inject constructor(
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
 
     var items: List<OpponentsAdapterItem> by diffableList(
-            { old, new -> old.id == new.id },
-            { old, new -> old == new }
+        { old, new -> old.id == new.id },
+        { old, new -> old == new }
     )
 
     fun actions(): Observable<OpponentsAction> = actionsSubject
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_opponent, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_opponent, parent, false)
 
         return ViewHolder(view)
     }
@@ -60,8 +59,9 @@ class OpponentsAdapter @Inject constructor(
     override fun getItemCount() = items.size
 
     inner class ViewHolder(
-        override val containerView: View
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+        private val containerView: View
+    ) : RecyclerView.ViewHolder(containerView) {
+        private val binding = ItemOpponentBinding.bind(containerView)
 
         private var _item: OpponentsAdapterItem? = null
         private var disposable: Disposable? = null
@@ -73,9 +73,9 @@ class OpponentsAdapter @Inject constructor(
         fun subscribe() {
             _item?.let { item ->
                 disposable = firebase
-                        .observeValueEvents(profiles.document(item.id))
-                        .map { it.toPerson() }
-                        .subscribe { update(it) }
+                    .observeValueEvents(profiles.document(item.id))
+                    .map { it.toPerson() }
+                    .subscribe { update(it) }
             }
         }
 
@@ -91,11 +91,11 @@ class OpponentsAdapter @Inject constructor(
             }
 
             Picasso.get()
-                    .load(person.photoUrl)
-                    .transform(CircleTransformation())
-                    .into(containerView.icon)
+                .load(person.photoUrl)
+                .transform(CircleTransformation())
+                .into(binding.icon)
 
-            containerView.title.text = person.displayName
+            binding.title.text = person.displayName
         }
     }
 }
