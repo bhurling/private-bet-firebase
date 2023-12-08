@@ -21,6 +21,11 @@ android {
         targetSdk = rootProject.ext["targetSdk"] as Int
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     buildFeatures {
         viewBinding = true
     }
