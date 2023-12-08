@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.transition)
 
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.authui)
     implementation(libs.firebase.database)

@@ -21,6 +21,7 @@ android {
 dependencies {
     api(libs.kotlin.stdlib)
 
+    implementation(platform(libs.firebase.bom))
     api(libs.firebase.database)
 
     api(libs.rx.java)
