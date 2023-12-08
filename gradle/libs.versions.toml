@@ -1,6 +1,6 @@
 [versions]
 agp = "7.4.2"
-hilt = "2.47"
+hilt = "2.49"
 google_services = "4.4.0"
 kotlin = "1.8.22"
 
