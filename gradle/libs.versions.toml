@@ -1,5 +1,5 @@
 [versions]
-agp = "8.0.2"
+agp = "8.2.0"
 hilt = "2.49"
 google_services = "4.4.0"
 kotlin = "1.9.21"
