@@ -89,10 +89,14 @@ class OpponentsAdapter @Inject constructor(
                 actionsSubject.onNext(OpponentsAction.Selected(person))
             }
 
-            Picasso.get()
-                .load(person.photoUrl)
-                .transform(CircleTransformation())
-                .into(binding.icon)
+            person.photoUrl?.let { url ->
+                Picasso.get()
+                    .load(url)
+                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar)
+                    .transform(CircleTransformation())
+                    .into(binding.icon)
+            } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
             binding.title.text = person.displayName
         }

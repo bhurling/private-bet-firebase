@@ -54,11 +54,14 @@ internal class FriendsAdapter @Inject constructor() :
             isInvited: Boolean,
             actions: Observer<InviteAction>
         ) {
-            Picasso.get()
-                .load(person.photoUrl)
-                .error(R.drawable.default_avatar)
-                .transform(CircleTransformation())
-                .into(binding.icon)
+            person.photoUrl?.let { url ->
+                Picasso.get()
+                    .load(url)
+                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar)
+                    .transform(CircleTransformation())
+                    .into(binding.icon)
+            } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
             binding.title.text = person.displayName
 

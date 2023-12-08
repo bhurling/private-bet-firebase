@@ -43,11 +43,14 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
     ) : RecyclerView.ViewHolder(containerView) {
         private val binding = ItemInviteBinding.bind(containerView)
         fun bind(item: InviteAdapterItem, actions: Observer<InviteAction>) {
-            Picasso.get()
-                .load(item.person.photoUrl)
-                .error(R.drawable.default_avatar)
-                .transform(CircleTransformation())
-                .into(binding.icon)
+            item.person.photoUrl?.let { url ->
+                Picasso.get()
+                    .load(url)
+                    .error(R.drawable.default_avatar)
+                    .placeholder(R.drawable.default_avatar)
+                    .transform(CircleTransformation())
+                    .into(binding.icon)
+            } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
             binding.title.text = item.person.displayName
 

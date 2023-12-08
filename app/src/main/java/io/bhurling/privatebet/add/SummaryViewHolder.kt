@@ -3,6 +3,7 @@ package io.bhurling.privatebet.add
 import android.view.View
 import androidx.core.view.isVisible
 import com.squareup.picasso.Picasso
+import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.PartialAddSummaryBinding
 import io.bhurling.privatebet.model.pojo.Person
@@ -18,10 +19,14 @@ class SummaryViewHolder(val containerView: View) {
         binding.betsAddSummaryStatement.text = statement
         binding.itemOpponentInclude.title.text = opponent.displayName
 
-        Picasso.get()
-                .load(opponent.photoUrl)
+        opponent.photoUrl?.let { url ->
+            Picasso.get()
+                .load(url)
+                .error(R.drawable.default_avatar)
+                .placeholder(R.drawable.default_avatar)
                 .transform(CircleTransformation())
                 .into(binding.itemOpponentInclude.icon)
+        } ?: binding.itemOpponentInclude.icon.setImageResource(R.drawable.default_avatar)
     }
 
     fun fadeIn() {
