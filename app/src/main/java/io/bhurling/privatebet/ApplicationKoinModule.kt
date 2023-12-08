@@ -13,10 +13,6 @@ import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class DeviceDocument
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
 annotation class MePrivateDocument
 
 @Qualifier
@@ -38,20 +34,6 @@ annotation class ProfilesCollection
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class LinksCollection
-
-object Qualifiers {
-    const val bets = "bets"
-    const val feed = "feed"
-    const val profiles = "profiles"
-    const val links = "links"
-    const val devices = "devices"
-
-    object Me {
-        const val private = "me.private"
-        const val public = "me.public"
-    }
-}
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -86,12 +68,6 @@ object ApplicationModule {
     @MePrivateDocument
     fun provideMePrivateDoc(store: FirebaseFirestore, auth: FirebaseAuth) =
         store.collection("private_profiles")
-            .document(auth.currentUser?.uid ?: "")
-
-    @Provides
-    @DeviceDocument
-    fun provideDeviceDoc(store: FirebaseFirestore, auth: FirebaseAuth) =
-        store.collection("devices")
             .document(auth.currentUser?.uid ?: "")
 
     @Provides

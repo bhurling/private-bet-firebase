@@ -1,6 +1,5 @@
 package io.bhurling.privatebet.common.push
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,13 +12,9 @@ import javax.inject.Inject
 class MessagingService : FirebaseMessagingService() {
 
     @Inject
-    lateinit var auth: FirebaseAuth
-    @Inject
     lateinit var interactor: TokenInteractor
 
     override fun onNewToken(token: String) {
-        if (auth.currentUser == null) return
-
         interactor.addDeviceToken(token)
     }
 
