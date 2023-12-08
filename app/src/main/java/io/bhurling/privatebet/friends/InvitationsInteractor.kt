@@ -1,8 +1,9 @@
 package io.bhurling.privatebet.friends
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import io.bhurling.privatebet.LinksCollection
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FirebaseFirestore
 import io.bhurling.privatebet.model.pojo.Person
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
@@ -10,30 +11,33 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class InvitationsInteractor @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val store: FirebaseFirestore,
     private val firebase: ReactiveFirebase,
-    @LinksCollection private val links: CollectionReference,
-    private val auth: FirebaseAuth
 ) {
 
     private val myLinks by lazy {
-        links.document(auth.currentUser?.uid ?: "")
+        store.collection("links").document(auth.currentUser?.uid ?: "")
     }
 
     fun incoming(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("incoming"))
         .map { it.documents }
+        .mapToPublicProfiles()
         .map { documents -> documents.mapSafely { it.toPerson() } }
         .distinctUntilChanged()
 
     fun outgoing(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("outgoing"))
         .map { it.documents }
+        .mapToPublicProfiles()
         .map { documents -> documents.mapSafely { it.toPerson() } }
         .distinctUntilChanged()
 
     fun confirmed(): Observable<List<Person>> = firebase
         .observeValueEvents(myLinks.collection("confirmed"))
         .map { it.documents }
+        .mapToPublicProfiles()
         .map { documents -> documents.mapSafely { it.toPerson() } }
         .distinctUntilChanged()
 
@@ -53,6 +57,18 @@ class InvitationsInteractor @Inject constructor(
         myLinks.collection("incoming").document(id).delete()
     }
 
+    private fun Observable<List<DocumentSnapshot>>.mapToPublicProfiles(): Observable<List<DocumentSnapshot>> {
+        return switchMap { documents ->
+            if (documents.isEmpty()) {
+                Observable.just(emptyList())
+            } else {
+                firebase.observeValueEvents(
+                    store.collection("public_profiles")
+                        .whereIn(FieldPath.documentId(), documents.map { it.id })
+                ).map { it.documents }
+            }
+        }
+    }
 }
 
 private fun <T, R : Any> List<T>.mapSafely(mapper: (T) -> R): List<R> {

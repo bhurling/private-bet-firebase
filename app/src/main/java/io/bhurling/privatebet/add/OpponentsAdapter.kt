@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import io.bhurling.privatebet.ProfilesCollection
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.ItemOpponentBinding
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 class OpponentsAdapter @Inject constructor(
     private val firebase: ReactiveFirebase,
-    @ProfilesCollection private val profiles: CollectionReference
+    private val store: FirebaseFirestore,
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
@@ -73,7 +72,7 @@ class OpponentsAdapter @Inject constructor(
         fun subscribe() {
             _item?.let { item ->
                 disposable = firebase
-                    .observeValueEvents(profiles.document(item.id))
+                    .observeValueEvents(store.profiles.document(item.id))
                     .map { it.toPerson() }
                     .subscribe { update(it) }
             }
@@ -99,3 +98,5 @@ class OpponentsAdapter @Inject constructor(
         }
     }
 }
+
+private val FirebaseFirestore.profiles get() = collection("public_profiles")
