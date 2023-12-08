@@ -4,8 +4,7 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.common.push.TokenInteractor
 import javax.inject.Inject
@@ -15,8 +14,10 @@ class SignupService : IntentService("SignupService") {
 
     @Inject
     lateinit var auth: FirebaseAuth
+
     @Inject
     lateinit var signupInteractor: SignupInteractor
+
     @Inject
     lateinit var tokenInteractor: TokenInteractor
 
@@ -27,8 +28,10 @@ class SignupService : IntentService("SignupService") {
             signupInteractor.updateProfile(it.displayName, it.photoUrl.toString(), it.email)
         }
 
-        FirebaseInstanceId.getInstance().token?.let { token ->
-            tokenInteractor.addDeviceToken(token)
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            token?.let {
+                tokenInteractor.addDeviceToken(it)
+            }
         }
     }
 
