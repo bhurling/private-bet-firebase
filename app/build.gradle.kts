@@ -27,8 +27,13 @@ android {
     }
 
     buildFeatures {
+        compose = true
         viewBinding = true
         buildConfig = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildTypes {
@@ -48,6 +53,11 @@ dependencies {
     implementation(project(":lib-navigation"))
     implementation(project(":lib-ui"))
     implementation(project(":lib-rx-firebase"))
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
 
     implementation(libs.androidx.activity)
     implementation(libs.androidx.core)
