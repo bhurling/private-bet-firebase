@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.databinding.ItemFeedBinding
 import io.bhurling.privatebet.model.pojo.Bet
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 internal class FeedAdapter @Inject constructor(
-    private val interactor: GetBetInteractor
+    private val repository: BetsRepository
 ) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
     var keys: List<String>? = null
@@ -61,7 +63,8 @@ internal class FeedAdapter @Inject constructor(
         }
 
         fun subscribe() {
-            disposable = interactor.getBet(key!!)
+            disposable = repository.byId(key!!).asObservable()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ this.update(it) }, { it.printStackTrace() })
         }
 

@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import javax.inject.Singleton
 
 @Module
@@ -29,7 +28,4 @@ object ApplicationModule {
     @Provides
     @Singleton
     fun provideAuth() = FirebaseAuth.getInstance()
-
-    @Provides
-    fun provideReactiveFirebase() = ReactiveFirebase()
 }

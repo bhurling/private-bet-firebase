@@ -52,7 +52,6 @@ dependencies {
     implementation(project(":lib-arch"))
     implementation(project(":lib-navigation"))
     implementation(project(":lib-ui"))
-    implementation(project(":lib-rx-firebase"))
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)

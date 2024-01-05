@@ -9,18 +9,18 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.ItemOpponentBinding
+import io.bhurling.privatebet.friends.ProfileRepository
 import io.bhurling.privatebet.model.pojo.Profile
-import io.bhurling.privatebet.model.toPerson
-import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.bhurling.privatebet.ui.diffableList
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 class OpponentsAdapter @Inject constructor(
-    private val firebase: ReactiveFirebase,
-    private val store: FirebaseFirestore,
+    private val profileRepository: ProfileRepository
 ) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
@@ -71,9 +71,8 @@ class OpponentsAdapter @Inject constructor(
 
         fun subscribe() {
             _item?.let { item ->
-                disposable = firebase
-                    .observeValueEvents(store.profiles.document(item.id))
-                    .map { it.toPerson() }
+                disposable = profileRepository.byId(item.id).asObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { update(it) }
             }
         }
