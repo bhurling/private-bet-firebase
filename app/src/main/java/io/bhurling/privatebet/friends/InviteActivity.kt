@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.databinding.ActivityInviteBinding
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +23,6 @@ internal class InviteActivity : AppCompatActivity() {
 
     @Inject
     lateinit var adapter: InviteAdapter
-
-    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,17 +49,17 @@ internal class InviteActivity : AppCompatActivity() {
                 }
         }
 
-        disposables += adapter.actions()
-            .ofType<InviteAction.Invite>()
-            .subscribe {
+        lifecycleScope.launch {
+            adapter.actions().filterIsInstance<InviteAction.Invite>().collect {
                 viewModel.sendInvite(it.id)
             }
+        }
 
-        disposables += adapter.actions()
-            .ofType<InviteAction.Revoke>()
-            .subscribe {
+        lifecycleScope.launch {
+            adapter.actions().filterIsInstance<InviteAction.Revoke>().collect {
                 viewModel.revokeInvite(it.id)
             }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -74,11 +70,5 @@ internal class InviteActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        disposables.dispose()
-
-        super.onDestroy()
     }
 }

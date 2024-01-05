@@ -58,6 +58,7 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
 
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment)
