@@ -2,7 +2,6 @@ package io.bhurling.privatebet.friends
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.bhurling.privatebet.arch.ViewModelState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -46,4 +45,4 @@ internal class FriendsViewModel @Inject constructor(
 
 internal data class FriendsState(
     val items: List<FriendsAdapterItem>? = null
-) : ViewModelState
+)

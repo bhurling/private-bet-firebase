@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.PagerAdapter
 import com.jakewharton.rxbinding2.view.clicks
@@ -27,6 +29,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -108,67 +113,85 @@ class AddBetActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        actions.onNext(AddAction.BackClicked)
+        viewModel.offer(AddAction.BackClicked)
     }
 
     override fun onDestroy() {
-        viewModel.detach()
-
         disposables.dispose()
 
         super.onDestroy()
     }
 
     private fun attach() {
-        viewModel.attach(actions)
-
         disposables += binding.betsAddStatementInclude.betsAddStatement.textChanges()
             .map { it.toString() }
-            .subscribe { actions.onNext(AddAction.StatementChanged(it)) }
+            .subscribe { viewModel.offer(AddAction.StatementChanged(it)) }
 
         disposables += binding.betsAddStakeInclude.betsAddStake.textChanges().map { it.toString() }
-            .subscribe { actions.onNext(AddAction.StakeChanged(it)) }
+            .subscribe { viewModel.offer(AddAction.StakeChanged(it)) }
 
         disposables += binding.betsAddStatementInclude.betsAddDeadlineBg.clicks()
-            .subscribe { actions.onNext(AddAction.DeadlineClicked) }
+            .subscribe { viewModel.offer(AddAction.DeadlineClicked) }
 
         disposables += binding.betsAddStatementInclude.betsAddDeadlineRemove.clicks()
             .delay(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                actions.onNext(AddAction.DeadlineCleared)
+                viewModel.offer(AddAction.DeadlineCleared)
             }
 
         disposables += binding.betsAddNext.clicks()
             .subscribe {
-                actions.onNext(AddAction.NextClicked)
+                viewModel.offer(AddAction.NextClicked)
             }
 
         disposables += adapter.actions()
             .ofType<OpponentsAction.Selected>()
             .subscribe {
-                actions.onNext(AddAction.OpponentSelected(it.profile))
+                viewModel.offer(AddAction.OpponentSelected(it.profile))
             }
 
-        disposables += viewModel.stateOf { step }
-            .subscribe(this::updateStep)
+        disposables += actions.subscribe(viewModel::offer)
 
-        disposables += viewModel.stateOf { deadline }
-            .subscribe(this::updateDeadline)
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .map { it.step }
+                .distinctUntilChanged()
+                .collect(::updateStep)
+        }
 
-        disposables += viewModel.stateOf { opponentIds }
-            .subscribe(this::updateOpponents)
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .map { it.deadline }
+                .distinctUntilChanged()
+                .collect(::updateDeadline)
+        }
 
-        disposables += viewModel.stateOf { shouldShowNextButton }
-            .subscribe(this::updateButton)
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .map { it.opponentIds }
+                .distinctUntilChanged()
+                .collect(::updateOpponents)
+        }
 
-        disposables += viewModel.states()
-            .subscribe {
-                updateSummary(it.step, it.statement, it.opponent)
-            }
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .map { it.shouldShowNextButton }
+                .distinctUntilChanged()
+                .collect(::updateButton)
+        }
 
-        disposables += viewModel.effects()
-            .subscribe(effectHandler)
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    updateSummary(state.step, state.statement, state.opponent)
+                }
+        }
+
+        lifecycleScope.launch {
+            viewModel.effects.flowWithLifecycle(lifecycle)
+                .collect(effectHandler::accept)
+        }
     }
 
     private fun updateStep(step: AddViewState.Step) {

@@ -3,7 +3,6 @@ package io.bhurling.privatebet.friends
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.bhurling.privatebet.arch.ViewModelState
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -44,4 +43,4 @@ internal class InviteViewModel @Inject constructor(
 
 internal data class InviteState(
     val items: List<InviteAdapterItem> = emptyList()
-) : ViewModelState
+)

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.databinding.ActivityMainBinding
@@ -19,6 +21,8 @@ import io.bhurling.privatebet.navigation.launch
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -64,17 +68,11 @@ class HomeActivity : AppCompatActivity() {
             binding.pager.setCurrentItem(1, false)
         }
 
-        viewModel.attach(Observable.never())
-
-        disposables += viewModel.stateOf { isPrimaryActionVisible }
-            .subscribe { isVisible ->
-                binding.fab.isVisible = isVisible
-            }
-    }
-
-    override fun onDestroy() {
-        viewModel.detach()
-
-        super.onDestroy()
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    binding.fab.isVisible = state.isPrimaryActionVisible
+                }
+        }
     }
 }

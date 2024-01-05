@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.databinding.FragmentFeedBinding
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,13 +29,11 @@ internal class FeedFragment : Fragment(R.layout.fragment_feed) {
     @Inject
     lateinit var adapter: FeedAdapter
 
-    private val disposables = CompositeDisposable()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return FragmentFeedBinding.inflate(inflater, container, false).apply {
             _binding = this
         }.root
@@ -50,23 +48,21 @@ internal class FeedFragment : Fragment(R.layout.fragment_feed) {
         val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
         decoration.setDrawable(
             ContextCompat.getDrawable(
-                activity!!,
+                requireActivity(),
                 R.drawable.transparent_divider
             )!!
         )
         binding.feed.addItemDecoration(decoration)
 
-        viewModel.attach(Observable.never())
-
-        disposables += viewModel.stateOf { keys }
-            .subscribe { keys -> adapter.keys = keys }
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    adapter.keys = state.keys
+                }
+        }
     }
 
     override fun onDestroyView() {
-        viewModel.detach()
-
-        disposables.clear()
-
         // we need to unregister the adapter to make sure we call onViewDetachedFromWindow(ViewHolder)
         // for the visible items.
         binding.feed.swapAdapter(null, true)

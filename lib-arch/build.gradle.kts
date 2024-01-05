@@ -22,7 +22,6 @@ dependencies {
     api(libs.rx.java)
     api(libs.androidx.annotation)
 
-    implementation(libs.mvrx)
     implementation(libs.rx.kotlin)
 
     implementation(libs.kotlin.stdlib)

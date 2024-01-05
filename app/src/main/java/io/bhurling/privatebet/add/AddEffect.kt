@@ -1,9 +1,8 @@
 package io.bhurling.privatebet.add
 
-import io.bhurling.privatebet.arch.ViewModelEffect
-import java.util.*
+import java.util.Calendar
 
-sealed class AddEffect : ViewModelEffect {
+sealed class AddEffect {
     data class ShowDeadlinePicker(val initialValue: Calendar) : AddEffect()
-    object Finish : AddEffect()
+    data object Finish : AddEffect()
 }
