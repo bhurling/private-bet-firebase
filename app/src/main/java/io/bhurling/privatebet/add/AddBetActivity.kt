@@ -19,9 +19,6 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
-import io.bhurling.privatebet.arch.Optional
-import io.bhurling.privatebet.arch.getOrNull
-import io.bhurling.privatebet.arch.isSome
 import io.bhurling.privatebet.databinding.ActivityAddBinding
 import io.bhurling.privatebet.model.pojo.Profile
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -216,12 +213,12 @@ class AddBetActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateDeadline(value: Optional<Long>) {
-        binding.betsAddStatementInclude.betsAddDeadline.text = value.getOrNull()?.let { deadline ->
+    private fun updateDeadline(value: Long?) {
+        binding.betsAddStatementInclude.betsAddDeadline.text = value?.let { deadline ->
             DateFormat.getMediumDateFormat(this).format(deadline)
         } ?: getString(R.string.no_deadline)
 
-        binding.betsAddStatementInclude.betsAddDeadlineRemove.isVisible = value.isSome
+        binding.betsAddStatementInclude.betsAddDeadlineRemove.isVisible = value != null
     }
 
     private fun updateOpponents(opponentIds: List<String>) {

@@ -2,9 +2,6 @@ package io.bhurling.privatebet.add
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.bhurling.privatebet.arch.Optional
-import io.bhurling.privatebet.arch.getOrNull
-import io.bhurling.privatebet.arch.none
 import io.bhurling.privatebet.common.arch.BaseViewModel
 import io.bhurling.privatebet.friends.InvitationsRepository
 import io.bhurling.privatebet.model.pojo.Profile
@@ -50,7 +47,7 @@ class AddBetViewModel @Inject constructor(
         return flow {
             withState { state ->
                 val calendar = Calendar.getInstance().apply {
-                    state.deadline.getOrNull()?.let { deadline ->
+                    state.deadline?.let { deadline ->
                         timeInMillis = deadline
                     }
                 }
@@ -61,7 +58,7 @@ class AddBetViewModel @Inject constructor(
     }
 
     private fun onDeadlinedCleared(): Flow<AddViewState.StateUpdate> {
-        return flowOf(AddViewState.StateUpdate.Deadline(none()))
+        return flowOf(AddViewState.StateUpdate.Deadline(deadline = null))
     }
 
     private fun onBackClicked(): Flow<AddViewState.StateUpdate> {
@@ -79,7 +76,7 @@ class AddBetViewModel @Inject constructor(
         }
     }
 
-    private fun onDeadlineChanged(deadline: Optional<Long>): Flow<AddViewState.StateUpdate> {
+    private fun onDeadlineChanged(deadline: Long): Flow<AddViewState.StateUpdate> {
         return flowOf(AddViewState.StateUpdate.Deadline(deadline))
     }
 

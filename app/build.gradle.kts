@@ -49,7 +49,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":lib-arch"))
     implementation(project(":lib-navigation"))
     implementation(project(":lib-ui"))
 

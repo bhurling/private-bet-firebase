@@ -1,10 +1,9 @@
 package io.bhurling.privatebet.add
 
 import android.app.Activity
-import io.bhurling.privatebet.arch.toOptional
 import io.reactivex.Observer
 import io.reactivex.functions.Consumer
-import java.util.*
+import java.util.Calendar
 
 class AddBetEffectHandler(
     private val activity: Activity,
@@ -23,7 +22,7 @@ class AddBetEffectHandler(
 
     private fun onShowDeadlinePicker(initialValue: Calendar) {
         datePickerDialog(activity, initialValue) { selected ->
-            observer.onNext(AddAction.DeadlineChanged(selected.timeInMillis.toOptional()))
+            observer.onNext(AddAction.DeadlineChanged(selected.timeInMillis))
         }.apply {
             datePicker.minDate = System.currentTimeMillis()
         }.show()
