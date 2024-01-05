@@ -3,8 +3,7 @@ package io.bhurling.privatebet.friends
 import androidx.annotation.Keep
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.snapshots
-import com.google.firebase.firestore.toObjects
+import io.bhurling.privatebet.common.firestore.snapshots
 import io.bhurling.privatebet.model.pojo.Profile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -14,9 +13,10 @@ class ProfileRepository @Inject constructor(
     private val store: FirebaseFirestore
 ) {
     fun observeAll(): Flow<List<Profile>> {
-        return store.profiles.orderBy("displayName").snapshots().map { snapshot ->
-            snapshot.toObjects<FirestoreProfile>().map { it.toProfile() }
-        }
+        return store.profiles.orderBy("displayName").snapshots<FirestoreProfile>()
+            .map { firestoreProfiles ->
+                firestoreProfiles.map(FirestoreProfile::toProfile)
+            }
     }
 }
 

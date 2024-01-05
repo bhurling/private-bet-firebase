@@ -8,11 +8,12 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 @HiltViewModel
 internal class FriendsViewModel @Inject constructor(
-        private val invitationsInteractor: InvitationsInteractor
+    private val invitationsRepository: InvitationsRepository
 ) : BaseViewModel<InviteAction, FriendsState, ViewModelEffect>(FriendsState()) {
 
     override fun onAttach() {
@@ -36,26 +37,26 @@ internal class FriendsViewModel @Inject constructor(
         disposables += actions
             .ofType<InviteAction.Accept>()
             .subscribe {
-                invitationsInteractor.accept(it.id)
+                invitationsRepository.accept(it.id)
             }
     }
 
     private fun incoming(): Observable<List<FriendsAdapterItem>> {
-        return invitationsInteractor.incoming()
-                .map {
-                    it.map {
-                        FriendsAdapterItem(it, isInvited = true)
-                    }
+        return invitationsRepository.incoming().asObservable()
+            .map { incoming ->
+                incoming.map { profile ->
+                    FriendsAdapterItem(profile, isInvited = true)
                 }
+            }
     }
 
     private fun confirmed(): Observable<List<FriendsAdapterItem>> {
-        return invitationsInteractor.confirmed()
-                .map {
-                    it.map {
-                        FriendsAdapterItem(it, isConfirmed = true)
-                    }
+        return invitationsRepository.confirmed().asObservable()
+            .map { confirmed ->
+                confirmed.map { profile ->
+                    FriendsAdapterItem(profile, isConfirmed = true)
                 }
+            }
     }
 }
 

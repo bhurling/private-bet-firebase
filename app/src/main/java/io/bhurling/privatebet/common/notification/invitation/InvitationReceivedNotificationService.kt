@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.notification.CHANNEL_LINKS
 import io.bhurling.privatebet.common.ui.CircleTransformation
-import io.bhurling.privatebet.friends.InvitationsInteractor
+import io.bhurling.privatebet.friends.InvitationsRepository
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.makeIntent
 import javax.inject.Inject
@@ -147,11 +147,11 @@ class InvitationReceivedNotificationService : JobService() {
 class AcceptInvitationService : IntentService("AcceptInvitationService") {
 
     @Inject
-    lateinit var interactor: InvitationsInteractor
+    lateinit var repository: InvitationsRepository
 
     override fun onHandleIntent(intent: Intent?) {
         intent?.extras?.let { extras ->
-            interactor.accept(extras.userId)
+            repository.accept(extras.userId)
 
             InvitationReceivedNotificationService
                 .schedule(

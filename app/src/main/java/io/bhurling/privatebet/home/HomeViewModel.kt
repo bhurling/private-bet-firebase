@@ -5,17 +5,18 @@ import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.ViewModelAction
 import io.bhurling.privatebet.arch.ViewModelEffect
 import io.bhurling.privatebet.arch.ViewModelState
-import io.bhurling.privatebet.friends.InvitationsInteractor
+import io.bhurling.privatebet.friends.InvitationsRepository
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-        private val invitationsInteractor: InvitationsInteractor
+    private val invitationsRepository: InvitationsRepository
 ) : BaseViewModel<ViewModelAction, HomeState, ViewModelEffect>(HomeState()) {
 
     override fun onAttach() {
         disposables.addAll(
-            invitationsInteractor.confirmed()
+            invitationsRepository.confirmed().asObservable()
                 .subscribe { confirmed ->
                     updateState { copy(isPrimaryActionVisible = confirmed.isNotEmpty()) }
                 }

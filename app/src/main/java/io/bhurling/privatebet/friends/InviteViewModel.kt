@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class InviteViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    private val invitationsInteractor: InvitationsInteractor,
+    private val invitationsRepository: InvitationsRepository,
     private val auth: FirebaseAuth
 ) : BaseViewModel<InviteAction, InviteState, ViewModelEffect>(InviteState()) {
 
@@ -23,8 +23,8 @@ internal class InviteViewModel @Inject constructor(
         disposables += Observables
                 .combineLatest(
                         profileRepository.observeAll().asObservable(),
-                        invitationsInteractor.incoming(),
-                        invitationsInteractor.outgoing()
+                        invitationsRepository.incoming().asObservable(),
+                        invitationsRepository.outgoing().asObservable()
                 )
                 .map { (persons, incoming, outgoing) ->
                     persons.filter {
@@ -46,25 +46,25 @@ internal class InviteViewModel @Inject constructor(
         disposables += actions
                 .ofType<InviteAction.Invite>()
                 .subscribe {
-                    invitationsInteractor.invite(it.id)
+                    invitationsRepository.invite(it.id)
                 }
 
         disposables += actions
                 .ofType<InviteAction.Revoke>()
                 .subscribe {
-                    invitationsInteractor.revoke(it.id)
+                    invitationsRepository.revoke(it.id)
                 }
 
         disposables += actions
                 .ofType<InviteAction.Accept>()
                 .subscribe {
-                    invitationsInteractor.accept(it.id)
+                    invitationsRepository.accept(it.id)
                 }
 
         disposables += actions
                 .ofType<InviteAction.Decline>()
                 .subscribe {
-                    invitationsInteractor.decline(it.id)
+                    invitationsRepository.decline(it.id)
                 }
     }
 }

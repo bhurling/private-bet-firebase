@@ -4,21 +4,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.arch.BaseViewModel
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.none
-import io.bhurling.privatebet.friends.InvitationsInteractor
+import io.bhurling.privatebet.friends.InvitationsRepository
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
+import kotlinx.coroutines.rx2.asObservable
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class AddBetViewModel @Inject constructor(
-    private val interactor: InvitationsInteractor // TODO should not reference this one
+    private val repository: InvitationsRepository
 ) : BaseViewModel<AddAction, AddViewState, AddEffect>(AddViewState()) {
 
     override fun handleActions(actions: Observable<AddAction>) {
-        disposables += interactor.confirmed()
+        disposables += repository.confirmed().asObservable()
             .take(1) // TODO Allow updates to confirmed friends while on screen
             .map { persons -> persons.map { it.id } } // TODO required?
             .subscribe { opponentIds ->
