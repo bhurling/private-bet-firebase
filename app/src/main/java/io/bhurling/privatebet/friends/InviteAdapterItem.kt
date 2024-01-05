@@ -1,9 +1,9 @@
 package io.bhurling.privatebet.friends
 
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 
 data class InviteAdapterItem(
-        val person: Person,
-        val isSent: Boolean,
-        val isIncoming: Boolean
+    val profile: Profile,
+    val isSent: Boolean,
+    val isIncoming: Boolean
 )

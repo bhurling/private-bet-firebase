@@ -2,7 +2,7 @@ package io.bhurling.privatebet.add
 
 import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.ViewModelAction
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 
 sealed class AddAction : ViewModelAction {
     object BackClicked : AddAction()
@@ -11,6 +11,6 @@ sealed class AddAction : ViewModelAction {
     object DeadlineClicked : AddAction()
     data class DeadlineChanged(val deadline: Optional<Long>) : AddAction()
     object DeadlineCleared : AddAction()
-    data class OpponentSelected(val opponent: Person) : AddAction()
+    data class OpponentSelected(val opponent: Profile) : AddAction()
     object NextClicked : AddAction()
 }

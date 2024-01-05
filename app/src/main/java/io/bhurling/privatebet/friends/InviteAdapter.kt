@@ -20,7 +20,7 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
     var items: List<InviteAdapterItem> by diffableList(
-        { old, new -> old.person.id == new.person.id },
+        { old, new -> old.profile.id == new.profile.id },
         { old, new -> old == new }
     )
 
@@ -43,7 +43,7 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
     ) : RecyclerView.ViewHolder(containerView) {
         private val binding = ItemInviteBinding.bind(containerView)
         fun bind(item: InviteAdapterItem, actions: Observer<InviteAction>) {
-            item.person.photoUrl?.let { url ->
+            item.profile.photoUrl?.let { url ->
                 Picasso.get()
                     .load(url)
                     .error(R.drawable.default_avatar)
@@ -52,7 +52,7 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
                     .into(binding.icon)
             } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
-            binding.title.text = item.person.displayName
+            binding.title.text = item.profile.displayName
 
             when {
                 !item.isSent && !item.isIncoming -> {
@@ -60,7 +60,7 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
                     binding.button.text = getString(R.string.action_add)
 
                     binding.button.setOnClickListener {
-                        actions.onNext(InviteAction.Invite(item.person.id))
+                        actions.onNext(InviteAction.Invite(item.profile.id))
                     }
                 }
 
@@ -69,7 +69,7 @@ class InviteAdapter @Inject constructor() : RecyclerView.Adapter<InviteAdapter.V
                     binding.button.text = getString(R.string.action_remove)
 
                     binding.button.setOnClickListener {
-                        actions.onNext(InviteAction.Revoke(item.person.id))
+                        actions.onNext(InviteAction.Revoke(item.profile.id))
                     }
                 }
 

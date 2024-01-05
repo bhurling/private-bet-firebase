@@ -25,7 +25,7 @@ internal class FriendsViewModel @Inject constructor(
                     incoming + confirmed
                 }
                 .map { invites ->
-                    invites.reversed().distinctBy { it.person.id }.reversed()
+                    invites.reversed().distinctBy { it.profile.id }.reversed()
                 }
                 .subscribe { items ->
                     updateState { copy(items = items) }

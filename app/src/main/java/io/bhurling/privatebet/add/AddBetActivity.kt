@@ -21,7 +21,7 @@ import io.bhurling.privatebet.arch.Optional
 import io.bhurling.privatebet.arch.getOrNull
 import io.bhurling.privatebet.arch.isSome
 import io.bhurling.privatebet.databinding.ActivityAddBinding
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
@@ -147,7 +147,7 @@ class AddBetActivity : AppCompatActivity() {
         disposables += adapter.actions()
             .ofType<OpponentsAction.Selected>()
             .subscribe {
-                actions.onNext(AddAction.OpponentSelected(it.person))
+                actions.onNext(AddAction.OpponentSelected(it.profile))
             }
 
         disposables += viewModel.stateOf { step }
@@ -205,7 +205,7 @@ class AddBetActivity : AppCompatActivity() {
         adapter.items = opponentIds.map { OpponentsAdapterItem(it) }
     }
 
-    private fun updateSummary(step: AddViewState.Step, statement: String, opponent: Person?) {
+    private fun updateSummary(step: AddViewState.Step, statement: String, opponent: Profile?) {
         opponent?.let { summary.bind(statement, it) }
 
         if (step == AddViewState.Step.OPPONENT && opponent != null) {

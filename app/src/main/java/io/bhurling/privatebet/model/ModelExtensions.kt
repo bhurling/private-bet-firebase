@@ -1,10 +1,10 @@
 package io.bhurling.privatebet.model
 
 import com.google.firebase.firestore.DocumentSnapshot
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 
 // TODO can we use toObject()?
-fun DocumentSnapshot.toPerson() = Person(
+fun DocumentSnapshot.toPerson() = Profile(
     id = id,
     displayName = getStringOrThrow("displayName"),
     photoUrl = getString("photoUrl")

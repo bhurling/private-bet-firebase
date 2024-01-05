@@ -6,7 +6,7 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.PartialAddSummaryBinding
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 
 class SummaryViewHolder(val containerView: View) {
     private val binding = PartialAddSummaryBinding.bind(containerView)
@@ -15,7 +15,7 @@ class SummaryViewHolder(val containerView: View) {
         binding.itemOpponentInclude.icon.parent as View
     }
 
-    fun bind(statement: String, opponent: Person) {
+    fun bind(statement: String, opponent: Profile) {
         binding.betsAddSummaryStatement.text = statement
         binding.itemOpponentInclude.title.text = opponent.displayName
 

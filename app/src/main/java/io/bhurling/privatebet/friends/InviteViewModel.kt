@@ -9,19 +9,20 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
 @HiltViewModel
 internal class InviteViewModel @Inject constructor(
-        private val peopleInteractor: PeopleInteractor,
-        private val invitationsInteractor: InvitationsInteractor,
-        private val auth: FirebaseAuth
+    private val profileRepository: ProfileRepository,
+    private val invitationsInteractor: InvitationsInteractor,
+    private val auth: FirebaseAuth
 ) : BaseViewModel<InviteAction, InviteState, ViewModelEffect>(InviteState()) {
 
     override fun onAttach() {
         disposables += Observables
                 .combineLatest(
-                        peopleInteractor.all(),
+                        profileRepository.observeAll().asObservable(),
                         invitationsInteractor.incoming(),
                         invitationsInteractor.outgoing()
                 )
@@ -30,7 +31,7 @@ internal class InviteViewModel @Inject constructor(
                         it.id != auth.currentUser?.uid
                     }.map {
                         InviteAdapterItem(
-                                person = it,
+                                profile = it,
                                 isIncoming = incoming.contains(it),
                                 isSent = outgoing.contains(it)
                         )

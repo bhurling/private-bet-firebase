@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.ItemOpponentBinding
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.bhurling.privatebet.ui.diffableList
@@ -84,12 +84,12 @@ class OpponentsAdapter @Inject constructor(
             }
         }
 
-        private fun update(person: Person) {
+        private fun update(profile: Profile) {
             itemView.setOnClickListener {
-                actionsSubject.onNext(OpponentsAction.Selected(person))
+                actionsSubject.onNext(OpponentsAction.Selected(profile))
             }
 
-            person.photoUrl?.let { url ->
+            profile.photoUrl?.let { url ->
                 Picasso.get()
                     .load(url)
                     .error(R.drawable.default_avatar)
@@ -98,7 +98,7 @@ class OpponentsAdapter @Inject constructor(
                     .into(binding.icon)
             } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
-            binding.title.text = person.displayName
+            binding.title.text = profile.displayName
         }
     }
 }

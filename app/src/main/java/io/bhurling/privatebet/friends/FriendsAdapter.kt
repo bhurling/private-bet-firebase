@@ -8,7 +8,7 @@ import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.ItemInviteBinding
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.ui.diffableList
 import io.bhurling.privatebet.ui.getString
 import io.reactivex.Observable
@@ -22,7 +22,7 @@ internal class FriendsAdapter @Inject constructor() :
     private val actionsSubject = PublishSubject.create<InviteAction>()
 
     var items: List<FriendsAdapterItem> by diffableList(
-        { old, new -> old.person.id == new.person.id },
+        { old, new -> old.profile.id == new.profile.id },
         { old, new -> old == new }
     )
 
@@ -46,15 +46,15 @@ internal class FriendsAdapter @Inject constructor() :
         private val binding = ItemInviteBinding.bind(containerView)
 
         fun bind(item: FriendsAdapterItem, actions: Observer<InviteAction>) {
-            update(item.person, item.isInvited, actions)
+            update(item.profile, item.isInvited, actions)
         }
 
         private fun update(
-            person: Person,
+            profile: Profile,
             isInvited: Boolean,
             actions: Observer<InviteAction>
         ) {
-            person.photoUrl?.let { url ->
+            profile.photoUrl?.let { url ->
                 Picasso.get()
                     .load(url)
                     .error(R.drawable.default_avatar)
@@ -63,7 +63,7 @@ internal class FriendsAdapter @Inject constructor() :
                     .into(binding.icon)
             } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
-            binding.title.text = person.displayName
+            binding.title.text = profile.displayName
 
             when {
                 isInvited -> {
@@ -71,7 +71,7 @@ internal class FriendsAdapter @Inject constructor() :
                     binding.button.text = getString(R.string.action_accept)
 
                     binding.button.setOnClickListener {
-                        actions.onNext(InviteAction.Accept(person.id))
+                        actions.onNext(InviteAction.Accept(profile.id))
                     }
                 }
 

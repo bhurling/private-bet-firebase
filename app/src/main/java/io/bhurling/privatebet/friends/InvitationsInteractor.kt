@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import io.bhurling.privatebet.model.pojo.Person
+import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.model.toPerson
 import io.bhurling.privatebet.rx.firebase.ReactiveFirebase
 import io.reactivex.Observable
@@ -20,21 +20,21 @@ class InvitationsInteractor @Inject constructor(
         store.collection("links").document(auth.currentUser?.uid ?: "")
     }
 
-    fun incoming(): Observable<List<Person>> = firebase
+    fun incoming(): Observable<List<Profile>> = firebase
         .observeValueEvents(myLinks.collection("incoming"))
         .map { it.documents }
         .mapToPublicProfiles()
         .map { documents -> documents.mapSafely { it.toPerson() } }
         .distinctUntilChanged()
 
-    fun outgoing(): Observable<List<Person>> = firebase
+    fun outgoing(): Observable<List<Profile>> = firebase
         .observeValueEvents(myLinks.collection("outgoing"))
         .map { it.documents }
         .mapToPublicProfiles()
         .map { documents -> documents.mapSafely { it.toPerson() } }
         .distinctUntilChanged()
 
-    fun confirmed(): Observable<List<Person>> = firebase
+    fun confirmed(): Observable<List<Profile>> = firebase
         .observeValueEvents(myLinks.collection("confirmed"))
         .map { it.documents }
         .mapToPublicProfiles()
