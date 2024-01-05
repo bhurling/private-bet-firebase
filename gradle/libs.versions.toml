@@ -1,12 +1,13 @@
 [versions]
 agp = "8.2.0"
-hilt = "2.49"
-google_services = "4.4.0"
-kotlin = "1.9.21"
-ksp = "1.9.21-1.0.15"
-firebase = "32.6.0"
 compose = "2023.10.01"
 compose_compiler = "1.5.6"
+coroutines = "1.7.3"
+firebase = "32.6.0"
+google_services = "4.4.0"
+hilt = "2.49"
+kotlin = "1.9.21"
+ksp = "1.9.21-1.0.15"
 
 [libraries]
 kotlin_stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -26,8 +27,10 @@ firebase_authui = "com.firebaseui:firebase-ui-auth:8.0.2"
 firebase_bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase_database = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase_messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
-hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
-hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt"}
+hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlin_coroutines_rx2 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "coroutines" }
 rx_java = "io.reactivex.rxjava2:rxjava:2.2.19"
 rx_android = "io.reactivex.rxjava2:rxandroid:2.1.1"
 rx_kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"

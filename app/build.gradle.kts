@@ -75,6 +75,8 @@ dependencies {
     implementation(libs.rx.java)
     implementation(libs.rx.kotlin)
     implementation(libs.rx.binding)
+    implementation(libs.kotlin.coroutines)
+    implementation(libs.kotlin.coroutines.rx2)
 
     implementation(libs.material)
     implementation(libs.picasso)
