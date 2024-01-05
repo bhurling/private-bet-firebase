@@ -29,7 +29,7 @@ class InvitationsRepository @Inject constructor(
             .whereEqualTo("linked", true)
             .snapshots<FirestoreLink>()
             .mapToPublicProfiles()
-            .map { firestoreProfiles -> firestoreProfiles.map(FirestoreProfile::toProfile) }
+            .map { firestoreProfiles -> firestoreProfiles.map(FirestorePublicProfile::toProfile) }
             .distinctUntilChanged()
     }
 
@@ -38,14 +38,14 @@ class InvitationsRepository @Inject constructor(
             .whereEqualTo("linked", true)
             .snapshots<FirestoreLink>()
             .mapToPublicProfiles()
-            .map { firestoreProfiles -> firestoreProfiles.map(FirestoreProfile::toProfile) }
+            .map { firestoreProfiles -> firestoreProfiles.map(FirestorePublicProfile::toProfile) }
             .distinctUntilChanged()
 
     fun confirmed(): Flow<List<Profile>> = myLinks.collection("confirmed")
         .whereEqualTo("linked", true)
         .snapshots<FirestoreLink>()
         .mapToPublicProfiles()
-        .map { firestoreProfiles -> firestoreProfiles.map(FirestoreProfile::toProfile) }
+        .map { firestoreProfiles -> firestoreProfiles.map(FirestorePublicProfile::toProfile) }
         .distinctUntilChanged()
 
     fun invite(id: String) {
@@ -65,7 +65,7 @@ class InvitationsRepository @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun Flow<List<FirestoreLink>>.mapToPublicProfiles(): Flow<List<FirestoreProfile>> {
+    private fun Flow<List<FirestoreLink>>.mapToPublicProfiles(): Flow<List<FirestorePublicProfile>> {
         return flatMapLatest { links ->
             if (links.isEmpty()) {
                 flowOf(emptyList())

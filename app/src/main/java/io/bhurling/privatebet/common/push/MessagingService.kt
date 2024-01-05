@@ -12,7 +12,7 @@ import javax.inject.Inject
 class MessagingService : FirebaseMessagingService() {
 
     @Inject
-    lateinit var interactor: TokenInteractor
+    lateinit var interactor: TokenRepository
 
     override fun onNewToken(token: String) {
         interactor.addDeviceToken(token)
