@@ -3,6 +3,8 @@ package io.bhurling.privatebet.friends
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
@@ -11,22 +13,22 @@ import io.bhurling.privatebet.databinding.ItemInviteBinding
 import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.ui.diffableList
 import io.bhurling.privatebet.ui.getString
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class FriendsAdapter @Inject constructor() :
     RecyclerView.Adapter<FriendsAdapter.ViewHolder>() {
 
-    private val actionsSubject = PublishSubject.create<InviteAction>()
+    private val _actions = MutableSharedFlow<InviteAction>()
 
     var items: List<FriendsAdapterItem> by diffableList(
         { old, new -> old.profile.id == new.profile.id },
         { old, new -> old == new }
     )
 
-    fun actions(): Observable<InviteAction> = actionsSubject
+    fun actions() = _actions.asSharedFlow()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_invite, parent, false)
@@ -35,7 +37,7 @@ internal class FriendsAdapter @Inject constructor() :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], actionsSubject)
+        holder.bind(items[position], _actions)
     }
 
     override fun getItemCount() = items.size
@@ -44,15 +46,16 @@ internal class FriendsAdapter @Inject constructor() :
         private val containerView: View
     ) : RecyclerView.ViewHolder(containerView) {
         private val binding = ItemInviteBinding.bind(containerView)
+        private val lifecycleScope get() = containerView.findViewTreeLifecycleOwner()?.lifecycleScope
 
-        fun bind(item: FriendsAdapterItem, actions: Observer<InviteAction>) {
+        fun bind(item: FriendsAdapterItem, actions: MutableSharedFlow<InviteAction>) {
             update(item.profile, item.isInvited, actions)
         }
 
         private fun update(
             profile: Profile,
             isInvited: Boolean,
-            actions: Observer<InviteAction>
+            actions: MutableSharedFlow<InviteAction>
         ) {
             profile.photoUrl?.let { url ->
                 Picasso.get()
@@ -71,7 +74,9 @@ internal class FriendsAdapter @Inject constructor() :
                     binding.button.text = getString(R.string.action_accept)
 
                     binding.button.setOnClickListener {
-                        actions.onNext(InviteAction.Accept(profile.id))
+                        lifecycleScope?.launch {
+                            actions.emit(InviteAction.Accept(profile.id))
+                        }
                     }
                 }
 

@@ -20,11 +20,8 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.databinding.FragmentFriendsBinding
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -40,8 +37,6 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
 
     @Inject
     lateinit var adapter: FriendsAdapter
-
-    private val disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,11 +72,12 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
                 }
         }
 
-        disposables += adapter.actions()
-            .ofType<InviteAction.Accept>()
-            .subscribe {
+
+        lifecycleScope.launch {
+            adapter.actions().filterIsInstance<InviteAction.Accept>().collect {
                 viewModel.acceptInvitation(it.id)
             }
+        }
     }
 
     private fun onItemsChanged(items: List<FriendsAdapterItem>) {
@@ -107,8 +103,6 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
     }
 
     override fun onDestroyView() {
-        disposables.clear()
-
         super.onDestroyView()
 
         _binding = null
