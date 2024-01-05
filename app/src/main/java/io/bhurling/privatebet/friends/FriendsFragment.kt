@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +21,13 @@ import io.bhurling.privatebet.databinding.FragmentFriendsBinding
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,11 +67,20 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
         )
         binding.friendsList.adapter = adapter
 
-        viewModel.attach(adapter.actions())
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .map { it.items }
+                .filterNotNull()
+                .distinctUntilChanged()
+                .collect { items ->
+                    onItemsChanged(items)
+                }
+        }
 
-        disposables += viewModel.stateOf { items }
-            .subscribe { items ->
-                onItemsChanged(items)
+        disposables += adapter.actions()
+            .ofType<InviteAction.Accept>()
+            .subscribe {
+                viewModel.acceptInvitation(it.id)
             }
     }
 
@@ -90,8 +107,6 @@ internal class FriendsFragment : Fragment(R.layout.fragment_friends) {
     }
 
     override fun onDestroyView() {
-        viewModel.detach()
-
         disposables.clear()
 
         super.onDestroyView()
