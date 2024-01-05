@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.databinding.ActivityInviteBinding
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,11 +46,23 @@ internal class InviteActivity : AppCompatActivity() {
         )
         binding.inviteList.adapter = adapter
 
-        viewModel.attach(adapter.actions())
+        lifecycleScope.launch {
+            viewModel.state.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    adapter.items = state.items
+                }
+        }
 
-        disposables += viewModel.stateOf { items }
-            .subscribe { items ->
-                adapter.items = items
+        disposables += adapter.actions()
+            .ofType<InviteAction.Invite>()
+            .subscribe {
+                viewModel.sendInvite(it.id)
+            }
+
+        disposables += adapter.actions()
+            .ofType<InviteAction.Revoke>()
+            .subscribe {
+                viewModel.revokeInvite(it.id)
             }
     }
 
@@ -61,8 +77,6 @@ internal class InviteActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.detach()
-
         disposables.dispose()
 
         super.onDestroy()
