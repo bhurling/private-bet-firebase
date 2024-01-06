@@ -23,10 +23,10 @@ import io.bhurling.privatebet.databinding.ActivityAddBinding
 import io.bhurling.privatebet.model.pojo.Profile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -142,11 +142,13 @@ class AddBetActivity : AppCompatActivity() {
                 viewModel.offer(AddAction.NextClicked)
             }
 
-        disposables += adapter.actions()
-            .ofType<OpponentsAction.Selected>()
-            .subscribe {
-                viewModel.offer(AddAction.OpponentSelected(it.profile))
-            }
+        lifecycleScope.launch {
+            adapter.actions()
+                .filterIsInstance<OpponentsAction.Selected>()
+                .collect {
+                    viewModel.offer(AddAction.OpponentSelected(it.profile))
+                }
+        }
 
         disposables += actions.subscribe(viewModel::offer)
 
