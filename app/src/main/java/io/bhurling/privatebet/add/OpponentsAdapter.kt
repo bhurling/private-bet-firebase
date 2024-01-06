@@ -4,29 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.CircleTransformation
 import io.bhurling.privatebet.databinding.ItemOpponentBinding
-import io.bhurling.privatebet.friends.ProfileRepository
-import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.ui.diffableList
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.rx2.asObservable
 import javax.inject.Inject
 
-class OpponentsAdapter @Inject constructor(
-    private val profileRepository: ProfileRepository
-) : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
+class OpponentsAdapter @Inject constructor() : RecyclerView.Adapter<OpponentsAdapter.ViewHolder>() {
 
     private val actionsSubject = PublishSubject.create<OpponentsAction>()
 
     var items: List<OpponentsAdapterItem> by diffableList(
-        { old, new -> old.id == new.id },
+        { old, new -> old.profile.id == new.profile.id },
         { old, new -> old == new }
     )
 
@@ -43,52 +35,19 @@ class OpponentsAdapter @Inject constructor(
         holder.bind(items[position])
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-
-        holder.unsubscribe()
-    }
-
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-
-        holder.subscribe()
-    }
-
     override fun getItemCount() = items.size
 
     inner class ViewHolder(
-        private val containerView: View
+        containerView: View
     ) : RecyclerView.ViewHolder(containerView) {
         private val binding = ItemOpponentBinding.bind(containerView)
 
-        private var _item: OpponentsAdapterItem? = null
-        private var disposable: Disposable? = null
-
         fun bind(item: OpponentsAdapterItem) {
-            this._item = item
-        }
-
-        fun subscribe() {
-            _item?.let { item ->
-                disposable = profileRepository.byId(item.id).asObservable()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { update(it) }
-            }
-        }
-
-        fun unsubscribe() {
-            disposable?.let {
-                if (!it.isDisposed) it.dispose()
-            }
-        }
-
-        private fun update(profile: Profile) {
             itemView.setOnClickListener {
-                actionsSubject.onNext(OpponentsAction.Selected(profile))
+                actionsSubject.onNext(OpponentsAction.Selected(item.profile))
             }
 
-            profile.photoUrl?.let { url ->
+            item.profile.photoUrl?.let { url ->
                 Picasso.get()
                     .load(url)
                     .error(R.drawable.default_avatar)
@@ -97,9 +56,7 @@ class OpponentsAdapter @Inject constructor(
                     .into(binding.icon)
             } ?: binding.icon.setImageResource(R.drawable.default_avatar)
 
-            binding.title.text = profile.displayName
+            binding.title.text = item.profile.displayName
         }
     }
 }
-
-private val FirebaseFirestore.profiles get() = collection("public_profiles")

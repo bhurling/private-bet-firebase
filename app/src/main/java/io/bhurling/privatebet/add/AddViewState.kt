@@ -8,7 +8,7 @@ data class AddViewState(
     val statement: String = "",
     val deadline: Long? = null,
     val stake: String = "",
-    val opponentIds: List<String> = listOf(),
+    val contacts: List<Profile> = listOf(),
     val opponent: Profile? = null
 ) : Serializable {
     val shouldShowNextButton
@@ -28,6 +28,6 @@ data class AddViewState(
         data class Stake(val stake: String) : StateUpdate()
         data class Statement(val statement: String) : StateUpdate()
         data class Opponent(val opponent: Profile) : StateUpdate()
-        data class OpponentIds(val ids: List<String>) : StateUpdate()
+        data class Contacts(val contacts: List<Profile>) : StateUpdate()
     }
 }

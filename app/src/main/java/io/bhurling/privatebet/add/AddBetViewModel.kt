@@ -39,8 +39,7 @@ class AddBetViewModel @Inject constructor(
 
     private fun onInit(): Flow<AddViewState.StateUpdate> {
         return repository.confirmed()
-            .map { confirmed -> confirmed.map(Profile::id) }
-            .map(AddViewState.StateUpdate::OpponentIds)
+            .map(AddViewState.StateUpdate::Contacts)
     }
 
     private fun onDeadlineClicked(): Flow<AddViewState.StateUpdate> {
@@ -137,8 +136,8 @@ class AddBetViewModel @Inject constructor(
                 statement = update.statement
             )
 
-            is AddViewState.StateUpdate.OpponentIds -> state.copy(
-                opponentIds = update.ids
+            is AddViewState.StateUpdate.Contacts -> state.copy(
+                contacts = update.contacts
             )
         }
     }

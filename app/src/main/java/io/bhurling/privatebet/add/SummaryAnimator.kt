@@ -21,23 +21,24 @@ class SummaryAnimator(
 
         summary.containerView.visibility = View.VISIBLE
 
-        adapter.items.indexOfFirst { it.id == opponentId }.takeUnless { it == -1 }?.let { index ->
-            summary.opponent.doOnNextLayoutOrImmediate { opponent ->
-                val topBefore = IntArray(2).apply {
-                    layoutManager.findViewByPosition(index)
-                        ?.getLocationOnScreen(this)
-                }[1]
+        adapter.items.indexOfFirst { it.profile.id == opponentId }
+            .takeUnless { it == -1 }?.let { index ->
+                summary.opponent.doOnNextLayoutOrImmediate { opponent ->
+                    val topBefore = IntArray(2).apply {
+                        layoutManager.findViewByPosition(index)
+                            ?.getLocationOnScreen(this)
+                    }[1]
 
-                val topAfter = IntArray(2).apply {
-                    opponent.getLocationOnScreen(this)
-                }[1]
+                    val topAfter = IntArray(2).apply {
+                        opponent.getLocationOnScreen(this)
+                    }[1]
 
-                opponent.translationY = (topBefore - topAfter).toFloat()
-                opponent.animate().translationY(0F).start()
+                    opponent.translationY = (topBefore - topAfter).toFloat()
+                    opponent.animate().translationY(0F).start()
+                }
+
+                summary.fadeIn()
             }
-
-            summary.fadeIn()
-        }
     }
 
     fun hide() {

@@ -166,9 +166,9 @@ class AddBetActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.state.flowWithLifecycle(lifecycle)
-                .map { it.opponentIds }
+                .map { it.contacts }
                 .distinctUntilChanged()
-                .collect(::updateOpponents)
+                .collect(::updateContacts)
         }
 
         lifecycleScope.launch {
@@ -221,8 +221,12 @@ class AddBetActivity : AppCompatActivity() {
         binding.betsAddStatementInclude.betsAddDeadlineRemove.isVisible = value != null
     }
 
-    private fun updateOpponents(opponentIds: List<String>) {
-        adapter.items = opponentIds.map { OpponentsAdapterItem(it) }
+    private fun updateContacts(contacts: List<Profile>) {
+        adapter.items = contacts.map {
+            OpponentsAdapterItem(
+                profile = it
+            )
+        }
     }
 
     private fun updateSummary(step: AddViewState.Step, statement: String, opponent: Profile?) {
