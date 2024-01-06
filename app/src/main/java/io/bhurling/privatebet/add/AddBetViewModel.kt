@@ -1,6 +1,7 @@
 package io.bhurling.privatebet.add
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bhurling.privatebet.common.arch.BaseViewModel
 import io.bhurling.privatebet.friends.InvitationsRepository
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -19,7 +21,9 @@ class AddBetViewModel @Inject constructor(
 ) : BaseViewModel<AddViewState, AddViewState.StateUpdate, AddEffect, AddAction>(savedStateHandle) {
 
     init {
-        offer(AddAction.Init)
+        viewModelScope.launch {
+            offer(AddAction.Init)
+        }
     }
     override fun initialState() = AddViewState()
 

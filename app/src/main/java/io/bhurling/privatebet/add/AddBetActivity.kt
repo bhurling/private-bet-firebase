@@ -11,25 +11,21 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.PagerAdapter
-import com.jakewharton.rxbinding2.view.clicks
-import com.jakewharton.rxbinding2.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.bhurling.privatebet.R
 import io.bhurling.privatebet.databinding.ActivityAddBinding
 import io.bhurling.privatebet.model.pojo.Profile
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,7 +49,6 @@ class AddBetActivity : AppCompatActivity() {
     }
 
     private val actions = MutableSharedFlow<AddAction>()
-    private val disposables = CompositeDisposable()
     private val effectHandler = AddBetEffectHandler(this, actions)
 
     private val inputManager by lazy {
@@ -113,34 +108,29 @@ class AddBetActivity : AppCompatActivity() {
         viewModel.offer(AddAction.BackClicked)
     }
 
-    override fun onDestroy() {
-        disposables.dispose()
-
-        super.onDestroy()
-    }
-
     private fun attach() {
-        disposables += binding.betsAddStatementInclude.betsAddStatement.textChanges()
-            .map { it.toString() }
-            .subscribe { viewModel.offer(AddAction.StatementChanged(it)) }
+        binding.betsAddStatementInclude.betsAddStatement.addTextChangedListener {
+            viewModel.offer(AddAction.StatementChanged(it.toString()))
+        }
 
-        disposables += binding.betsAddStakeInclude.betsAddStake.textChanges().map { it.toString() }
-            .subscribe { viewModel.offer(AddAction.StakeChanged(it)) }
+        binding.betsAddStakeInclude.betsAddStake.addTextChangedListener {
+            viewModel.offer(AddAction.StakeChanged(it.toString()))
+        }
 
-        disposables += binding.betsAddStatementInclude.betsAddDeadlineBg.clicks()
-            .subscribe { viewModel.offer(AddAction.DeadlineClicked) }
+        binding.betsAddStatementInclude.betsAddDeadlineBg.setOnClickListener {
+            viewModel.offer(AddAction.DeadlineClicked)
+        }
 
-        disposables += binding.betsAddStatementInclude.betsAddDeadlineRemove.clicks()
-            .delay(100, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+        binding.betsAddStatementInclude.betsAddDeadlineRemove.setOnClickListener {
+            lifecycleScope.launch {
+                delay(100)
                 viewModel.offer(AddAction.DeadlineCleared)
             }
+        }
 
-        disposables += binding.betsAddNext.clicks()
-            .subscribe {
-                viewModel.offer(AddAction.NextClicked)
-            }
+        binding.betsAddNext.setOnClickListener {
+            viewModel.offer(AddAction.NextClicked)
+        }
 
         lifecycleScope.launch {
             adapter.actions()

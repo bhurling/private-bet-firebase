@@ -18,10 +18,6 @@ import io.bhurling.privatebet.navigation.ActivityStartParams
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.HomeActivityStartParams
 import io.bhurling.privatebet.navigation.launch
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -30,8 +26,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: HomeViewModel by viewModels()
-
-    private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
