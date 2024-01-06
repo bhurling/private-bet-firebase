@@ -31,6 +31,7 @@ firebase_messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+lifecycle_viewmodel_compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 material = "com.google.android.material:material:1.0.0"
 picasso = "com.squareup.picasso:picasso:2.71828"
 timber = "com.jakewharton.timber:timber:4.7.1"

@@ -4,71 +4,51 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.bhurling.privatebet.R
-import io.bhurling.privatebet.databinding.FragmentFeedBinding
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-internal class FeedFragment : Fragment(R.layout.fragment_feed) {
-
-    private var _binding: FragmentFeedBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: FeedViewModel by viewModels()
-
-    @Inject
-    lateinit var adapter: FeedAdapter
+internal class FeedFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return FragmentFeedBinding.inflate(inflater, container, false).apply {
-            _binding = this
-        }.root
-    }
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.feed.adapter = adapter
-        binding.feed.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-
-        val decoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
-        decoration.setDrawable(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.transparent_divider
-            )!!
-        )
-        binding.feed.addItemDecoration(decoration)
-
-        lifecycleScope.launch {
-            viewModel.state.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    adapter.keys = state.keys
-                }
+            setContent {
+                FeedScreen()
+            }
         }
     }
+}
 
-    override fun onDestroyView() {
-        // we need to unregister the adapter to make sure we call onViewDetachedFromWindow(ViewHolder)
-        // for the visible items.
-        binding.feed.swapAdapter(null, true)
+@Composable
+internal fun FeedScreen() {
+    val viewModel: FeedViewModel = viewModel()
+    val state by viewModel.state.collectAsState(initial = FeedState())
 
-        super.onDestroyView()
+    Feed(state)
+}
 
-        _binding = null
+@Composable
+internal fun Feed(state: FeedState) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(modifier = Modifier.align(Alignment.Center), text = "Feed")
     }
 }
