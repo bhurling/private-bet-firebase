@@ -24,7 +24,7 @@ import io.bhurling.privatebet.model.pojo.Profile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
@@ -52,7 +52,7 @@ class AddBetActivity : AppCompatActivity() {
         )
     }
 
-    private val actions = PublishSubject.create<AddAction>()
+    private val actions = MutableSharedFlow<AddAction>()
     private val disposables = CompositeDisposable()
     private val effectHandler = AddBetEffectHandler(this, actions)
 
@@ -150,7 +150,9 @@ class AddBetActivity : AppCompatActivity() {
                 }
         }
 
-        disposables += actions.subscribe(viewModel::offer)
+        lifecycleScope.launch {
+            actions.collect(viewModel::offer)
+        }
 
         lifecycleScope.launch {
             viewModel.state.flowWithLifecycle(lifecycle)
