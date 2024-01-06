@@ -23,7 +23,7 @@ internal class FriendsAdapter @Inject constructor() :
 
     private val _actions = MutableSharedFlow<InviteAction>()
 
-    var items: List<FriendsAdapterItem> by diffableList(
+    var items: List<FriendsItem> by diffableList(
         { old, new -> old.profile.id == new.profile.id },
         { old, new -> old == new }
     )
@@ -48,8 +48,8 @@ internal class FriendsAdapter @Inject constructor() :
         private val binding = ItemInviteBinding.bind(containerView)
         private val lifecycleScope get() = containerView.findViewTreeLifecycleOwner()?.lifecycleScope
 
-        fun bind(item: FriendsAdapterItem, actions: MutableSharedFlow<InviteAction>) {
-            update(item.profile, item.isInvited, actions)
+        fun bind(item: FriendsItem, actions: MutableSharedFlow<InviteAction>) {
+            update(item.profile, item.isIncoming, actions)
         }
 
         private fun update(

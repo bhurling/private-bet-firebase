@@ -20,20 +20,20 @@ internal class FriendsViewModel @Inject constructor(
         FriendsState(items)
     }
 
-    private fun incoming(): Flow<List<FriendsAdapterItem>> {
+    private fun incoming(): Flow<List<FriendsItem>> {
         return invitationsRepository.incoming()
             .map { incoming ->
                 incoming.map { profile ->
-                    FriendsAdapterItem(profile, isInvited = true)
+                    FriendsItem(profile, isIncoming = true)
                 }
             }
     }
 
-    private fun confirmed(): Flow<List<FriendsAdapterItem>> {
+    private fun confirmed(): Flow<List<FriendsItem>> {
         return invitationsRepository.confirmed()
             .map { confirmed ->
                 confirmed.map { profile ->
-                    FriendsAdapterItem(profile, isConfirmed = true)
+                    FriendsItem(profile, isConfirmed = true)
                 }
             }
     }
@@ -44,5 +44,7 @@ internal class FriendsViewModel @Inject constructor(
 }
 
 internal data class FriendsState(
-    val items: List<FriendsAdapterItem>? = null
-)
+    val items: List<FriendsItem> = emptyList()
+) {
+    val shouldShowMenu get() = items.isNotEmpty()
+}
