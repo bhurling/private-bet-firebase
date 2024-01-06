@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -161,7 +160,16 @@ internal fun Friends(
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(40.dp))
-                    Button(onClick = onConnectClick) {
+                    OutlinedButton(
+                        onClick = onConnectClick,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
                         Text(text = stringResource(id = R.string.friends_empty_button_label))
                     }
                 }
