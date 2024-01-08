@@ -55,13 +55,9 @@ import io.bhurling.privatebet.common.ui.Theme
 import io.bhurling.privatebet.model.pojo.Profile
 import io.bhurling.privatebet.navigation.EntryPoint
 import io.bhurling.privatebet.navigation.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class FriendsFragment : Fragment() {
-
-    @Inject
-    lateinit var adapter: FriendsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,

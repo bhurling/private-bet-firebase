@@ -22,7 +22,7 @@ internal class InviteViewModel @Inject constructor(
         persons.filter {
             it.id != auth.currentUser?.uid
         }.map {
-            InviteAdapterItem(
+            InviteItem(
                 profile = it,
                 isIncoming = incoming.contains(it),
                 isSent = outgoing.contains(it)
@@ -42,5 +42,5 @@ internal class InviteViewModel @Inject constructor(
 }
 
 internal data class InviteState(
-    val items: List<InviteAdapterItem> = emptyList()
+    val items: List<InviteItem> = emptyList()
 )
