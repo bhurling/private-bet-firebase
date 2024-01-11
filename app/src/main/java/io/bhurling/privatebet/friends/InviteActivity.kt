@@ -1,7 +1,7 @@
 package io.bhurling.privatebet.friends
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -42,7 +42,7 @@ import io.bhurling.privatebet.R
 import io.bhurling.privatebet.common.ui.Theme
 
 @AndroidEntryPoint
-internal class InviteActivity : AppCompatActivity() {
+internal class InviteActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

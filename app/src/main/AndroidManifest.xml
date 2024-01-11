@@ -40,6 +40,11 @@
             android:theme="@style/Theme.PrivateBet.CleanTitle"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
+        <activity
+            android:name=".add.AddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
         <service
             android:name=".signup.SignupService"
             android:exported="false"
