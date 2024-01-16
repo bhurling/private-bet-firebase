@@ -16,7 +16,9 @@ fun Theme(
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = Color(0xFF3D5065),
+            onPrimary = Color(0xFFFFFFFF),
             secondary = Color(0xFFFF6D28),
+            onSecondary = Color(0xFFFFFFFF),
             onBackground = Color(0xFF3D5065)
         )
     ) {

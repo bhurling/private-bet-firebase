@@ -14,6 +14,9 @@ data class AddViewState(
     val shouldShowNextButton
         get() = step != Step.OPPONENT
 
+    val shouldInterceptBackPress
+        get() = step != Step.STATEMENT
+
     enum class Step {
         STATEMENT,
         STAKE,
