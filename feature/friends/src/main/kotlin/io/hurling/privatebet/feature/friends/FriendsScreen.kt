@@ -35,13 +35,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import io.bhurling.privatebet.feature.friends.R
 
 @Composable
 fun FriendsScreen() {
-    val viewModel: FriendsViewModel = viewModel()
+    val viewModel: FriendsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     Friends(
