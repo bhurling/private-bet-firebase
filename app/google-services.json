@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1040347160160-vj6uualcn2qogc7a75s3chlll368749b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.bhurling.privatebet",
+            "certificate_hash": "3fd3b1209f17da41979c95f00f340217a08def6c"
+          }
+        },
+        {
           "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,57 @@
             {
               "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1040347160160-gaousultntuq0854b9e78s9qtob6th2t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.hurling.privatebet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040347160160:android:8eddb2df5c0ec2aad26d05",
+        "android_client_info": {
+          "package_name": "io.hurling.privatebet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040347160160-vtaohf9qm5dso6gscugdm8o60rp65dcp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.hurling.privatebet",
+            "certificate_hash": "3fd3b1209f17da41979c95f00f340217a08def6c"
+          }
+        },
+        {
+          "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKIdtwdNUC676hGTyMsRR58rCXW9AMxn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040347160160-37dmqumdi0h1a0r8csa1lg8hdb6bqkae.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1040347160160-gaousultntuq0854b9e78s9qtob6th2t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.hurling.privatebet"
+              }
             }
           ]
         }

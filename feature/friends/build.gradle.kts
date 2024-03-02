@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.google.services)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
@@ -10,13 +9,7 @@ android {
     compileSdk = rootProject.ext["compileSdkVersion"] as Int
 
     defaultConfig {
-        applicationId = "io.hurling.privatebet"
-        namespace = "io.hurling.privatebet"
-        versionCode = 1
-        versionName = "1.0"
-
-        minSdk = rootProject.ext["minSdkVersion"] as Int
-        targetSdk = rootProject.ext["targetSdkVersion"] as Int
+        namespace = "io.bhurling.privatebet.feature.friends"
     }
 
     compileOptions {
@@ -31,23 +24,15 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-        }
-    }
 }
 
 dependencies {
     implementation(project(":core:auth"))
     implementation(project(":core:data"))
     implementation(project(":core:design"))
-    implementation(project(":feature:friends"))
 
-    implementation(platform(libs.compose.bom))
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
