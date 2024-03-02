@@ -1,8 +1,9 @@
 package io.hurling.privatebet.feature.friends
 
-data class FriendsScreenState(
-    val items: List<Friend> = emptyList()
-)
+sealed interface FriendsScreenState {
+    data object Loading: FriendsScreenState
+    data class Success(val items: List<Friend>) : FriendsScreenState
+}
 
 data class Friend(
     val id: String,

@@ -33,16 +33,19 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
+    val navController = rememberNavController()
     Scaffold { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
             NavHost(
-                navController = rememberNavController(),
+                navController = navController,
                 startDestination = FRIENDS_ROUTE,
                 modifier = Modifier
             ) {
-                friendsScreen()
+                friendsScreen(
+                    navController = navController
+                )
             }
         }
     }

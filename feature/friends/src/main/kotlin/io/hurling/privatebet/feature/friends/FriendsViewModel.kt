@@ -9,20 +9,21 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class FriendsViewModel @Inject constructor(
-    getFriends: GetFriendsUseCase
+internal class FriendsViewModel @Inject constructor(
+    getFriends: GetFriendsUseCase,
+    private val acceptInvitation: AcceptInvitationUseCase
 ) : ViewModel() {
     val state = getFriends()
         .map { friends ->
-            FriendsScreenState(items = friends)
+            FriendsScreenState.Success(items = friends)
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = FriendsScreenState()
+            initialValue = FriendsScreenState.Loading
         )
 
     fun acceptInvitation(id: String) {
-        TODO("Not yet implemented")
+        acceptInvitation.invoke(id)
     }
 }

@@ -1,5 +1,7 @@
 <resources>
     <string name="action_accept">Accept</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
     <string name="friends_empty_title">No one here yet</string>
     <string name="friends_empty_body">Find your friends on Private Bet and connect to them</string>
     <string name="friends_empty_button_label">Connect</string>

@@ -22,6 +22,9 @@ interface NetworkLinksDataSource {
     fun incomingForId(id: String): Flow<List<NetworkLink>>
     fun outgoingForId(id: String): Flow<List<NetworkLink>>
     fun confirmedForId(id: String): Flow<List<NetworkLink>>
+    fun addOutgoingLink(fromId: String, toId: String)
+    fun removeOutgoingLink(fromId: String, toId: String)
+    fun addConfirmedLink(fromId: String, toId: String)
 }
 
 @Singleton
@@ -76,6 +79,26 @@ internal class FirestoreDataSource @Inject constructor(
             .snapshots()
     }
 
+    override fun addOutgoingLink(fromId: String, toId: String) {
+        store.collection("links").document(fromId)
+            .collection("outgoing")
+            .document(toId)
+            .set(mapOf("linked" to true))
+    }
+
+    override fun removeOutgoingLink(fromId: String, toId: String) {
+        store.collection("links").document(fromId)
+            .collection("outgoing")
+            .document(toId)
+            .delete()
+    }
+
+    override fun addConfirmedLink(fromId: String, toId: String) {
+        store.collection("links").document(fromId)
+            .collection("confirmed")
+            .document(toId)
+            .set(mapOf("linked" to true))
+    }
 }
 
 @Keep
