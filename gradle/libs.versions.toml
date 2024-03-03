@@ -6,7 +6,8 @@ composeCompiler = "1.5.10"
 coroutines = "1.7.3"
 firebase = "32.7.2"
 googleServices = "4.4.1"
-hilt = "2.51"
+daggerHilt = "2.51"
+hilt = "1.2.0"
 kotlin = "1.9.22"
 ksp = "1.9.22-1.0.17"
 navigation = "2.7.7"
@@ -18,6 +19,7 @@ androidx_activity_ktx = "androidx.activity:activity-ktx:1.8.2"
 androidx_core = "androidx.core:core-ktx:1.12.0"
 androidx_fragment = "androidx.fragment:fragment-ktx:1.6.2"
 androidx_navigation_compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+androidx_work = "androidx.work:work-runtime-ktx:2.9.0"
 coil_compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 compose_bom = { module = "androidx.compose:compose-bom", version.ref = "compose" }
 compose_material3 = { module = "androidx.compose.material3:material3" }
@@ -27,9 +29,10 @@ firebase_auth = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase_bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase_firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebaseui_auth = "com.firebaseui:firebase-ui-auth:8.0.2"
-hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
-hilt_navigation_compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
+hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "daggerHilt" }
+hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "daggerHilt" }
+hilt_work = { module = "androidx.hilt:hilt-work", version.ref = "hilt" }
+hilt_navigation_compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt" }
 kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 lifecycle_viewmodel_compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 lifecycle_runtime_compose = { module = "androidx.lifecycle:lifecycle-runtime-compose" }
@@ -43,6 +46,6 @@ mockito_kotlin = "org.mockito.kotlin:mockito-kotlin:4.1.0"
 android_application = { id = "com.android.application", version.ref = "agp" }
 android_library = { id = "com.android.library", version.ref = "agp" }
 google_services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 kotlin_android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

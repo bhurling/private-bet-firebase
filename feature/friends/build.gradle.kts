@@ -9,7 +9,7 @@ android {
     compileSdk = rootProject.ext["compileSdkVersion"] as Int
 
     defaultConfig {
-        namespace = "io.bhurling.privatebet.feature.friends"
+        namespace = "io.hurling.privatebet.feature.friends"
     }
 
     compileOptions {

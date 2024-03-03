@@ -7,8 +7,8 @@ import javax.inject.Singleton
 
 interface Auth {
     val currentUserId: String?
-
     val authState: Flow<AuthState>
+    val authUser: Flow<AuthUser?>
 }
 
 @Singleton
@@ -19,4 +19,6 @@ class DefaultAuth @Inject constructor(
         get() = firebaseAuth.uid
     override val authState: Flow<AuthState>
         get() = firebaseAuth.authState
+    override val authUser: Flow<AuthUser?>
+        get() = firebaseAuth.authUser
 }

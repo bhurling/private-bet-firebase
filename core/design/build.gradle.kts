@@ -7,7 +7,7 @@ android {
     compileSdk = rootProject.ext["compileSdkVersion"] as Int
 
     defaultConfig {
-        namespace = "io.bhurling.privatebet.core.design"
+        namespace = "io.hurling.privatebet.core.design"
     }
 
     compileOptions {

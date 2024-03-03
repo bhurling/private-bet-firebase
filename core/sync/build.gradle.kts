@@ -9,7 +9,7 @@ android {
     compileSdk = rootProject.ext["compileSdkVersion"] as Int
 
     defaultConfig {
-        namespace = "io.hurling.privatebet.core.network"
+        namespace = "io.hurling.privatebet.core.sync"
     }
 
     compileOptions {
@@ -19,10 +19,12 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
+    implementation(project(":core:auth"))
+    implementation(project(":core:data"))
 
+    implementation(libs.androidx.work)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.work)
     ksp(libs.hilt.compiler)
 
     api(libs.kotlin.coroutines)

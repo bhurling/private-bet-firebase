@@ -9,7 +9,7 @@ android {
     compileSdk = rootProject.ext["compileSdkVersion"] as Int
 
     defaultConfig {
-        namespace = "io.bhurling.privatebet.core.auth"
+        namespace = "io.hurling.privatebet.core.auth"
     }
 
     compileOptions {

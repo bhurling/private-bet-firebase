@@ -2,6 +2,7 @@ package io.hurling.privatebet.core.data
 
 import io.hurling.privatebet.core.network.NetworkProfilesDataSource
 import io.hurling.privatebet.core.network.NetworkPublicProfile
+import io.hurling.privatebet.core.network.NetworkPublicProfileUpdateParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -10,6 +11,7 @@ interface ProfilesRepository {
     fun profiles(): Flow<List<Profile>>
     fun profileById(id: String): Flow<Profile?>
     fun profilesByIds(ids: List<String>): Flow<List<Profile>>
+    fun updateProfile(uid: String, displayName: String?, photoUrl: String?)
 }
 
 class DefaultProfilesRepository @Inject constructor(
@@ -27,6 +29,13 @@ class DefaultProfilesRepository @Inject constructor(
         networkDataSource.publicProfilesByIds(ids).map { networkPublicProfiles ->
             networkPublicProfiles.map(NetworkPublicProfile::asEntity)
         }
+
+    override fun updateProfile(uid: String, displayName: String?, photoUrl: String?) {
+        networkDataSource.updatePublicProfile(
+            id = uid,
+            params = NetworkPublicProfileUpdateParams(displayName, photoUrl)
+        )
+    }
 }
 
 fun NetworkPublicProfile.asEntity() = Profile(

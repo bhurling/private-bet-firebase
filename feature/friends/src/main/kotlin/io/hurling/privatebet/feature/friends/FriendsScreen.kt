@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import io.bhurling.privatebet.feature.friends.R
 
 @Composable
 fun FriendsScreen(onConnectClick: () -> Unit) {

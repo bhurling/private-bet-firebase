@@ -23,8 +23,35 @@ internal val FirebaseAuth.authState: Flow<AuthState>
         }
     }
 
+internal val FirebaseAuth.authUser: Flow<AuthUser?>
+    get() = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { auth ->
+            val user = auth.currentUser?.let { currentUser ->
+                AuthUser(
+                    uid = currentUser.uid,
+                    displayName = currentUser.displayName,
+                    photoUrl = currentUser.photoUrl?.toString()
+                )
+            }
+
+            launch { send(user) }
+        }
+
+        addAuthStateListener(listener)
+
+        awaitClose {
+            removeAuthStateListener(listener)
+        }
+    }
+
 sealed interface AuthState {
     data object Unknown : AuthState
     data object NotAuthenticated : AuthState
     data class Authenticated(val uid: String) : AuthState
 }
+
+data class AuthUser(
+    val uid: String,
+    val displayName: String?,
+    val photoUrl: String?
+)
