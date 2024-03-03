@@ -26,11 +26,13 @@ compose_ui_tooling_preview = { module = "androidx.compose.ui:ui-tooling-preview"
 firebase_auth = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase_bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase_firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+firebaseui_auth = "com.firebaseui:firebase-ui-auth:8.0.2"
 hilt_android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt_compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt_navigation_compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
 kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 lifecycle_viewmodel_compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
+lifecycle_runtime_compose = { module = "androidx.lifecycle:lifecycle-runtime-compose" }
 # Testing
 junit = "junit:junit:4.13.2"
 mockito_core = "org.mockito:mockito-core:5.5.0"
