@@ -34,8 +34,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.hilt.navigation.compose)
 
     implementation(libs.hilt.android)
+    implementation(libs.hilt.ext.navigation.compose)
     ksp(libs.hilt.compiler)
 }

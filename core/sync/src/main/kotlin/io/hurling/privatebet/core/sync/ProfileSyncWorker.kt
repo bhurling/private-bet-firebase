@@ -16,8 +16,6 @@ import kotlinx.coroutines.flow.first
 
 private const val WORK_NAME = "ProfileSyncWork"
 
-// TODO make sure hilt is used to create these workers
-
 @HiltWorker
 internal class ProfileSyncWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,

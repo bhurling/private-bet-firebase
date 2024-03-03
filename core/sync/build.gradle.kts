@@ -22,10 +22,10 @@ dependencies {
     implementation(project(":core:auth"))
     implementation(project(":core:data"))
 
-    implementation(libs.androidx.work)
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.work)
-    ksp(libs.hilt.compiler)
+    api(libs.androidx.work)
 
-    api(libs.kotlin.coroutines)
+    implementation(libs.hilt.android)
+    api(libs.hilt.ext.work)
+    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.ext.compiler)
 }

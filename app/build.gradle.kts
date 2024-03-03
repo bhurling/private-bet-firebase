@@ -44,6 +44,7 @@ dependencies {
     implementation(project(":core:auth"))
     implementation(project(":core:data"))
     implementation(project(":core:design"))
+    implementation(project(":core:sync"))
     implementation(project(":feature:friends"))
 
     implementation(platform(libs.compose.bom))
