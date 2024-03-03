@@ -49,6 +49,10 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.lifecycle.runtime.compose)
+
+    // We might want to move this into a standalone feature
+    implementation(libs.firebaseui.auth)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

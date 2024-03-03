@@ -24,6 +24,7 @@ internal val FirebaseAuth.authState: Flow<AuthState>
     }
 
 sealed interface AuthState {
+    data object Unknown : AuthState
     data object NotAuthenticated : AuthState
     data class Authenticated(val uid: String) : AuthState
 }
