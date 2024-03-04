@@ -1,15 +1,14 @@
-package io.hurling.privatebet.feature.friends
+package io.hurling.privatebet.core.domain
 
 import io.hurling.privatebet.core.auth.Auth
 import io.hurling.privatebet.core.data.LinksRepository
-import io.hurling.privatebet.core.data.Profile
 import io.hurling.privatebet.core.data.ProfilesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
-internal class GetInvitableProfilesUseCase @Inject constructor(
+class GetInvitableProfilesUseCase @Inject constructor(
     private val auth: Auth,
     private val profilesRepository: ProfilesRepository,
     private val linksRepository: LinksRepository
@@ -34,8 +33,3 @@ internal class GetInvitableProfilesUseCase @Inject constructor(
         }
     }
 }
-
-internal data class InvitableProfile(
-    val profile: Profile,
-    val isInvited: Boolean = false,
-)

@@ -1,10 +1,10 @@
-package io.hurling.privatebet.feature.friends
+package io.hurling.privatebet.core.domain
 
 import io.hurling.privatebet.core.auth.Auth
 import io.hurling.privatebet.core.data.LinksRepository
 import javax.inject.Inject
 
-internal class SendInvitationUseCase @Inject constructor(
+class SendInvitationUseCase @Inject constructor(
     private val auth: Auth,
     private val linksRepository: LinksRepository
 ) {

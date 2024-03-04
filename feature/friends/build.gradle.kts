@@ -27,9 +27,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:auth"))
-    implementation(project(":core:data"))
     implementation(project(":core:design"))
+    implementation(project(":core:domain"))
 
     implementation(libs.coil.compose)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -38,4 +37,9 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.ext.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.kotest.assertions)
 }
