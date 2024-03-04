@@ -26,4 +26,9 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     api(libs.kotlin.coroutines)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.kotest.assertions)
 }
