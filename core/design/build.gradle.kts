@@ -27,4 +27,8 @@ android {
 dependencies {
     implementation(platform(libs.compose.bom))
     api(libs.compose.material3)
+    api(libs.compose.ui.tooling.preview)
+    api(libs.material.icons.extended)
+
+    debugApi(libs.compose.ui.tooling)
 }

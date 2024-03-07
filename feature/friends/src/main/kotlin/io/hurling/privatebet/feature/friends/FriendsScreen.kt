@@ -1,7 +1,6 @@
 package io.hurling.privatebet.feature.friends
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -27,17 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import io.hurling.privatebet.core.design.PrivateBetIcons
+import io.hurling.privatebet.core.design.Theme
 import io.hurling.privatebet.core.domain.Friend
 
 @Composable
@@ -137,19 +137,23 @@ fun FriendsEmptyState(
             color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.headlineSmall
         )
-        Image(
+        Box(
             modifier = Modifier
-                .padding(vertical = 32.dp)
+                .padding(32.dp)
                 .size(120.dp)
                 .background(
                     color = MaterialTheme.colorScheme.onPrimary,
                     shape = CircleShape
                 ),
-            painter = painterResource(id = R.drawable.ic_people_black_56dp),
-            contentDescription = null,
-            contentScale = ContentScale.Inside,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-        )
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                modifier = Modifier.size(80.dp),
+                imageVector = PrivateBetIcons.Group,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
         Text(
             modifier = Modifier.widthIn(max = 240.dp),
             text = stringResource(id = R.string.friends_empty_body),
@@ -170,5 +174,15 @@ fun FriendsEmptyState(
         ) {
             Text(text = stringResource(id = R.string.friends_empty_button_label))
         }
+    }
+}
+
+@Preview
+@Composable
+internal fun FriendsEmptyStatePreview() {
+    Theme {
+        FriendsEmptyState(
+            onConnectClick = {}
+        )
     }
 }

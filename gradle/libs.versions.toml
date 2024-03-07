@@ -37,6 +37,7 @@ hilt_ext_work = { module = "androidx.hilt:hilt-work", version.ref = "hiltExt" }
 kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 lifecycle_viewmodel_compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 lifecycle_runtime_compose = { module = "androidx.lifecycle:lifecycle-runtime-compose" }
+material_icons_extended = "androidx.compose.material:material-icons-extended-android:1.6.3"
 # Testing
 junit = "junit:junit:4.13.2"
 kotest_assertions = "io.kotest:kotest-assertions-core:5.8.0"
