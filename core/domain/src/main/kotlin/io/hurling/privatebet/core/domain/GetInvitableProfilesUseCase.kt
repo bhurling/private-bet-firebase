@@ -22,14 +22,18 @@ class GetInvitableProfilesUseCase @Inject constructor(
     private fun invoke(uid: String): Flow<List<InvitableProfile>> {
         return combine(
             profilesRepository.profiles(),
-            linksRepository.outgoing(uid)
-        ) { profiles, outgoingLinks ->
-            profiles.map { profile ->
-                InvitableProfile(
-                    profile = profile,
-                    isInvited = outgoingLinks.contains(profile.id)
-                )
-            }.filterNot { it.profile.id == uid }
+            linksRepository.outgoing(uid),
+            linksRepository.confirmed(uid)
+        ) { profiles, outgoingLinks, confirmedLinks ->
+            profiles
+                .filterNot { it.id == uid }
+                .filterNot { it.id in confirmedLinks }
+                .map { profile ->
+                    InvitableProfile(
+                        profile = profile,
+                        isInvited = outgoingLinks.contains(profile.id)
+                    )
+                }
         }
     }
 }
