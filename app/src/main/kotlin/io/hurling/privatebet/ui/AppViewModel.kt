@@ -31,4 +31,6 @@ class AppViewModel @Inject constructor(
 
 data class AppState(
     val authState: AuthState
-)
+) {
+    val shouldShowBottomBar = authState is AuthState.Authenticated
+}

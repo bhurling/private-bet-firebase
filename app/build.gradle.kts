@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":core:design"))
     implementation(project(":core:sync"))
     implementation(project(":feature:friends"))
+    implementation(project(":feature:feed"))
 
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.compose)
