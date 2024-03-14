@@ -1,6 +1,7 @@
 package io.hurling.privatebet.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -28,7 +29,9 @@ fun App(onLaunchSignIn: () -> Unit) {
 
     Scaffold { padding ->
         Column(
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(padding)
+                .consumeWindowInsets(padding)
         ) {
             when (state.authState) {
                 is AuthState.Authenticated -> AuthenticatedApp()

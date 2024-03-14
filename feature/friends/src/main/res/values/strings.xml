@@ -5,4 +5,5 @@
     <string name="friends_empty_title">No one here yet</string>
     <string name="friends_empty_body">Find your friends on Private Bet and connect to them</string>
     <string name="friends_empty_button_label">Connect</string>
+    <string name="friends_screen_title">Friends</string>
 </resources>
