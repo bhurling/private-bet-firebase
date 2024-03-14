@@ -10,6 +10,7 @@ android {
 
     defaultConfig {
         namespace = "io.hurling.privatebet.core.auth"
+        minSdk = rootProject.ext["minSdkVersion"] as Int
     }
 
     compileOptions {

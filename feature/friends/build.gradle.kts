@@ -10,6 +10,7 @@ android {
 
     defaultConfig {
         namespace = "io.hurling.privatebet.feature.friends"
+        minSdk = rootProject.ext["minSdkVersion"] as Int
     }
 
     compileOptions {

@@ -8,6 +8,7 @@ android {
 
     defaultConfig {
         namespace = "io.hurling.privatebet.core.design"
+        minSdk = rootProject.ext["minSdkVersion"] as Int
     }
 
     compileOptions {

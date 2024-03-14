@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
 
     // We might want to move this into a standalone feature
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebaseui.auth)
 
     implementation(libs.hilt.android)
