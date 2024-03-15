@@ -12,6 +12,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
@@ -30,14 +33,22 @@ internal fun CreateBetScreen() {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     CreateBet(
-        state = state, onStatementChanged = viewModel::onStatementChanged
+        state = state,
+        onStatementChanged = viewModel::onStatementChanged,
+        onDeadlineChanged = viewModel::onDeadlineChanged
     )
 }
 
 @Composable
 private fun CreateBet(
-    state: CreateBetScreenState, onStatementChanged: (String) -> Unit = {}
+    state: CreateBetScreenState,
+    onStatementChanged: (String) -> Unit = {},
+    onDeadlineChanged: (LocalDate) -> Unit = {}
 ) {
+    var shouldShowDatePicker by remember {
+        mutableStateOf(false)
+    }
+
     // TODO human readable date
     val deadlineString = state.deadline?.toString()
         ?: stringResource(id = R.string.create_bet_no_deadline)
@@ -69,13 +80,25 @@ private fun CreateBet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged {
-                            // TODO launch date picker
+                            // TODO loose focus when dialog is closed
+                            if (it.isFocused) shouldShowDatePicker = true
                         },
                     readOnly = true,
                     value = deadlineString,
                     onValueChange = {},
                     label = {
                         Text(text = stringResource(R.string.create_bet_deadline_label))
+                    }
+                )
+            }
+
+            if (shouldShowDatePicker) {
+                DeadlinePicker(
+                    initialSelectedDate = state.deadline,
+                    onDismiss = { shouldShowDatePicker = false },
+                    onDateSelected = {
+                        onDeadlineChanged(it)
+                        shouldShowDatePicker = false
                     }
                 )
             }

@@ -3,4 +3,5 @@
     <string name="create_bet_deadline_label">by</string>
     <string name="create_bet_statement_label">I bet that…</string>
     <string name="create_bet_no_deadline">No deadline</string>
+    <string name="create_bet_deadline_dialog_confirm">Set deadline</string>
 </resources>
