@@ -1,9 +1,13 @@
 package io.hurling.privatebet.core.design
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
@@ -75,5 +79,16 @@ fun Theme(content: @Composable () -> Unit) {
         colorScheme = if (isSystemInDarkTheme()) DarkColorScheme else LightColorScheme
     ) {
         content()
+    }
+}
+
+@Composable
+fun PreviewScaffold(content: @Composable () -> Unit) {
+    Theme {
+        Scaffold { paddingValues ->
+            Box(modifier = Modifier.padding(paddingValues)) {
+                content()
+            }
+        }
     }
 }

@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:design"))
     implementation(project(":core:sync"))
+    implementation(project(":feature:create"))
     implementation(project(":feature:friends"))
     implementation(project(":feature:feed"))
 

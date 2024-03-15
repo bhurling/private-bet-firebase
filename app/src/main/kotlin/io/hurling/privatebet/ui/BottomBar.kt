@@ -12,8 +12,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import io.hurling.privatebet.core.design.PrivateBetIcons
-import io.hurling.privatebet.feature.feed.navigation.FEED_ROUTE
-import io.hurling.privatebet.feature.friends.navigation.FRIENDS_ROUTE
+import io.hurling.privatebet.feature.feed.navigation.FEED_TAB_ROUTE
+import io.hurling.privatebet.feature.friends.navigation.FRIENDS_TAB_ROUTE
 
 @Composable
 fun BottomBar(navController: NavController) {
@@ -54,11 +54,11 @@ enum class TopLevelDestination(
 ) {
     Feed(
         icon = PrivateBetIcons.List,
-        route = FEED_ROUTE
+        route = FEED_TAB_ROUTE
     ),
     Friends(
         icon = PrivateBetIcons.Group,
-        route = FRIENDS_ROUTE
+        route = FRIENDS_TAB_ROUTE
     )
 }
 

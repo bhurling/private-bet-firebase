@@ -7,8 +7,10 @@ import androidx.navigation.navigation
 import io.hurling.privatebet.feature.friends.FriendsScreen
 import io.hurling.privatebet.feature.friends.InviteScreen
 
-const val FRIENDS_ROUTE = "friends_route"
-const val INVITE_ROUTE = "invite_route"
+private const val FRIENDS_ROUTE = "friends_route"
+private const val INVITE_ROUTE = "invite_route"
+
+const val FRIENDS_TAB_ROUTE = "${FRIENDS_ROUTE}_tab"
 
 fun NavController.navigateToInviteScreen() {
     navigate(INVITE_ROUTE)
@@ -18,7 +20,7 @@ fun NavGraphBuilder.friendsScreen(
     navController: NavController
 ) {
     navigation(
-        route = "${FRIENDS_ROUTE}_graph",
+        route = FRIENDS_TAB_ROUTE,
         startDestination = FRIENDS_ROUTE
     ) {
         composable(
