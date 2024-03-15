@@ -32,11 +32,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import io.hurling.privatebet.core.design.PreviewScaffold
 import io.hurling.privatebet.core.design.PrivateBetIcons
 import io.hurling.privatebet.core.design.Theme
 import io.hurling.privatebet.core.domain.Friend
@@ -173,10 +175,10 @@ fun FriendsEmptyState(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 internal fun FriendsEmptyStatePreview() {
-    Theme {
+    PreviewScaffold {
         FriendsEmptyState(
             onConnectClick = {}
         )
