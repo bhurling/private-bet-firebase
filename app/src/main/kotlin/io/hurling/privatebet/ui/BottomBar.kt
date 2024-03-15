@@ -6,7 +6,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import io.hurling.privatebet.core.design.PrivateBetIcons
 import io.hurling.privatebet.feature.feed.navigation.FEED_ROUTE
@@ -14,10 +17,12 @@ import io.hurling.privatebet.feature.friends.navigation.FRIENDS_ROUTE
 
 @Composable
 fun BottomBar(navController: NavController) {
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+
     NavigationBar {
         TopLevelDestination.entries.forEach { topLevelDestination ->
             NavigationBarItem(
-                selected = false,
+                selected = topLevelDestination.isParentOf(currentDestination),
                 onClick = {
                     navController.navigate(topLevelDestination.route, navOptions {
                         // Pop up to the start destination of the graph to
@@ -55,4 +60,10 @@ enum class TopLevelDestination(
         icon = PrivateBetIcons.Group,
         route = FRIENDS_ROUTE
     )
+}
+
+fun TopLevelDestination.isParentOf(currentDestination: NavDestination?): Boolean {
+    return currentDestination?.hierarchy?.any { destinationInHierarchy ->
+        destinationInHierarchy.route?.startsWith(route) ?: false
+    } ?: false
 }

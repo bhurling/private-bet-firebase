@@ -3,6 +3,7 @@ package io.hurling.privatebet.feature.friends.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import io.hurling.privatebet.feature.friends.FriendsScreen
 import io.hurling.privatebet.feature.friends.InviteScreen
 
@@ -16,14 +17,19 @@ fun NavController.navigateToInviteScreen() {
 fun NavGraphBuilder.friendsScreen(
     navController: NavController
 ) {
-    composable(
-        route = FRIENDS_ROUTE,
+    navigation(
+        route = "${FRIENDS_ROUTE}_graph",
+        startDestination = FRIENDS_ROUTE
     ) {
-        FriendsScreen(onConnectClick = navController::navigateToInviteScreen)
-    }
-    composable(
-        route = INVITE_ROUTE
-    ) {
-        InviteScreen(onBackClick = navController::popBackStack)
+        composable(
+            route = FRIENDS_ROUTE,
+        ) {
+            FriendsScreen(onConnectClick = navController::navigateToInviteScreen)
+        }
+        composable(
+            route = INVITE_ROUTE
+        ) {
+            InviteScreen(onBackClick = navController::popBackStack)
+        }
     }
 }
