@@ -14,8 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.hurling.privatebet.core.auth.AuthState
+import io.hurling.privatebet.feature.feed.navigation.FEED_ROUTE
 import io.hurling.privatebet.feature.feed.navigation.feedScreen
-import io.hurling.privatebet.feature.friends.navigation.FRIENDS_ROUTE
 import io.hurling.privatebet.feature.friends.navigation.friendsScreen
 
 @Composable
@@ -58,7 +58,7 @@ fun App(onLaunchSignIn: () -> Unit) {
 fun AuthenticatedApp(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = FRIENDS_ROUTE,
+        startDestination = FEED_ROUTE,
         modifier = Modifier
     ) {
         feedScreen()

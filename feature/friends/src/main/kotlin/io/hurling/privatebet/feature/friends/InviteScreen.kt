@@ -3,6 +3,7 @@ package io.hurling.privatebet.feature.friends
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -12,7 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -29,29 +34,49 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import io.hurling.privatebet.core.design.PrivateBetIcons
 import io.hurling.privatebet.core.domain.InvitableProfile
 
 @Composable
-fun InviteScreen() {
+fun InviteScreen(onBackClick: () -> Unit) {
     val viewModel: InviteViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Invite(
         state = state,
         onRevokeInvitation = viewModel::revokeInvitation,
-        onSendInvitation = viewModel::sendInvitation
+        onSendInvitation = viewModel::sendInvitation,
+        onBackClick = onBackClick
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Invite(
     state: InviteScreenState,
     onRevokeInvitation: (String) -> Unit = {},
-    onSendInvitation: (String) -> Unit = {}
+    onSendInvitation: (String) -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        CenterAlignedTopAppBar(
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(imageVector = PrivateBetIcons.ArrowBack, contentDescription = null)
+                }
+            },
+            title = { Text(text = stringResource(id = R.string.invite_screen_title)) },
+        )
+
         when (state) {
-            is InviteScreenState.Loading -> CircularProgressIndicator()
+            is InviteScreenState.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+
             is InviteScreenState.Success -> InviteList(
                 items = state.items,
                 onRevokeInvitation = onRevokeInvitation,

@@ -24,6 +24,6 @@ fun NavGraphBuilder.friendsScreen(
     composable(
         route = INVITE_ROUTE
     ) {
-        InviteScreen()
+        InviteScreen(onBackClick = navController::popBackStack)
     }
 }
