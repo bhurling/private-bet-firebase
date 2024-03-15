@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,14 +19,16 @@ internal class CreateBetViewModel @Inject constructor(
         .getStateFlow("statement", "")
         .map { statement ->
             CreateBetScreenState(
-                statement = statement
+                statement = statement,
+                deadline = null
             )
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = CreateBetScreenState(
-                statement = ""
+                statement = "",
+                deadline = null
             )
         )
 
@@ -35,5 +38,6 @@ internal class CreateBetViewModel @Inject constructor(
 }
 
 internal data class CreateBetScreenState(
-    val statement: String
+    val statement: String,
+    val deadline: LocalDate?
 )

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="create_bet_statement_label">I bet that...</string>
+    <string name="create_bet_deadline_label">by</string>
+    <string name="create_bet_statement_label">I bet that…</string>
+    <string name="create_bet_no_deadline">No deadline</string>
 </resources>
