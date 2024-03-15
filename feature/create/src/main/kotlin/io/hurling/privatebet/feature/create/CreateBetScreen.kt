@@ -26,6 +26,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.hurling.privatebet.core.design.PreviewScaffold
 import io.hurling.privatebet.core.design.autoFocus
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DecimalStyle
+import java.time.format.FormatStyle
+import java.util.Locale
 
 @Composable
 internal fun CreateBetScreen() {
@@ -49,9 +53,12 @@ private fun CreateBet(
         mutableStateOf(false)
     }
 
-    // TODO human readable date
-    val deadlineString = state.deadline?.toString()
-        ?: stringResource(id = R.string.create_bet_no_deadline)
+    val deadlineString = state.deadline?.let {
+        DateTimeFormatter
+            .ofLocalizedDate(FormatStyle.LONG)
+            .withLocale(Locale.US)
+            .format(it)
+    } ?: stringResource(id = R.string.create_bet_no_deadline)
 
     Box(
         modifier = Modifier
