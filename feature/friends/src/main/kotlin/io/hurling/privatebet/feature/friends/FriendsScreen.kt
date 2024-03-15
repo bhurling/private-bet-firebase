@@ -1,6 +1,5 @@
 package io.hurling.privatebet.feature.friends
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,14 +14,13 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -122,16 +120,7 @@ fun FriendsList(
                 )
 
                 if (item.isIncoming && !item.isConfirmed) {
-                    OutlinedButton(
-                        onClick = { onAcceptInvitation(item.id) },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
+                    FilledTonalButton(onClick = { onAcceptInvitation(item.id) }) {
                         Text(text = stringResource(id = R.string.action_accept))
                     }
                 }
@@ -159,7 +148,7 @@ fun FriendsEmptyState(
                 .padding(32.dp)
                 .size(120.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center
@@ -168,7 +157,7 @@ fun FriendsEmptyState(
                 modifier = Modifier.size(80.dp),
                 imageVector = PrivateBetIcons.Group,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.background
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
         Text(
@@ -178,7 +167,7 @@ fun FriendsEmptyState(
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(40.dp))
-        OutlinedButton(onClick = onConnectClick) {
+        FilledTonalButton(onClick = onConnectClick) {
             Text(text = stringResource(id = R.string.friends_empty_button_label))
         }
     }

@@ -1,6 +1,5 @@
 package io.hurling.privatebet.feature.friends
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,14 +11,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -120,20 +117,11 @@ private fun InviteList(
                 )
 
                 if (item.isInvited) {
-                    OutlinedButton(onClick = { onRevokeInvitation(item.profile.id) }) {
+                    FilledTonalButton(onClick = { onRevokeInvitation(item.profile.id) }) {
                         Text(text = stringResource(id = R.string.action_remove))
                     }
                 } else {
-                    OutlinedButton(
-                        onClick = { onSendInvitation(item.profile.id) },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
+                    FilledTonalButton(onClick = { onSendInvitation(item.profile.id) }) {
                         Text(text = stringResource(id = R.string.action_add))
                     }
                 }
@@ -141,5 +129,4 @@ private fun InviteList(
 
         }
     }
-
 }
