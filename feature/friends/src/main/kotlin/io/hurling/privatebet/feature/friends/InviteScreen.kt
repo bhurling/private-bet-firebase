@@ -120,16 +120,7 @@ private fun InviteList(
                 )
 
                 if (item.isInvited) {
-                    OutlinedButton(
-                        onClick = { onRevokeInvitation(item.profile.id) },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
+                    OutlinedButton(onClick = { onRevokeInvitation(item.profile.id) }) {
                         Text(text = stringResource(id = R.string.action_remove))
                     }
                 } else {

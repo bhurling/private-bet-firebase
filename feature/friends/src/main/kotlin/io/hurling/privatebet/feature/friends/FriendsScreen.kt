@@ -146,15 +146,12 @@ fun FriendsEmptyState(
     onConnectClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(id = R.string.friends_empty_title),
-            color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.headlineSmall
         )
         Box(
@@ -162,7 +159,7 @@ fun FriendsEmptyState(
                 .padding(32.dp)
                 .size(120.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center
@@ -171,27 +168,17 @@ fun FriendsEmptyState(
                 modifier = Modifier.size(80.dp),
                 imageVector = PrivateBetIcons.Group,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.background
             )
         }
         Text(
             modifier = Modifier.widthIn(max = 240.dp),
             text = stringResource(id = R.string.friends_empty_body),
-            color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(40.dp))
-        OutlinedButton(
-            onClick = onConnectClick,
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
+        OutlinedButton(onClick = onConnectClick) {
             Text(text = stringResource(id = R.string.friends_empty_button_label))
         }
     }
