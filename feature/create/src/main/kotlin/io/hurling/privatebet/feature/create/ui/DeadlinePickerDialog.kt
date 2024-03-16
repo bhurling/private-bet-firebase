@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import io.hurling.privatebet.feature.create.R
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,11 +45,11 @@ fun DeadlinePickerDialog(
 }
 
 private fun LocalDate.toEpochMillis(): Long {
-    return atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    return atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 }
 
 private fun Long.toLocalDate(): LocalDate {
-    return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+    return Instant.ofEpochMilli(this).atZone(ZoneOffset.UTC).toLocalDate()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
