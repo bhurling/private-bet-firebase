@@ -36,7 +36,7 @@ internal class CreateBetViewModel @Inject constructor(
         savedStateHandle["statement"] = statement
     }
 
-    fun onDeadlineChanged(deadline: LocalDate) {
+    fun onDeadlineChanged(deadline: LocalDate?) {
         savedStateHandle["deadline"] = deadline
     }
 }
