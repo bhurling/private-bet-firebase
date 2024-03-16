@@ -1,5 +1,6 @@
 package io.hurling.privatebet.feature.create
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,10 +50,19 @@ internal fun CreateBetScreen(
 
     CreateBet(
         state = state,
-        onBackClick = onBackClick,
+        onBackClick = if (state.shouldInterceptBackPress) {
+            viewModel::onBackClick
+        } else {
+            onBackClick
+        },
         onNextClick = viewModel::onNextClick,
         onStatementChanged = viewModel::onStatementChanged,
         onDeadlineChanged = viewModel::onDeadlineChanged
+    )
+
+    BackHandler(
+        enabled = state.shouldInterceptBackPress,
+        onBack = viewModel::onBackClick
     )
 }
 
@@ -62,6 +72,50 @@ private fun CreateBet(
     state: CreateBetScreenState,
     onBackClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
+    onStatementChanged: (String) -> Unit = {},
+    onDeadlineChanged: (LocalDate?) -> Unit = {}
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        TopAppBar(
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(imageVector = PrivateBetIcons.ArrowBack, contentDescription = null)
+                }
+            },
+            title = {
+                Text(text = stringResource(R.string.create_bet_screen_title))
+            },
+            actions = {
+                TextButton(
+                    enabled = state.isNextButtonEnabled,
+                    onClick = onNextClick
+                ) {
+                    Text(text = stringResource(R.string.create_bet_button_next))
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = PrivateBetIcons.ArrowForward,
+                        contentDescription = null
+                    )
+                }
+            }
+        )
+
+        when (state.step) {
+            CreateBetStep.Statement -> CreateBetStatementStep(
+                state = state,
+                onStatementChanged = onStatementChanged,
+                onDeadlineChanged = onDeadlineChanged
+            )
+
+            CreateBetStep.Stake -> CreateBetStakeStep()
+            CreateBetStep.Opponent -> CreateBetOpponentStep()
+        }
+    }
+}
+
+@Composable
+private fun CreateBetStatementStep(
+    state: CreateBetScreenState,
     onStatementChanged: (String) -> Unit = {},
     onDeadlineChanged: (LocalDate?) -> Unit = {}
 ) {
@@ -76,82 +130,66 @@ private fun CreateBet(
             .format(it)
     } ?: stringResource(id = R.string.create_bet_no_deadline)
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(imageVector = PrivateBetIcons.ArrowBack, contentDescription = null)
-                }
+    Column(modifier = Modifier.padding(vertical = 24.dp, horizontal = 32.dp)) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .autoFocus(),
+            value = state.statement,
+            onValueChange = onStatementChanged,
+            label = {
+                Text(text = stringResource(R.string.create_bet_statement_label))
             },
-            title = {
-                Text(text = "New bet")
-            },
-            actions = {
-                TextButton(
-                    enabled = state.isNextButtonEnabled,
-                    onClick = onNextClick
-                ) {
-                    Text(text = "Next")
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = PrivateBetIcons.ArrowForward,
-                        contentDescription = null
-                    )
-                }
-            }
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences
+            )
         )
 
-        Column(modifier = Modifier.padding(vertical = 24.dp, horizontal = 32.dp)) {
-            OutlinedTextField(
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box {
+            OutlinedDecoratedText(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .autoFocus(),
-                value = state.statement,
-                onValueChange = onStatementChanged,
-                label = {
-                    Text(text = stringResource(R.string.create_bet_statement_label))
+                    .clickable { shouldShowDatePicker = true },
+                innerText = {
+                    Text(modifier = Modifier.fillMaxWidth(), text = deadlineString)
                 },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences
-                )
+                label = {
+                    Text(text = stringResource(R.string.create_bet_deadline_label))
+                }
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Box {
-                OutlinedDecoratedText(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { shouldShowDatePicker = true },
-                    innerText = {
-                        Text(modifier = Modifier.fillMaxWidth(), text = deadlineString)
-                    },
-                    label = {
-                        Text(text = stringResource(R.string.create_bet_deadline_label))
-                    }
-                )
-
-                IconButton(
-                    enabled = state.deadline != null,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = { onDeadlineChanged(null) }
-                ) {
-                    Icon(imageVector = PrivateBetIcons.Clear, contentDescription = null)
-                }
+            IconButton(
+                enabled = state.deadline != null,
+                modifier = Modifier.align(Alignment.CenterEnd),
+                onClick = { onDeadlineChanged(null) }
+            ) {
+                Icon(imageVector = PrivateBetIcons.Clear, contentDescription = null)
             }
         }
-
-        if (shouldShowDatePicker) {
-            DeadlinePickerDialog(
-                initialSelectedDate = state.deadline,
-                onDismiss = { shouldShowDatePicker = false },
-                onDateSelected = {
-                    onDeadlineChanged(it)
-                    shouldShowDatePicker = false
-                }
-            )
-        }
     }
+
+    if (shouldShowDatePicker) {
+        DeadlinePickerDialog(
+            initialSelectedDate = state.deadline,
+            onDismiss = { shouldShowDatePicker = false },
+            onDateSelected = {
+                onDeadlineChanged(it)
+                shouldShowDatePicker = false
+            }
+        )
+    }
+}
+
+@Composable
+fun CreateBetStakeStep() {
+
+}
+
+@Composable
+fun CreateBetOpponentStep() {
+
 }
 
 @PreviewLightDark
@@ -160,6 +198,7 @@ private fun CreateBetStatementInputPreview() {
     PreviewScaffold {
         CreateBet(
             state = CreateBetScreenState(
+                step = CreateBetStep.Statement,
                 statement = "Summer is gonna come",
                 deadline = LocalDate.now()
             )
