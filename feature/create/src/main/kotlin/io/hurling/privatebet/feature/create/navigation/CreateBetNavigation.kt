@@ -11,10 +11,14 @@ fun NavController.navigateToCreateBetScreen() {
     navigate(CREATE_BET_ROUTE)
 }
 
-fun NavGraphBuilder.createBetScreen() {
+fun NavGraphBuilder.createBetScreen(
+    onBackClick: () -> Unit
+) {
     composable(
         route = CREATE_BET_ROUTE
     ) {
-        CreateBetScreen()
+        CreateBetScreen(
+            onBackClick = onBackClick
+        )
     }
 }

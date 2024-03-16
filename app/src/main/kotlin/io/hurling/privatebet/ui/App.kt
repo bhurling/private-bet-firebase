@@ -66,7 +66,9 @@ fun AuthenticatedApp(navController: NavHostController) {
         feedScreen(
             onCreateBetClick = navController::navigateToCreateBetScreen,
             nestedGraphs = {
-                createBetScreen()
+                createBetScreen(
+                    onBackClick = navController::popBackStack
+                )
             }
         )
         friendsScreen(

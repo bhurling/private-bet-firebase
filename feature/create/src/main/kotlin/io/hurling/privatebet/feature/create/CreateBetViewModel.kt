@@ -39,9 +39,15 @@ internal class CreateBetViewModel @Inject constructor(
     fun onDeadlineChanged(deadline: LocalDate?) {
         savedStateHandle["deadline"] = deadline
     }
+
+    fun onNextClick() {
+
+    }
 }
 
 internal data class CreateBetScreenState(
     val statement: String,
     val deadline: LocalDate?
-)
+) {
+    val isNextButtonEnabled = statement.isNotBlank()
+}
