@@ -18,28 +18,30 @@ internal class CreateBetViewModel @Inject constructor(
 
     private val currentStep = MutableStateFlow(CreateBetStep.Statement)
 
-    val state = combine(
-        currentStep,
-        savedStateHandle.getStateFlow("statement", ""),
-        savedStateHandle.getStateFlow<LocalDate?>("deadline", null),
-        savedStateHandle.getStateFlow("stake", ""),
-    ) { currentStep, statement, deadline, stake ->
-        CreateBetScreenState(
-            step = currentStep,
-            statement = statement,
-            deadline = deadline,
-            stake = stake
+    val state = lazy {
+        combine(
+            currentStep,
+            savedStateHandle.getStateFlow("statement", ""),
+            savedStateHandle.getStateFlow<LocalDate?>("deadline", null),
+            savedStateHandle.getStateFlow("stake", ""),
+        ) { currentStep, statement, deadline, stake ->
+            CreateBetScreenState(
+                step = currentStep,
+                statement = statement,
+                deadline = deadline,
+                stake = stake
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = CreateBetScreenState(
+                step = CreateBetStep.Statement,
+                statement = "",
+                deadline = null,
+                stake = ""
+            )
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = CreateBetScreenState(
-            step = CreateBetStep.Statement,
-            statement = "",
-            deadline = null,
-            stake = ""
-        )
-    )
+    }
 
     fun onStatementChanged(statement: String) {
         savedStateHandle["statement"] = statement
