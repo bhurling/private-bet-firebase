@@ -18,7 +18,7 @@ internal class CreateBetViewModel @Inject constructor(
 
     private val currentStep = MutableStateFlow(CreateBetStep.Statement)
 
-    val state = lazy {
+    val state by lazy {
         combine(
             currentStep,
             savedStateHandle.getStateFlow("statement", ""),
