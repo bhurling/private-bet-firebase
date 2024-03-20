@@ -1,7 +1,7 @@
 package io.hurling.privatebet.feature.friends
 
 import io.hurling.privatebet.core.domain.AcceptInvitationUseCase
-import io.hurling.privatebet.core.domain.GetFriendsUseCase
+import io.hurling.privatebet.core.domain.GetFriendsAndIncomingInvitationsUseCase
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.MockKAnnotations
@@ -28,7 +28,7 @@ internal class FriendsViewModelTest {
 
 
     @MockK
-    lateinit var getFriends: GetFriendsUseCase
+    lateinit var getFriends: GetFriendsAndIncomingInvitationsUseCase
 
     @MockK(relaxed = true)
     lateinit var acceptInvitation: AcceptInvitationUseCase

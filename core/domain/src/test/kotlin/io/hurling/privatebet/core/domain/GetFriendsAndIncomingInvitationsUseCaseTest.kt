@@ -24,7 +24,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GetFriendsUseCaseTest {
+class GetFriendsAndIncomingInvitationsUseCaseTest {
 
     @MockK
     lateinit var auth: Auth
@@ -36,7 +36,7 @@ class GetFriendsUseCaseTest {
     lateinit var linksRepository: LinksRepository
 
     @InjectMockKs
-    lateinit var sut: GetFriendsUseCase
+    lateinit var sut: GetFriendsAndIncomingInvitationsUseCase
 
     @Before
     fun setup() {

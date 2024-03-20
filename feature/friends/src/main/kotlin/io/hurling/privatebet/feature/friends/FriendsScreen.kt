@@ -108,7 +108,7 @@ fun FriendsList(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF777777)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     model = item.photoUrl,
                     contentDescription = null,
                 )

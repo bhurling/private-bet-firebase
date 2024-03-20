@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.hurling.privatebet.core.data.Profile
+import io.hurling.privatebet.core.domain.GetFriendsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CreateBetViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val getFriends: GetFriendsUseCase
 ) : ViewModel() {
 
     private val currentStep = MutableStateFlow(CreateBetStep.Statement)
@@ -24,12 +27,14 @@ internal class CreateBetViewModel @Inject constructor(
             savedStateHandle.getStateFlow("statement", ""),
             savedStateHandle.getStateFlow<LocalDate?>("deadline", null),
             savedStateHandle.getStateFlow("stake", ""),
-        ) { currentStep, statement, deadline, stake ->
+            getFriends()
+        ) { currentStep, statement, deadline, stake, friends ->
             CreateBetScreenState(
                 step = currentStep,
                 statement = statement,
                 deadline = deadline,
-                stake = stake
+                stake = stake,
+                friends = friends
             )
         }.stateIn(
             scope = viewModelScope,
@@ -38,7 +43,8 @@ internal class CreateBetViewModel @Inject constructor(
                 step = CreateBetStep.Statement,
                 statement = "",
                 deadline = null,
-                stake = ""
+                stake = "",
+                friends = emptyList()
             )
         )
     }
@@ -69,6 +75,7 @@ internal data class CreateBetScreenState(
     val statement: String,
     val deadline: LocalDate?,
     val stake: String,
+    val friends: List<Profile>
 ) {
     val shouldInterceptBackPress get() = step != CreateBetStep.Statement
     val isNextButtonEnabled
