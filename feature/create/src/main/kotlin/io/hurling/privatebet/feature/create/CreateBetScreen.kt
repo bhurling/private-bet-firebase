@@ -57,7 +57,8 @@ internal fun CreateBetScreen(
         },
         onNextClick = viewModel::onNextClick,
         onStatementChanged = viewModel::onStatementChanged,
-        onDeadlineChanged = viewModel::onDeadlineChanged
+        onDeadlineChanged = viewModel::onDeadlineChanged,
+        onStakeChanged = viewModel::onStakeChanged
     )
 
     BackHandler(
@@ -73,7 +74,8 @@ private fun CreateBet(
     onBackClick: () -> Unit = {},
     onNextClick: () -> Unit = {},
     onStatementChanged: (String) -> Unit = {},
-    onDeadlineChanged: (LocalDate?) -> Unit = {}
+    onDeadlineChanged: (LocalDate?) -> Unit = {},
+    onStakeChanged: (String) -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -107,7 +109,10 @@ private fun CreateBet(
                 onDeadlineChanged = onDeadlineChanged
             )
 
-            CreateBetStep.Stake -> CreateBetStakeStep()
+            CreateBetStep.Stake -> CreateBetStakeStep(
+                state = state,
+                onStakeChanged = onStakeChanged
+            )
             CreateBetStep.Opponent -> CreateBetOpponentStep()
         }
     }
@@ -183,8 +188,25 @@ private fun CreateBetStatementStep(
 }
 
 @Composable
-fun CreateBetStakeStep() {
-
+private fun CreateBetStakeStep(
+    state: CreateBetScreenState,
+    onStakeChanged: (String) -> Unit
+) {
+    Column(modifier = Modifier.padding(vertical = 24.dp, horizontal = 32.dp)) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .autoFocus(),
+            value = state.stake,
+            onValueChange = onStakeChanged,
+            label = {
+                Text(text = stringResource(R.string.create_bet_stake_label))
+            },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences
+            )
+        )
+    }
 }
 
 @Composable
@@ -200,6 +222,7 @@ private fun CreateBetStatementInputPreview() {
             state = CreateBetScreenState(
                 step = CreateBetStep.Statement,
                 statement = "Summer is gonna come",
+                stake = "",
                 deadline = LocalDate.now()
             )
         )

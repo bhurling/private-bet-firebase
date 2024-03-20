@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import java.lang.IllegalStateException
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -23,11 +22,13 @@ internal class CreateBetViewModel @Inject constructor(
         currentStep,
         savedStateHandle.getStateFlow("statement", ""),
         savedStateHandle.getStateFlow<LocalDate?>("deadline", null),
-    ) { currentStep, statement, deadline ->
+        savedStateHandle.getStateFlow("stake", ""),
+    ) { currentStep, statement, deadline, stake ->
         CreateBetScreenState(
             step = currentStep,
             statement = statement,
-            deadline = deadline
+            deadline = deadline,
+            stake = stake
         )
     }.stateIn(
         scope = viewModelScope,
@@ -35,7 +36,8 @@ internal class CreateBetViewModel @Inject constructor(
         initialValue = CreateBetScreenState(
             step = CreateBetStep.Statement,
             statement = "",
-            deadline = null
+            deadline = null,
+            stake = ""
         )
     )
 
@@ -45,6 +47,10 @@ internal class CreateBetViewModel @Inject constructor(
 
     fun onDeadlineChanged(deadline: LocalDate?) {
         savedStateHandle["deadline"] = deadline
+    }
+
+    fun onStakeChanged(stake: String) {
+        savedStateHandle["stake"] = stake
     }
 
     fun onNextClick() {
@@ -59,12 +65,16 @@ internal class CreateBetViewModel @Inject constructor(
 internal data class CreateBetScreenState(
     val step: CreateBetStep,
     val statement: String,
-    val deadline: LocalDate?
+    val deadline: LocalDate?,
+    val stake: String,
 ) {
     val shouldInterceptBackPress get() = step != CreateBetStep.Statement
     val isNextButtonEnabled
-        get() =
-            step == CreateBetStep.Statement && statement.isNotBlank()
+        get() = when (step) {
+            CreateBetStep.Statement -> statement.isNotBlank()
+            CreateBetStep.Stake -> stake.isNotBlank()
+            CreateBetStep.Opponent -> false
+        }
 }
 
 internal enum class CreateBetStep {
@@ -73,13 +83,13 @@ internal enum class CreateBetStep {
     Opponent
 }
 
-internal fun CreateBetStep.next() = when (this) {
+private fun CreateBetStep.next() = when (this) {
     CreateBetStep.Statement -> CreateBetStep.Stake
     CreateBetStep.Stake -> CreateBetStep.Opponent
     CreateBetStep.Opponent -> throw IllegalStateException("Can't go forward from Opponent step")
 }
 
-internal fun CreateBetStep.previous() = when (this) {
+private fun CreateBetStep.previous() = when (this) {
     CreateBetStep.Statement -> throw IllegalStateException("Can't go back from Statement step")
     CreateBetStep.Stake -> CreateBetStep.Statement
     CreateBetStep.Opponent -> CreateBetStep.Stake
